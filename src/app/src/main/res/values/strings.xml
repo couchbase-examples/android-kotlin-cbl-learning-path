@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Inventory Audit</string>
+    <string name="title_activity_main">Inventory Audit</string>
+    <!-- LoginView -->
+    <string name="tfUsername">username</string>
+    <string name="tfPassword">password</string>
+    <string name="btnLogin">login</string>
+    <string name="loginError">Error: username or password is incorrect</string>
+    <!-- UserProfileView -->
+    <string name="lblEmail">email</string>
+    <string name="tfGivenName">givenName</string>
+    <string name="tfSurname">surname</string>
+    <string name="tfJobTitle">jobTitle</string>
+    <string name="btnSave">save</string>
+    <!-- OverflowMenu -->
+    <string name="btnAppBarMenu">appBarMenu</string>
+    <string name="btnMenu">overflowMenu</string>
+    <string name="btnHome">Home</string>
+    <string name="btnDeveloper">Developer</string>
+    <string name="btnLogout">Logout</string>
+    <!-- Projects Screen -->
+    <string name="projects">Projects</string>
+    <!--Messages-->
+    <string name="nothingFound">No Items found in the database</string>
+</resources>

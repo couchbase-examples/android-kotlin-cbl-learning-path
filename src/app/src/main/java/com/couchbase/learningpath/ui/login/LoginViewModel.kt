@@ -1,0 +1,57 @@
+package com.couchbase.learningpath.ui.login
+
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
+
+import com.couchbase.learningpath.data.DatabaseManager
+import com.couchbase.learningpath.services.AuthenticationService
+
+class LoginViewModel (
+    private val authenticationService: AuthenticationService,
+    private val context: WeakReference<Context>)
+    : ViewModel() {
+
+    private val _username = MutableLiveData("")
+    val username: LiveData<String> = _username
+    val onUsernameChanged: (String) -> Unit = { newValue ->
+        _isError.value = false
+        _username.value = newValue
+    }
+
+    private val _password = MutableLiveData("")
+    val password: LiveData<String> = _password
+    val onPasswordChanged: (String) -> Unit = { newValue ->
+        _isError.value = false
+        _password.value = newValue
+    }
+
+    private val _isError = MutableLiveData(false)
+    val isError: LiveData<Boolean> = _isError
+
+    fun login () : Boolean {
+        context.get()?.let { itContext ->
+            _username.value?.let { uname ->
+                _password.value?.let { pwd ->
+                    if (authenticationService.authenticatedUser(username = uname, password = pwd)) {
+                        _isError.value = false
+                        authenticationService.getCurrentUser()?.let { user ->
+                            viewModelScope.launch(Dispatchers.IO) {
+                                //initialize database if needed
+                                DatabaseManager.getInstance(itContext).initializeDatabases(user)
+                            }
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        _isError.value = true
+        return false
+    }
+}
