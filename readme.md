@@ -1,15 +1,8 @@
-# Learn Couchbase Lite Key Value Engine with Kotlin and Jetpack Compose
-#### Learn how to run Couchbase Lite in Stanadlone mode using the Key Value engine to create and update documents.
+# Learn Couchbase Lite with Kotlin and Jetpack Compose
 
-In this part of our learning path, you will walk through the demo application of using Couchbase Lite in standalone mode, which means the database does not sync information from other resources using replication.
+In this learning path you will be reviewing an Android Application written in Kotlin and JetPack Compose that uses the Couchbase Lite Android SDK for Kotlin. You will learn how to get and insert documents using the key-value engine, query the database using the QueryBuilder engine or SQL++, and learn how to sync information between your mobile app and either a Couchbase Server using Sync Gateway or using peer-to-peer technology.
 
-You will learn the fundamentals of:
-
-- Installing Couchbase Lite on Android
-- Database operations for creating, opening, closing, and deleting a database
-- Document create, read, update, and delete (CRUD) operations via key-value pair
-
-Full documentation can be found on the [Couchbase Developer Portal](https://developer.couchbase.com/tutorial-quickstart-android-kotlin-basic/).
+Full documentation can be found on the [Couchbase Developer Portal](https://developer.couchbase.com/learn/android-kotlin).
 
 ## Prerequisites
 To run this prebuilt project, you will need:
