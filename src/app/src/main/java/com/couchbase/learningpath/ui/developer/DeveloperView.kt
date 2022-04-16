@@ -28,7 +28,7 @@ fun DeveloperView(
     openDrawer: () -> Unit,
     navigateToDatabaseInfoView: () -> Unit
 ) {
-    LearningPathTheme() {
+    LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
             topBar = {

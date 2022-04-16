@@ -13,21 +13,18 @@ import com.couchbase.learningpath.data.DatabaseManager
 class MainViewModel(
     private val authService: AuthenticationService,
     val context: WeakReference<Context>
-)
-    : ViewModel() {
+) : ViewModel() {
 
     val startDatabase: () -> Unit = {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             context.get()?.let {
-                authService.getCurrentUser()?.let { user ->
-                    DatabaseManager.getInstance(it).initializeDatabases(user)
-                }
+                DatabaseManager.getInstance(it).initializeDatabases(authService.getCurrentUser())
             }
         }
     }
 
     val closeDatabase: () -> Unit = {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             context.get()?.let {
                 DatabaseManager.getInstance(it).closeDatabases()
             }

@@ -20,7 +20,7 @@ fun DevDatabaseInfoView(
     navigateUp: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     viewModel: DevDatabaseInfoViewModel) {
-    LearningPathTheme() {
+    LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
             topBar = {

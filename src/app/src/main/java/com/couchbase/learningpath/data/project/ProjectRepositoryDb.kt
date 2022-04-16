@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,11 +21,13 @@ import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.data.location.LocationRepository
 import com.couchbase.learningpath.models.Location
 import com.couchbase.learningpath.models.Project
-import com.couchbase.learningpath.models.ProjectDTO
+import com.couchbase.learningpath.models.ProjectDao
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.services.RandomDescriptionService
+import kotlinx.serialization.ExperimentalSerializationApi
 
-
+@ExperimentalCoroutinesApi
+@ExperimentalSerializationApi
 class ProjectRepositoryDb(
     private val context: Context,
     private val authenticationService: AuthenticationService,
@@ -36,22 +39,25 @@ class ProjectRepositoryDb(
         get() = DatabaseManager.getInstance(context).currentInventoryDatabaseName
 
     //live query demo of returning project documents
+
     override fun getDocuments(team: String): Flow<List<Project>> {
         try {
             val db = DatabaseManager.getInstance(context).inventoryDatabase
             // NOTE - the as method is a also a keyword in Kotlin, so it must be escaped using
-            // `as` - this will probably break intellisense, so it will act like the where method isn't available
-            // work around is to do your entire statement without the as function call and add that in last
+            // `as` - this will probably break intellisense, so it will act like the where
+            // method isn't available  work around is to do your entire statement without the as
+            // function call and add that in last
             db?.let { database ->
                 val query = QueryBuilder        // 1
                     .select(SelectResult.all()) // 2
                     .from(DataSource.database(database).`as`("item")) // 3
-                    .where(
+                    .where( //4
                         Expression.property("type").equalTo(Expression.string(projectType)) // 4
                             .and(Expression.property("team").equalTo(Expression.string(team)))
                     ) //4
 
-                // create a flow to return the results dynamically as needed - more information on CoRoutine Flows can be found at
+                // create a flow to return the results dynamically as needed - more information on
+                // CoRoutine Flows can be found at
                 // https://developer.android.com/kotlin/flow
                 val flow = query        // 1
                     .queryChangeFlow()  // 2
@@ -69,10 +75,10 @@ class ProjectRepositoryDb(
     private fun mapQueryChangeToProject(queryChange: QueryChange): List<Project> {
         val projects = mutableListOf<Project>() // 1
         queryChange.results?.let { results ->  // 2
-            results.forEach() { result ->      // 3
+            results.forEach { result ->      // 3
                 val json = result.toJSON()     // 4
                 val project =
-                    Json { ignoreUnknownKeys = true }.decodeFromString<ProjectDTO>(json).item   // 5
+                    Json.decodeFromString<ProjectDao>(json).item   // 5
                 projects.add(project) // 6
             }
         }
@@ -89,9 +95,7 @@ class ProjectRepositoryDb(
                         val json = document.toJSON()
                         json?.let { projectJson ->
                             return@withContext (
-                                    Json { ignoreUnknownKeys = true }.decodeFromString<Project>(
-                                        projectJson
-                                    ))
+                                    Json.decodeFromString<Project>(projectJson))
                         }
                     }
                 }
@@ -99,14 +103,19 @@ class ProjectRepositoryDb(
                 Log.e(e.message, e.stackTraceToString())
             }
 
-            val team = authenticationService.getCurrentUser()?.team ?: ""
+            val team = authenticationService.getCurrentUser().team
 
             //calculate due date 90 days from today by default
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DATE, 90)
             val dueDate = SimpleDateFormat("MM-dd-yyyy", Locale.US)
-                .parse("${calendar.get(Calendar.MONTH)}-${calendar.get(Calendar.DAY_OF_MONTH)}-${calendar.get(
-                    Calendar.YEAR)}")
+                .parse(
+                    "${calendar.get(Calendar.MONTH)}-${calendar.get(Calendar.DAY_OF_MONTH)}-${
+                        calendar.get(
+                            Calendar.YEAR
+                        )
+                    }"
+                )
             return@withContext (
                     Project(
                         projectId = documentId,
@@ -203,41 +212,40 @@ class ProjectRepositoryDb(
     override suspend fun loadSampleData() {
         return withContext(Dispatchers.IO) {
             try {
-                authenticationService.getCurrentUser()?.let {
-                    val descriptionService = RandomDescriptionService()
-                    val locations = locationRepository.get()
-                    val locationsCount = locations.count() - 1
-                    if (locationsCount > 0) {
-                        val db = DatabaseManager.getInstance(context).inventoryDatabase
-                        db?.let { database ->
-                            // batch operations for saving multiple documents
-                            // this is a faster way to process groups of documents at once
-                            // https://docs.couchbase.com/couchbase-lite/current/android/document.html#batch-operations
-                            database.inBatch(UnitOfWork {   // 1
-                                for (count in 1..10) {      // 2
-                                    val document = Project(  //3
-                                        projectId = UUID.randomUUID().toString(),
-                                        name = "Audit ${(1..1000000).random()}",
-                                        description = descriptionService.randomDescription(),
-                                        isComplete = false,
-                                        type = projectType,
-                                        dueDate = SimpleDateFormat(
-                                            "MM-dd-yyyy",
-                                            Locale.US
-                                        ).parse("${(1..12).random()}-${(1..27).random()}-${(2022..2024).random()}"),
-                                        team = it.team,
-                                        createdBy = it.username,
-                                        modifiedBy = it.username,
-                                        createdOn = Date(),
-                                        modifiedOn = Date(),
-                                        location = locations[(0..locationsCount).random()]
-                                    )
-                                    val json = Json.encodeToString(document) // 4
-                                    val doc = MutableDocument(document.projectId, json) // 5
-                                    database.save(doc) // 6
-                                }
-                            })
-                        }
+                val currentUser = authenticationService.getCurrentUser()
+                val descriptionService = RandomDescriptionService()
+                val locations = locationRepository.get()
+                val locationsCount = locations.count() - 1
+                if (locationsCount > 0) {
+                    val db = DatabaseManager.getInstance(context).inventoryDatabase
+                    db?.let { database ->
+                        // batch operations for saving multiple documents
+                        // this is a faster way to process groups of documents at once
+                        // https://docs.couchbase.com/couchbase-lite/current/android/document.html#batch-operations
+                        database.inBatch(UnitOfWork {   // 1
+                            for (count in 1..10) {      // 2
+                                val document = Project(  //3
+                                    projectId = UUID.randomUUID().toString(),
+                                    name = "Audit ${(1..1000000).random()}",
+                                    description = descriptionService.randomDescription(),
+                                    isComplete = false,
+                                    type = projectType,
+                                    dueDate = SimpleDateFormat(
+                                        "MM-dd-yyyy",
+                                        Locale.US
+                                    ).parse("${(1..12).random()}-${(1..27).random()}-${(2022..2024).random()}"),
+                                    team = currentUser.team,
+                                    createdBy = currentUser.username,
+                                    modifiedBy = currentUser.username,
+                                    createdOn = Date(),
+                                    modifiedOn = Date(),
+                                    location = locations[(0..locationsCount).random()]
+                                )
+                                val json = Json.encodeToString(document) // 4
+                                val doc = MutableDocument(document.projectId, json) // 5
+                                database.save(doc) // 6
+                            }
+                        })
                     }
                 }
             } catch (e: Exception) {

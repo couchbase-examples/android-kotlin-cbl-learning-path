@@ -12,7 +12,7 @@ import java.lang.Exception
 
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Location
-import com.couchbase.learningpath.models.LocationDTO
+import com.couchbase.learningpath.models.LocationDao
 
 class LocationRepositoryDb(context: Context) : LocationRepository  {
     private val databaseResources: DatabaseManager = DatabaseManager.getInstance(context)
@@ -59,7 +59,7 @@ class LocationRepositoryDb(context: Context) : LocationRepository  {
                     //loop through results and add to list
                     query.execute().allResults().forEach { item ->
                         val json = item.toJSON()
-                        val location = Json { ignoreUnknownKeys = true }.decodeFromString<LocationDTO>(json).item
+                        val location = Json.decodeFromString<LocationDao>(json).item
                         locations.add(location)
                     }
                 }
@@ -82,7 +82,7 @@ class LocationRepositoryDb(context: Context) : LocationRepository  {
                         .where(Expression.property(typeAttributeName).equalTo(Expression.string(locationType)))
                     query.execute().allResults().forEach { item ->
                         val json = item.toJSON()
-                        val location = Json{ ignoreUnknownKeys = true }.decodeFromString<LocationDTO>(json).item
+                        val location = Json.decodeFromString<LocationDao>(json).item
                         locations.add(location)
                     }
                 }

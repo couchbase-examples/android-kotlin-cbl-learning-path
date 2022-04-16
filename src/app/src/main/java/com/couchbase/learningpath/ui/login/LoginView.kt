@@ -45,7 +45,7 @@ fun LoginView(onSuccessLogin: () -> Unit,
     }
 
     //setup clean view with LoginWindow
-    LearningPathTheme() {
+    LearningPathTheme {
         Surface(
             color = MaterialTheme.colors.background,
             modifier = Modifier.fillMaxSize()
@@ -159,7 +159,7 @@ fun DefaultPreview() {
     val password = ""
     val isError = false
 
-    LearningPathTheme() {
+    LearningPathTheme {
         LoginWindow(
             username = username,
             password = password,

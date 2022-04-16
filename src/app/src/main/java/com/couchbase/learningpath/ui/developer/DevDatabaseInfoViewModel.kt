@@ -16,7 +16,7 @@ class DevDatabaseInfoViewModel(
     private val userProfileRepository: KeyValueRepository,
     private val locationRepository: LocationRepository,
     private val projectRepository: ProjectRepository,
-    private val authService: AuthenticationService
+    authService: AuthenticationService
 ) : ViewModel() {
 
     private var currentUser = authService.getCurrentUser()
@@ -43,10 +43,9 @@ class DevDatabaseInfoViewModel(
     private suspend fun updateUserProfileInfo() {
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                currentUser?.let {
-                    currentUsername.value = it.username
-                    currentTeam.value = it.team
-                }
+                currentUsername.value = currentUser.username
+                currentTeam.value = currentUser.team
+
             }
         }
     }

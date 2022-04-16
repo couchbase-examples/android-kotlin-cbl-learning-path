@@ -2,6 +2,7 @@ package com.couchbase.learningpath.models
 
 import androidx.annotation.Keep
 import com.couchbase.learningpath.util.DateSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -10,10 +11,12 @@ import java.util.*
 
 @Keep
 @Serializable
-data class ProjectDTO(var item: Project)
+@ExperimentalSerializationApi
+data class ProjectDao(var item: Project)
 
 @Keep
 @Serializable
+@ExperimentalSerializationApi
 data class Project (
     var projectId: String = "",
     var name: String = "",

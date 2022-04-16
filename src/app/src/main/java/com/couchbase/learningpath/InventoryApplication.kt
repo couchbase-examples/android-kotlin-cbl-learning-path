@@ -27,7 +27,11 @@ import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.project.LocationSelectionViewModel
 import com.couchbase.learningpath.ui.project.ProjectEditorViewModel
 import com.couchbase.learningpath.ui.project.ProjectListViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.serialization.ExperimentalSerializationApi
 
+@ExperimentalSerializationApi
+@ExperimentalCoroutinesApi
 class InventoryApplication
     : Application() {
 
@@ -52,6 +56,8 @@ class InventoryApplication
     //dependency registration for dependency inversion and injection
     private fun registerDependencies() : Module {
         return module {
+            // ** DO NOT listen to the NO cast needed warnings - removing the as statement will
+            // ** result in the application not functioning correctly
             single { MockAuthenticationService() as AuthenticationService }
             single { UserProfileRepository(this@InventoryApplication) as KeyValueRepository }
             single { LocationRepositoryDb(this@InventoryApplication) as LocationRepository }
@@ -62,7 +68,7 @@ class InventoryApplication
             viewModel { ProjectEditorViewModel(get()) }
             viewModel { LocationSelectionViewModel(get(), get()) }
             viewModel { UserProfileViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
-            viewModel { DeveloperViewModel(get(), get(), get(), get()) }
+            viewModel { DeveloperViewModel(get()) }
             viewModel { DevDatabaseInfoViewModel(get(), get(), get(), get()) }
         }
     }

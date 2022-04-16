@@ -7,8 +7,8 @@ class MockAuthenticationService : AuthenticationService {
     private var _user: User? = null
     private var _mockUsers = HashMap<String, User>()
 
-    override fun getCurrentUser(): User? {
-        return _user
+    override fun getCurrentUser(): User {
+        return _user?: User("", "", "")
     }
 
     override fun authenticatedUser(username: String, password: String): Boolean {

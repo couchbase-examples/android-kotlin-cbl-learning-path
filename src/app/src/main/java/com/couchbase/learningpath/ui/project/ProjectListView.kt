@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
 
 import com.couchbase.learningpath.models.Project
@@ -23,6 +24,9 @@ import com.couchbase.learningpath.ui.components.HorizontalDottedProgressBar
 import com.couchbase.learningpath.ui.components.NoItemsFound
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 
+
+@ExperimentalMaterialApi
+@ExperimentalCoroutinesApi
 @Composable
 fun ProjectListView(
     openDrawer: () -> Unit,
@@ -46,7 +50,7 @@ fun ProjectListView(
             {
                 // collecting the flow and turning it into state
                 // https://developer.android.com/jetpack/compose/libraries#streams
-                val projectList by viewModel.projectsFlow.collectAsState(initial = listOf())
+                val projectList by viewModel.repositoryFlow.collectAsState(initial = listOf())
 
                 //we will handle this in a future tutorial
                 val onProjectSelected: (String) -> Unit = { _ : String -> }
@@ -65,7 +69,9 @@ fun ProjectListView(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@ExperimentalCoroutinesApi
+@ExperimentalMaterialApi
 @Composable
 fun ProjectList(
     items: List<Project>,
@@ -110,6 +116,8 @@ fun ProjectList(
 }
 
 @Preview(showBackground = true)
+@ExperimentalCoroutinesApi
+@ExperimentalMaterialApi
 @Composable
 fun ProjectListPreview() {
     val project = Project(

@@ -12,16 +12,16 @@ import java.util.*
 // github:  https://github.com/Kotlin/kotlinx.serialization/issues/23#issuecomment-476524441
 // very simple implementation that works for this tutorial
 
-@OptIn(ExperimentalSerializationApi::class)
+@ExperimentalSerializationApi
 @Serializer(forClass = DateSerializer::class)
 object DateSerializer : KSerializer<Date> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DateSerializer", PrimitiveKind.STRING)
 
-    override fun serialize(output: Encoder, obj: Date) {
-        output.encodeString(obj.time.toString())
+    override fun serialize(encoder: Encoder, value: Date) {
+        encoder.encodeString(value.time.toString())
     }
 
-    override fun deserialize(input: Decoder): Date {
-        return Date(input.decodeString().toLong())
+    override fun deserialize(decoder: Decoder): Date {
+        return Date(decoder.decodeString().toLong())
     }
 }

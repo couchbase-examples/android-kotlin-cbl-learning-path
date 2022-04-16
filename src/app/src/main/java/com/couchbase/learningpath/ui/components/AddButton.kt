@@ -33,5 +33,5 @@ fun AddButton(onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun AddButtonPreview() {
-    AddButton(onClick = { "test" })
+    AddButton(onClick = {  })
 }

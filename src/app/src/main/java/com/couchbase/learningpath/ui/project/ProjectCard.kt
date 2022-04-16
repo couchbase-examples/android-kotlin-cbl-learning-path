@@ -172,7 +172,7 @@ fun ProjectCardPreview() {
     val scaffoldState:ScaffoldState = rememberScaffoldState()
     val coRouteScope = rememberCoroutineScope()
 
-    LearningPathTheme() {
+    LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
             topBar = {

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Keep
 @Serializable
-data class LocationDTO(var item: Location)
+data class LocationDao(var item: Location)
 
 @Keep
 @Serializable

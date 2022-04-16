@@ -1,5 +1,6 @@
 package com.couchbase.learningpath
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -9,6 +10,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.koin.androidx.compose.getViewModel
+import java.util.*
+
 import com.couchbase.learningpath.ui.developer.DevDatabaseInfoView
 import com.couchbase.learningpath.ui.developer.DevDatabaseInfoViewModel
 import com.couchbase.learningpath.ui.developer.DeveloperView
@@ -18,9 +24,6 @@ import com.couchbase.learningpath.ui.login.LoginViewModel
 import com.couchbase.learningpath.ui.profile.UserProfileView
 import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.project.*
-import kotlinx.coroutines.CoroutineScope
-import org.koin.androidx.compose.getViewModel
-import java.util.*
 
 /*
     Destinations used in routing
@@ -43,6 +46,8 @@ object MainDestinations {
 }
 
 //main function for handling navigation graph in the app
+@ExperimentalMaterialApi
+@ExperimentalCoroutinesApi
 @Composable
 fun InventoryNavGraph(
     openDrawer: () -> Unit,

@@ -110,7 +110,7 @@ fun LocationCardPreview() {
     val onLocationSelected: (Location) -> Unit = { _: Location -> }
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
-    LearningPathTheme() {
+    LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
             topBar = {

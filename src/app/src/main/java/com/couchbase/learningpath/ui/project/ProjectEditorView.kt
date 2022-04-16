@@ -30,7 +30,7 @@ fun ProjectEditorView(
     scaffoldState: ScaffoldState = rememberScaffoldState()
 )
 {
-    LearningPathTheme() {
+    LearningPathTheme {
         Scaffold(scaffoldState = scaffoldState,
             topBar = {
                 InventoryAppBar(
@@ -173,7 +173,7 @@ private fun ProjectEditorPreview() {
     val onDateChanged: (Long?) -> Unit = {}
     val errorMessage = ""
 
-    LearningPathTheme() {
+    LearningPathTheme {
         Surface(
             color = MaterialTheme.colors.background,
             modifier = Modifier.fillMaxSize()

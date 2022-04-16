@@ -134,7 +134,7 @@ fun Drawer(
 @Composable
 fun DrawerPreview() {
     val onClicked: (String) -> Unit = { _ -> }
-    LearningPathTheme() {
+    LearningPathTheme {
         Drawer(
             modifier = Modifier.padding(),
             firstName =  "Jane",

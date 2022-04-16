@@ -44,7 +44,7 @@ fun UserProfileView(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     viewModel: UserProfileViewModel) {
 
-    LearningPathTheme() {
+    LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
             topBar = {

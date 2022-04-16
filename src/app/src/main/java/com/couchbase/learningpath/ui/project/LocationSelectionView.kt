@@ -17,6 +17,7 @@ import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
 
+@ExperimentalMaterialApi
 @Composable
 fun LocationSelectionView(
     viewModel: LocationSelectionViewModel,
@@ -24,7 +25,7 @@ fun LocationSelectionView(
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ){
 
-    LearningPathTheme() {
+    LearningPathTheme {
         Scaffold(scaffoldState = scaffoldState,
             topBar = {
                 InventoryAppBar(
@@ -59,7 +60,7 @@ fun LocationSelectionView(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun LocationSelector(
     searchCity: String,
@@ -137,7 +138,7 @@ fun LocationSelector(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
 private fun LocationSelectorPreview() {
@@ -162,7 +163,7 @@ private fun LocationSelectorPreview() {
     val onSearch: () -> Unit = { }
     val locationStatusMessage = ""
     val locationList = listOf<Location>() + location + location + location
-    LearningPathTheme() {
+    LearningPathTheme {
         Surface(
             color = MaterialTheme.colors.background,
             modifier = Modifier.fillMaxSize()

@@ -28,7 +28,10 @@ import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.ui.components.Drawer
 import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalMaterialApi
+@ExperimentalCoroutinesApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
