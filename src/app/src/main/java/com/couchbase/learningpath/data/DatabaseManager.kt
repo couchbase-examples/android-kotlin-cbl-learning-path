@@ -109,9 +109,9 @@ class DatabaseManager private constructor(private val context: Context) {
                     // create index for ProjectListView to only return documents with
                     // the type attribute set to project and the team attribute set to the
                     // logged in users team
-                    it.createIndex( // 3
-                        teamIndexName, // 4
-                        IndexBuilder.valueIndex(   // 5
+                    it.createIndex( // 2
+                        teamIndexName, // 3
+                        IndexBuilder.valueIndex(   // 4
                             ValueIndexItem.property(typeAttributeName), // 5
                             ValueIndexItem.property(teamAttributeName)) // 5
                     )
