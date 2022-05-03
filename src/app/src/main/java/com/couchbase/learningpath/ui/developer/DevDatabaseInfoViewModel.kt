@@ -52,7 +52,7 @@ class DevDatabaseInfoViewModel(
 
     private suspend fun updateUserProfileCount() {
         viewModelScope.launch(Dispatchers.IO) {
-            val count = userProfileRepository.count()
+            val count = userProfileRepository.count()  // <1>
             if (count > 0) {
                 withContext(Dispatchers.Main) {
                     numberOfUserProfiles.value = count
