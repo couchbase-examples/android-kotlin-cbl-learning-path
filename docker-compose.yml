@@ -31,11 +31,6 @@ services:
     build: ./sync-gateway
     ports:
       - 4984-4986:4984-4986
-    environment:  
-      - ADMIN_INTERFACE=:4985
-      - INTERFACE=:4984
-      - METRICS_INTERFACE=:4986
-      - REMOTE_ADDRESS=$REMOTEIP
     hostname: sync-gateway
     container_name: sync-gateway
     depends_on:
