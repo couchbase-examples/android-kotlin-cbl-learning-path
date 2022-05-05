@@ -114,15 +114,13 @@
 			]
 		  }
 		},
-	  "import_filter":  `
-	  function(doc){
+	  "import_filter":  ` function(doc) {
 		console.log("********Processing import filter - documents from couchbase server");
-		  if (doc.type == 'project' || doc.type == 'location' || doc.type == 'user' || . doc.type == 'audit'){
+ 		if (doc.type == 'project' || doc.type == 'location' || doc.type == 'user' || doc.type == 'audit') {
 			return true;
-		  }
-		  return false;
-	  }
-	   `,
+		}
+		return false;
+	  } `,
 	  "sync":  `
 		function sync(doc, oldDoc) {
 	  
