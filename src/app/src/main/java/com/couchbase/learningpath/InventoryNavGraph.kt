@@ -10,15 +10,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.couchbase.learningpath.ui.developer.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.compose.getViewModel
 import java.util.*
 
-import com.couchbase.learningpath.ui.developer.DevDatabaseInfoView
-import com.couchbase.learningpath.ui.developer.DevDatabaseInfoViewModel
-import com.couchbase.learningpath.ui.developer.DeveloperView
-import com.couchbase.learningpath.ui.developer.DeveloperViewModel
 import com.couchbase.learningpath.ui.login.LoginView
 import com.couchbase.learningpath.ui.login.LoginViewModel
 import com.couchbase.learningpath.ui.profile.UserProfileView
@@ -43,6 +40,9 @@ object MainDestinations {
 
     const val PROJECT_EDITOR_KEY_ID = "projectId"
     const val LOCATION_LIST_KEY_ID = "projectId"
+
+    const val REPLICATOR_ROUTE = "replicator"
+    const val REPLICATOR_SETTINGS_ROUTE = "replicatorConfig"
 }
 
 //main function for handling navigation graph in the app
@@ -125,7 +125,21 @@ fun InventoryNavGraph(
                 navigateUp = actions.upPress,
                 viewModel = getViewModel<DevDatabaseInfoViewModel>())
         }
-
+        composable(MainDestinations.REPLICATOR_ROUTE){
+            ReplicatorView(
+                viewModel = getViewModel<ReplicatorViewModel>(),
+                openDrawer = openDrawer,
+                replicatorConfigNav = actions.navigateToReplicatorConfig,
+                scaffoldState = scaffoldState
+            )
+        }
+        composable(MainDestinations.REPLICATOR_SETTINGS_ROUTE){
+            ReplicatorConfigView(
+                viewModel = getViewModel<ReplicatorConfigViewModel>(),
+                navigateUp = actions.upPress,
+                scaffoldState = scaffoldState
+            )
+        }
         composable(MainDestinations.LOGOUT_ROUTE){
         }
     }
@@ -147,6 +161,11 @@ class MainActions(navController: NavHostController) {
     val navigateToDeveloperDatabaseInfo:() -> Unit = {
         navController.navigate(MainDestinations.DEVELOPER_DATABASE_INFO_ROUTE)
     }
+
+    val navigateToReplicatorConfig: () -> Unit = {
+        navController.navigate(MainDestinations.REPLICATOR_SETTINGS_ROUTE)
+    }
+
     val upPress: () -> Unit = {
         navController.popBackStack()
     }

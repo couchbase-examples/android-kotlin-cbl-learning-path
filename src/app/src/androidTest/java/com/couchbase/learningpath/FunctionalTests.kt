@@ -55,6 +55,7 @@ class FunctionalTests {
     private val testLastName2 = "Doe"
     private val testJobTitle2 = "Sr. Developer Advocate"
 
+    @OptIn(ExperimentalMaterialApi::class)
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
@@ -62,6 +63,7 @@ class FunctionalTests {
     fun resetData() {
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Test
     fun testApplicationWorkflow() {
 
@@ -117,6 +119,7 @@ class FunctionalTests {
         assertUserProfile(testFirstName1, testLastName1, testJobTitle1, testUsername1, resources)
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     private fun testAuthentication(
         username: String,
         password: String,
@@ -137,6 +140,7 @@ class FunctionalTests {
         composeTestRule.waitForIdle()
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     private fun testUserProfileForm(
         firstName: String,
         lastName: String,
@@ -151,6 +155,7 @@ class FunctionalTests {
             .performTextInput(jobTitle)
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     private fun assertUserProfile(
         firstName: String,
         lastName: String,
@@ -171,6 +176,7 @@ class FunctionalTests {
             .assert(hasText(jobTitle, ignoreCase = true))
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     private fun logout(resources: Map<String, String>) {
         composeTestRule.onNodeWithContentDescription(resources[keyAppBarMenu].toString())
             .performClick()
@@ -179,6 +185,7 @@ class FunctionalTests {
             .performClick()
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     private fun launchLoginScreenWithNavGraph(): Map<String, String> {
         var resources = HashMap<String, String>()
         composeTestRule.setContent {

@@ -11,9 +11,11 @@ import java.lang.ref.WeakReference
 
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.services.AuthenticationService
+import com.couchbase.learningpath.services.ReplicatorService
 
 class LoginViewModel (
     private val authenticationService: AuthenticationService,
+    private val replicatorService: ReplicatorService,
     private val context: WeakReference<Context>)
     : ViewModel() {
 
@@ -44,6 +46,7 @@ class LoginViewModel (
                             viewModelScope.launch(Dispatchers.IO) {
                                 //initialize database if needed
                                 DatabaseManager.getInstance(itContext).initializeDatabases(user)
+                                replicatorService.updateAuthentication(isReset = false)
                             }
                             return true
                         }

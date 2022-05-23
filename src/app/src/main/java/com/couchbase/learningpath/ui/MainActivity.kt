@@ -25,6 +25,7 @@ import com.couchbase.learningpath.MainDestinations
 import com.couchbase.learningpath.R
 import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.services.AuthenticationService
+import com.couchbase.learningpath.services.ReplicatorService
 import com.couchbase.learningpath.ui.components.Drawer
 import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
                 val scaffoldState = rememberScaffoldState()
                 val authService: AuthenticationService by inject()
                 val userProfileRepository: KeyValueRepository by inject()
+                val replicatorService : ReplicatorService by inject()
                 val menuResource = stringResource(id = R.string.btnMenu)
                 val mainViewModel = getViewModel<MainViewModel>()
 
@@ -50,6 +52,8 @@ class MainActivity : ComponentActivity() {
                 var profileViewModel: UserProfileViewModel? = null
 
                 fun logout() {
+                    replicatorService.stopReplication()
+                    replicatorService.updateAuthentication(isReset = true)
                     profileViewModel = null
                     authService.logout()
                 }

@@ -9,10 +9,13 @@ import java.lang.ref.WeakReference
 
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.data.DatabaseManager
+import com.couchbase.learningpath.services.ReplicatorService
 
 class MainViewModel(
     private val authService: AuthenticationService,
-    val context: WeakReference<Context>
+    private val replicatorService: ReplicatorService,
+    val context: WeakReference<Context>,
+
 ) : ViewModel() {
 
     val startDatabase: () -> Unit = {
@@ -26,6 +29,7 @@ class MainViewModel(
     val closeDatabase: () -> Unit = {
         viewModelScope.launch(Dispatchers.IO) {
             context.get()?.let {
+                replicatorService.stopReplication()
                 DatabaseManager.getInstance(it).closeDatabases()
             }
         }

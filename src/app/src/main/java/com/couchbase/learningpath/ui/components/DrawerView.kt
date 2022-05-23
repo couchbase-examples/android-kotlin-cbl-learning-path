@@ -26,6 +26,7 @@ import com.couchbase.learningpath.ui.theme.LearningPathTheme
 sealed class DrawerMenu(val title: String, val route: String, val imageVector: ImageVector){
     object Home: DrawerMenu("Home", MainDestinations.PROJECT_LIST_ROUTE, Icons.Filled.Person)
     object Developer: DrawerMenu("Developer", MainDestinations.DEVELOPER_ROUTE, Icons.Filled.DeveloperMode)
+    object Replication: DrawerMenu("Replication", MainDestinations.REPLICATOR_ROUTE, Icons.Filled.Sync)
     object Logout: DrawerMenu("Logout", MainDestinations.LOGOUT_ROUTE, Icons.Filled.Logout)
 }
 
@@ -33,6 +34,7 @@ sealed class DrawerMenu(val title: String, val route: String, val imageVector: I
 private val menu = listOf(
     DrawerMenu.Home,
     DrawerMenu.Developer,
+    DrawerMenu.Replication,
     DrawerMenu.Logout)
 
 //renders the drawer for the overflow menu
