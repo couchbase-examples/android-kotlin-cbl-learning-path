@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 import com.couchbase.learningpath.data.KeyValueRepository
+import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.location.LocationRepository
 import com.couchbase.learningpath.data.project.ProjectRepository
 import com.couchbase.learningpath.services.AuthenticationService
@@ -16,6 +17,7 @@ class DevDatabaseInfoViewModel(
     private val userProfileRepository: KeyValueRepository,
     private val locationRepository: LocationRepository,
     private val projectRepository: ProjectRepository,
+    private val auditRepository: AuditRepository,
     authService: AuthenticationService
 ) : ViewModel() {
 
@@ -30,13 +32,14 @@ class DevDatabaseInfoViewModel(
     var numberOfUserProfiles = mutableStateOf(0)
     var numberOfLocations = mutableStateOf(0)
     var numberOfProjects = mutableStateOf(0)
-
+    var numberOfAudits = mutableStateOf(0)
     init {
         viewModelScope.launch {
             updateUserProfileInfo()
             updateUserProfileCount()
             updateLocationCount()
             updateProjectCount()
+            updateAuditCount()
         }
     }
 
@@ -78,6 +81,17 @@ class DevDatabaseInfoViewModel(
             if (projectCount > 0) {
                 withContext(Dispatchers.Main) {
                     numberOfProjects.value = projectCount
+                }
+            }
+        }
+    }
+
+    private suspend fun updateAuditCount() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val auditCount = auditRepository.count()
+            if (auditCount > 0) {
+                withContext(Dispatchers.Main) {
+                    numberOfAudits.value = auditCount
                 }
             }
         }

@@ -11,11 +11,17 @@ import com.couchbase.learningpath.models.Project
 @ExperimentalCoroutinesApi
 @ExperimentalSerializationApi
 interface ProjectRepository : Repository<Project> {
+    val databaseName: String
+
     suspend fun completeProject(projectId: String)
+
+    suspend fun get(documentId: String): Project
 
     //required because cblite queryChangeFlow method is marked experimental
     @ExperimentalCoroutinesApi
     fun getDocuments(team: String): Flow<List<Project>>
 
     suspend fun updateProjectLocation(projectId: String, location: Location)
+
+    suspend fun loadSampleData()
 }

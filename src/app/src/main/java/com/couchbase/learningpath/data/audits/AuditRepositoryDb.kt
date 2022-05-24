@@ -1,13 +1,13 @@
 package com.couchbase.learningpath.data.audits
 
 import android.content.Context
+import android.util.Log
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.AuditDao
 import com.couchbase.learningpath.services.AuthenticationService
-import com.couchbase.lite.MutableDocument
-import com.couchbase.lite.QueryChange
-import com.couchbase.lite.queryChangeFlow
+import com.couchbase.lite.*
+import com.couchbase.lite.Function
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -30,14 +30,21 @@ class AuditRepositoryDb(
     override fun getAuditsByProjectId(projectId: String): Flow<List<Audit>>? {
         try {
             val db = databaseResources.inventoryDatabase
+            val team = authenticationService.getCurrentUser().team
             db?.let  { database ->
-                val query = database.createQuery("SELECT * FROM _ AS item WHERE type=\"audit\" AND projectId=\"$projectId\"")
-                val flow = query
-                    .queryChangeFlow()
-                    .map { qc -> mapQueryChangeToAudit(qc)}
-                    .flowOn(Dispatchers.IO)
-                query.execute()
-                return flow
+                val query = database.createQuery("SELECT * FROM _ AS item WHERE type=\"audit\" AND projectId=\$auditProjectId AND team=\$auditTeam") // 1
+
+                val parameters = Parameters() // 3
+                parameters.setValue("auditProjectId", projectId) // 3
+                parameters.setValue("auditTeam", team) // 3
+                query.parameters = parameters // 3
+
+                val flow = query // 4
+                    .queryChangeFlow() // 5
+                    .map { qc -> mapQueryChangeToAudit(qc)} // 6
+                    .flowOn(Dispatchers.IO) // 7
+                query.execute() // 8
+                return flow // 9
             }
         } catch (e: Exception){
             android.util.Log.e(e.message, e.stackTraceToString())
@@ -45,7 +52,7 @@ class AuditRepositoryDb(
         return null
     }
 
-    override suspend fun getAudit(projectId: String, auditId: String): Audit {
+    override suspend fun get(projectId: String, auditId: String): Audit {
         return withContext(Dispatchers.IO){
             try {
                 val db = databaseResources.inventoryDatabase
@@ -65,6 +72,7 @@ class AuditRepositoryDb(
             return@withContext Audit(
                 projectId = projectId,
                 auditId = UUID.randomUUID().toString(),
+                type = "audit",
                 createdOn = Date(),
                 modifiedOn =  Date(),
                 createdBy = user.username,
@@ -73,7 +81,7 @@ class AuditRepositoryDb(
         }
     }
 
-    override suspend fun saveAudit(audit: Audit) {
+    override suspend fun save(audit: Audit) {
         return withContext(Dispatchers.IO){
             try {
                 val db = databaseResources.inventoryDatabase
@@ -88,7 +96,7 @@ class AuditRepositoryDb(
         }
     }
 
-    override suspend fun deleteAudit(auditId: String): Boolean {
+    override suspend fun delete(auditId: String): Boolean {
         return withContext(Dispatchers.IO) {
             var result = false
             try {
@@ -104,6 +112,23 @@ class AuditRepositoryDb(
                 android.util.Log.e(e.message, e.stackTraceToString())
             }
             return@withContext result
+        }
+    }
+
+    override suspend fun count(): Int {
+        return withContext(Dispatchers.IO) {
+            var count = 0
+            try {
+                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                db?.let { database ->
+                    val query =  database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE type=\"audit\"") // 1
+                    val results = query.execute().allResults() // 2
+                    count = results[0].getInt("count") // 3
+                }
+            } catch (e: Exception) {
+                Log.e(e.message, e.stackTraceToString())
+            }
+            return@withContext count
         }
     }
 

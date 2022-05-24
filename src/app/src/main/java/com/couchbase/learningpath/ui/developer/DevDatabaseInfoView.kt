@@ -44,6 +44,7 @@ fun DevDatabaseInfoView(
                     viewModel.numberOfUserProfiles.value,
                     viewModel.numberOfLocations.value,
                     viewModel.numberOfProjects.value,
+                    viewModel.numberOfAudits.value,
                 )
             }
         }
@@ -61,6 +62,7 @@ fun DeveloperInfoWidget(
     numberOfUserProfiles: Int,
     numberOfLocations: Int,
     numberOfProjects: Int,
+    numberOfAudits: Int
 ) {
     LazyColumn(
         modifier = Modifier
@@ -179,6 +181,27 @@ fun DeveloperInfoWidget(
                 modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
             )
         }
+        item {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Audit Count", fontWeight = FontWeight.Bold)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("$numberOfAudits")
+            }
+            Divider(
+                color = Color.LightGray,
+                thickness = 2.dp,
+                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
+            )
+        }
         locationDatabaseLocation()?.let {
             item {
                 Row(
@@ -263,6 +286,7 @@ fun DeveloperInfoWidgetPreview() {
     val numberOfDocuments = 1000000000
     val numberOfLocations = 1000000000
     val numberOfProjects = 1000000000
+    val numberOfAudits = 100000
 
     DeveloperInfoWidget(
         inventoryDatabaseName = inventoryDatabaseName,
@@ -273,6 +297,7 @@ fun DeveloperInfoWidgetPreview() {
         currentTeam = currentTeam,
         numberOfUserProfiles = numberOfDocuments,
         numberOfLocations = numberOfLocations,
-        numberOfProjects = numberOfProjects
+        numberOfProjects = numberOfProjects,
+        numberOfAudits = numberOfAudits
     )
 }

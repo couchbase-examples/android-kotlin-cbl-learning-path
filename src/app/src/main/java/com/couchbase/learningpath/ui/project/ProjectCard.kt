@@ -1,5 +1,6 @@
 package com.couchbase.learningpath.ui.project
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.Card
@@ -15,11 +16,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.Base64
 
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 
+@SuppressLint("NewApi")
 @ExperimentalMaterialApi
 @Composable
 fun ProjectCard(project: Project,
@@ -39,7 +42,7 @@ fun ProjectCard(project: Project,
             .fillMaxWidth(),
         elevation = 8.dp,
         onClick = {
-            val projectJson = project.toJson()
+            val projectJson = Base64.getEncoder().encodeToString(project.toJson().toByteArray())
             onProjectSelected(projectJson)
         }
     ) {

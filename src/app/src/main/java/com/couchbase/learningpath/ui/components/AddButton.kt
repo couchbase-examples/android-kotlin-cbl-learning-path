@@ -30,6 +30,24 @@ fun AddButton(onClick: (String) -> Unit) {
     }
 }
 
+
+@Composable
+fun AddSubItemButton(onNavClick: () -> Unit) {
+    FloatingActionButton(
+        backgroundColor = MaterialTheme.colors.primary,
+        elevation = FloatingActionButtonDefaults.elevation(),
+        shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
+        onClick = onNavClick
+        )
+    {
+        Icon(
+            Icons.Default.Add,
+            contentDescription = "add",
+            tint = Color.White
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun AddButtonPreview() {

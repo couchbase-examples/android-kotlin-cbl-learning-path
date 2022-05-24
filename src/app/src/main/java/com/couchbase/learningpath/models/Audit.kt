@@ -1,15 +1,27 @@
 package com.couchbase.learningpath.models
 
+import androidx.annotation.Keep
+import com.couchbase.learningpath.util.DateSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.*
 
+@Keep
+@Serializable
+@ExperimentalSerializationApi
 data class AuditDao(var item: Audit)
 
+@Keep
+@Serializable
+@ExperimentalSerializationApi
 data class Audit (
     var auditId: String = "",
     var projectId: String = "",
     var name: String = "",
     var count: Int = 0,
-    var type: String = "audit",
+    var type: String = "",
     var notes: String = "",
     var partNumber: String = "",
     var pictureMetadata: String? = null,
@@ -17,6 +29,13 @@ data class Audit (
     var team: String = "",
     var createdBy: String = "",
     var modifiedBy: String = "",
+    @Serializable(with = DateSerializer::class)
     var createdOn: Date? = null,
+    @Serializable(with = DateSerializer::class)
     var modifiedOn: Date? = null
 )
+{
+    fun toJson(): String {
+        return Json.encodeToString(this)
+    }
+}

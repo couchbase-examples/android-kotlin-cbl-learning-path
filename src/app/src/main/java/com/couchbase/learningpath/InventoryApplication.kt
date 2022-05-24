@@ -12,6 +12,8 @@ import org.koin.dsl.module
 import java.lang.ref.WeakReference
 
 import com.couchbase.learningpath.data.KeyValueRepository
+import com.couchbase.learningpath.data.audits.AuditRepository
+import com.couchbase.learningpath.data.audits.AuditRepositoryDb
 import com.couchbase.learningpath.data.location.LocationRepository
 import com.couchbase.learningpath.data.location.LocationRepositoryDb
 import com.couchbase.learningpath.data.project.ProjectRepository
@@ -22,6 +24,8 @@ import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.learningpath.services.ReplicatorService
 import com.couchbase.learningpath.services.ReplicatorServiceDb
 import com.couchbase.learningpath.ui.MainViewModel
+import com.couchbase.learningpath.ui.audit.AuditEditorViewModel
+import com.couchbase.learningpath.ui.audit.AuditListViewModel
 import com.couchbase.learningpath.ui.developer.DevDatabaseInfoViewModel
 import com.couchbase.learningpath.ui.developer.DeveloperViewModel
 import com.couchbase.learningpath.ui.developer.ReplicatorConfigViewModel
@@ -69,14 +73,19 @@ class InventoryApplication
             single { UserProfileRepository(this@InventoryApplication) as KeyValueRepository }
             single { LocationRepositoryDb(this@InventoryApplication) as LocationRepository }
             single { ProjectRepositoryDb(this@InventoryApplication, get(), get()) as ProjectRepository }
+            single { AuditRepositoryDb(this@InventoryApplication, get()) as AuditRepository }
+
             viewModel { MainViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
             viewModel { LoginViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
             viewModel { ProjectListViewModel(get(), get()) }
             viewModel { ProjectEditorViewModel(get()) }
+            viewModel { AuditListViewModel(get())}
+            viewModel { AuditEditorViewModel(get())}
+
             viewModel { LocationSelectionViewModel(get(), get()) }
             viewModel { UserProfileViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
             viewModel { DeveloperViewModel(get()) }
-            viewModel { DevDatabaseInfoViewModel(get(), get(), get(), get()) }
+            viewModel { DevDatabaseInfoViewModel(get(), get(), get(), get(), get()) }
             viewModel { ReplicatorViewModel(get())}
             viewModel { ReplicatorConfigViewModel(get())}
 

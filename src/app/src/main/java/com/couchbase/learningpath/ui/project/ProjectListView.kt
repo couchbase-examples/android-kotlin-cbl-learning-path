@@ -33,8 +33,9 @@ fun ProjectListView(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     navigateToProjectEditor: (String) -> Unit,
+    navigateToAuditListByProject: (String) -> Unit,
     viewModel: ProjectListViewModel) {
-    LearningPathTheme() {
+    LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
             topBar = {
@@ -53,12 +54,11 @@ fun ProjectListView(
                 val projectList by viewModel.repositoryFlow.collectAsState(initial = listOf())
 
                 //we will handle this in a future tutorial
-                val onProjectSelected: (String) -> Unit = { _ : String -> }
 
                 ProjectList(
                     items = projectList,
                     isLoading = viewModel.isLoading.value,
-                    onProjectSelected = onProjectSelected,
+                    onProjectSelected = navigateToAuditListByProject,
                     onEditChange = navigateToProjectEditor,
                     onDeleteChange = viewModel.deleteProject,
                     scaffoldState =  scaffoldState,

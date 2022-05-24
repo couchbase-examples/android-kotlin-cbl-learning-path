@@ -31,6 +31,9 @@ class DatabaseManager private constructor(private val context: Context) {
     private val cityCountryIndexName = "idxCityCountryType"
     private val countryAttributeName = "city"
 
+    private val auditIndexName = "idxAudit"
+    private val projectIdAttributeName = "projectId"
+
     var currentInventoryDatabaseName = "inventory"
 
     init {
@@ -96,6 +99,7 @@ class DatabaseManager private constructor(private val context: Context) {
             createTeamTypeIndex()
             createCityTypeIndex()
             createCityCountryTypeIndex()
+            createAuditIndex()
 
         } catch (e: Exception) {
             android.util.Log.e(e.message, e.stackTraceToString())
@@ -157,6 +161,29 @@ class DatabaseManager private constructor(private val context: Context) {
                             ValueIndexItem.property(typeAttributeName), // 5
                             ValueIndexItem.property(cityAttributeName), // 5
                             ValueIndexItem.property(countryAttributeName)) // 5
+                    )
+                }
+            }
+        } catch (e: Exception){
+            android.util.Log.e(e.message, e.stackTraceToString())
+        }
+    }
+
+    private fun createAuditIndex(){
+        try {
+            inventoryDatabase?.let {  // 1
+                if (!it.indexes.contains(auditIndexName)) {
+                    // create index for Audits to return documents with
+                    // the type attribute set to audit, the projectId filtered
+                    // by value sent in using equals, and the team attribute filtered
+                    // by the value sent in using equals
+
+                    it.createIndex( // 3
+                        auditIndexName, // 4
+                        IndexBuilder.valueIndex(   // 5
+                            ValueIndexItem.property(typeAttributeName), // 5
+                            ValueIndexItem.property(projectIdAttributeName), // 5
+                            ValueIndexItem.property(teamAttributeName)) // 5
                     )
                 }
             }
