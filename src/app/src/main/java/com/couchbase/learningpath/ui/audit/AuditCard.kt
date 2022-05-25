@@ -154,6 +154,7 @@ fun AuditCard(audit: Audit,
                         Text(
                             modifier = Modifier.padding(start = 10.dp),
                             overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
                             text = it,
                             style = MaterialTheme.typography.caption,
                             color = MaterialTheme.colors.onSurface

@@ -19,6 +19,7 @@ import java.util.*
 
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.data.location.LocationRepository
+import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.Location
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.ProjectDao
@@ -34,6 +35,7 @@ class ProjectRepositoryDb(
     private val locationRepository: LocationRepository
 ) : ProjectRepository {
     private val projectType = "project"
+    private val auditType = "audit"
 
     override val databaseName: String
         get() = DatabaseManager.getInstance(context).currentInventoryDatabaseName
@@ -224,9 +226,10 @@ class ProjectRepositoryDb(
                         // https://docs.couchbase.com/couchbase-lite/current/android/document.html#batch-operations
                         database.inBatch(UnitOfWork {   // 1
                             for (count in 1..10) {      // 2
+                                val projectId = UUID.randomUUID().toString()
                                 val document = Project(  //3
-                                    projectId = UUID.randomUUID().toString(),
-                                    name = "Audit ${(1..1000000).random()}",
+                                    projectId = projectId,
+                                    name = "Project ${(1..1000000).random()}",
                                     description = descriptionService.randomDescription(),
                                     isComplete = false,
                                     type = projectType,
@@ -244,6 +247,27 @@ class ProjectRepositoryDb(
                                 val json = Json.encodeToString(document) // 4
                                 val doc = MutableDocument(document.projectId, json) // 5
                                 database.save(doc) // 6
+
+                                //create random audit items per project
+                                for (auditCount in 1..10){
+                                    val auditDocument = Audit(
+                                        auditId = UUID.randomUUID().toString(),
+                                        projectId = projectId,
+                                        name = "Widget Item ${(1..1000000).random()}",
+                                        count = (1..1000).random(),
+                                        type = auditType,
+                                        notes = descriptionService.randomDescription(),
+                                        partNumber = (1..1000000).random().toString(),
+                                        team = currentUser.team,
+                                        createdBy = currentUser.username,
+                                        modifiedBy = currentUser.username,
+                                        createdOn = Date(),
+                                        modifiedOn = Date()
+                                    )
+                                    val auditJson = Json.encodeToString(auditDocument)
+                                    val auditDoc = MutableDocument(auditDocument.auditId, auditJson)
+                                    database.save(auditDoc)
+                                }
                             }
                         })
                     }
