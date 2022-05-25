@@ -74,18 +74,6 @@ class DatabaseManager private constructor(private val context: Context) {
     ) {
         try {
             val dbConfig = DatabaseConfigurationFactory.create(context.filesDir.toString())
-            // create the locations database if it doesn't already exist
-            if (!Database.exists(locationDatabaseName, context.filesDir)) {
-                unzip(startingLocationFileName, File(context.filesDir.toString()))
-
-                // copy the location database to the project database
-                // never open the database directly as this will cause issues
-                // with sync
-                val locationDbFile =
-                    File(String.format("%s/%s", context.filesDir, ("${startingLocationDatabaseName}.cblite2")))
-                Database.copy(locationDbFile, locationDatabaseName, dbConfig)
-            }
-            locationDatabase = Database(locationDatabaseName, dbConfig)
 
             // create or open a database to share between team members to store
             // projects, assets, and user profiles
@@ -94,8 +82,13 @@ class DatabaseManager private constructor(private val context: Context) {
             currentInventoryDatabaseName = teamName.plus("_").plus(defaultInventoryDatabaseName)
             inventoryDatabase = Database(currentInventoryDatabaseName, dbConfig)
 
+            //setup the location Database
+            setupLocationDatabase(dbConfig)
+
+            //create indexes for database queries
             createTypeIndex(locationDatabase)
             createTypeIndex(inventoryDatabase)
+
             createTeamTypeIndex()
             createCityTypeIndex()
             createCityCountryTypeIndex()
@@ -104,6 +97,27 @@ class DatabaseManager private constructor(private val context: Context) {
         } catch (e: Exception) {
             android.util.Log.e(e.message, e.stackTraceToString())
         }
+    }
+
+    private fun setupLocationDatabase(dbConfig: DatabaseConfiguration) {
+        // create the locations database if it doesn't already exist
+        if (!Database.exists(locationDatabaseName, context.filesDir)) {
+            unzip(startingLocationFileName, File(context.filesDir.toString()))
+
+            // copy the location database to the project database
+            // never open the database directly as this will cause issues
+            // with sync
+            val locationDbFile =
+                File(
+                    String.format(
+                        "%s/%s",
+                        context.filesDir,
+                        ("${startingLocationDatabaseName}.cblite2")
+                    )
+                )
+            Database.copy(locationDbFile, locationDatabaseName, dbConfig)
+        }
+        locationDatabase = Database(locationDatabaseName, dbConfig)
     }
 
     private fun createTeamTypeIndex(){

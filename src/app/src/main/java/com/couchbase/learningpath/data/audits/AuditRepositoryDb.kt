@@ -34,9 +34,9 @@ class AuditRepositoryDb(
             db?.let  { database ->
                 val query = database.createQuery("SELECT * FROM _ AS item WHERE type=\"audit\" AND projectId=\$auditProjectId AND team=\$auditTeam") // 1
 
-                val parameters = Parameters() // 3
-                parameters.setValue("auditProjectId", projectId) // 3
-                parameters.setValue("auditTeam", team) // 3
+                val parameters = Parameters() // 2
+                parameters.setValue("auditProjectId", projectId) // 2
+                parameters.setValue("auditTeam", team) // 2
                 query.parameters = parameters // 3
 
                 val flow = query // 4
