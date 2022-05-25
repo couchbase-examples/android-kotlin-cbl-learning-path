@@ -14,7 +14,7 @@ import java.net.URI
 
 @InternalCoroutinesApi
 @OptIn( ExperimentalCoroutinesApi::class)
-class ReplicatorServiceDb (
+class ReplicatorServiceDb  (
     private val authenticationService: AuthenticationService,
     private val context: Context) : ReplicatorService
 {
@@ -64,27 +64,27 @@ class ReplicatorServiceDb (
                     replicatorManager?.replicator?.status?.activityLevel == ReplicatorActivityLevel.OFFLINE)
         ){
             replicatorManager?.let { replicatorResources ->
-                val urlEndPoint = URLEndpoint(URI(replicationConfig.endpointUrl))
-                replicatorResources.replicatorConfiguration = ReplicatorConfiguration(replicatorResources.database, urlEndPoint)
-                replicatorResources.replicatorConfiguration?.let { replicatorConfiguration ->
-                    replicatorConfiguration.isContinuous = replicationConfig.continuous
+                val urlEndPoint = URLEndpoint(URI(replicationConfig.endpointUrl)) // 1
+                replicatorResources.replicatorConfiguration = ReplicatorConfiguration(replicatorResources.database, urlEndPoint) // 2
+                replicatorResources.replicatorConfiguration?.let { replicatorConfiguration -> //3
+                    replicatorConfiguration.isContinuous = replicationConfig.continuous // 4
 
-                    when (replicationConfig.replicatorType) {
-                        "PULL" -> replicatorConfiguration.type = ReplicatorType.PULL
-                        "PUSH" -> replicatorConfiguration.type = ReplicatorType.PUSH
-                        else -> replicatorConfiguration.type =  ReplicatorType.PUSH_AND_PULL
+                    when (replicationConfig.replicatorType) { // 5
+                        "PULL" -> replicatorConfiguration.type = ReplicatorType.PULL // 5
+                        "PUSH" -> replicatorConfiguration.type = ReplicatorType.PUSH // 5
+                        else -> replicatorConfiguration.type =  ReplicatorType.PUSH_AND_PULL // 5
                     }
-                    val authenticator = BasicAuthenticator(
-                        replicationConfig.username,
-                        replicationConfig.password.toCharArray()
+                    val authenticator = BasicAuthenticator( // 6
+                        replicationConfig.username, // 6
+                        replicationConfig.password.toCharArray() // 6
                     )
-                    replicatorConfiguration.setAuthenticator(authenticator)
-                    replicatorResources.replicator =
-                        Replicator(replicatorManager?.replicatorConfiguration!!)
+                    replicatorConfiguration.setAuthenticator(authenticator) //6
+                    replicatorResources.replicator =                            // 7
+                        Replicator(replicatorManager?.replicatorConfiguration!!) //7
                 }
 
-                canStartReplication.value = true
-                this.replicationConfig.value = replicationConfig
+                canStartReplication.value = true //8
+                this.replicationConfig.value = replicationConfig //9
             }
         } else {
             throw Exception("Error: can't update Replicator Config because replication is running")
