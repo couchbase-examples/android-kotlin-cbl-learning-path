@@ -1,7 +1,6 @@
 package com.couchbase.learningpath.ui.audit
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +27,7 @@ class AuditListViewModel(
 
     // create a flow to return the results dynamically as needed - more information on CoRoutine Flows can be found at
     // https://developer.android.com/kotlin/flow
-    var auditFlow: Flow<List<Audit>>? = null
+    private var _auditFlow: Flow<List<Audit>>? = null
 
     private val _audits: MutableLiveData<List<Audit>> by lazy {
         MutableLiveData<List<Audit>>()
@@ -37,12 +36,12 @@ class AuditListViewModel(
 
     @SuppressLint("NewApi")
     fun getAudits() {
-        auditFlow = null
+        _auditFlow = null
         var json = String(Base64.getDecoder().decode(projectJson))
         project = Json.decodeFromString<Project>(json)
         viewModelScope.launch(Dispatchers.IO) {
-            auditFlow = auditRepository.getAuditsByProjectId(project.projectId)
-            auditFlow?.let {  f ->
+            _auditFlow = auditRepository.getAuditsByProjectId(project.projectId)
+            _auditFlow?.let { f ->
                 f.collect {
                     _audits.postValue(it)
                 }
