@@ -16,8 +16,8 @@ class DatabaseManager private constructor(private val context: Context) {
 
     private val defaultInventoryDatabaseName = "inventory"
     private val warehouseDatabaseName = "warehouse"
-    private val startingWarehouseFileName = "startingWarehouse.zip"
-    private val startingWarehouseDatabaseName = "startingWarehouse"
+    private val startingWarehouseFileName = "startingWarehouses.zip"
+    private val startingWarehouseDatabaseName = "startingWarehouses"
 
     private val documentTypeIndexName = "idxDocumentType"
     private val documentTypeAttributeName = "documentType"

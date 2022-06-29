@@ -8,7 +8,7 @@
 # next must run script to create items
 # python3 item_gen.py
 #
-# note taking this script can take a while to insert 100,000 records
+# note taking this script can take a while to create 100,000 records
 #
 
 filename="beer_items.json" #data file

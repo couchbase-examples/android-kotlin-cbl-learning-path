@@ -253,11 +253,9 @@ class ProjectRepositoryDb(
                                     val auditDocument = Audit(
                                         auditId = UUID.randomUUID().toString(),
                                         projectId = projectId,
-                                        name = "Widget Item ${(1..1000000).random()}",
                                         count = (1..1000).random(),
                                         documentType = auditDocumentType,
                                         notes = descriptionService.randomDescription(),
-                                        partNumber = (1..1000000).random().toString(),
                                         team = currentUser.team,
                                         createdBy = currentUser.username,
                                         modifiedBy = currentUser.username,
