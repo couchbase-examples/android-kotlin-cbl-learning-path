@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
+
 package com.couchbase.learningpath.ui.project
 
 import androidx.compose.runtime.mutableStateOf
@@ -11,16 +13,18 @@ import java.util.*
 
 import com.couchbase.learningpath.data.project.ProjectRepository
 import com.couchbase.learningpath.models.Project
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.serialization.ExperimentalSerializationApi
 
 class ProjectEditorViewModel(
     private val repository: ProjectRepository,
 ) : ViewModel() {
 
-    private val defaultLocationText: String = "No Location Selected"
+    private val defaultWarehouseText: String = "No Warehouse Selected"
     var projectState = mutableStateOf<Project?>(null)
 
     val dueDateState = mutableStateOf("Select Due Date")
-    val locationSelectionState = mutableStateOf(defaultLocationText)
+    val warehouseSelectionState = mutableStateOf(defaultWarehouseText)
     val errorMessageState = mutableStateOf("")
     var navigateUpCallback: () -> Unit  = { }
     var navigateToListSelection: (String) -> Unit = { }
@@ -34,12 +38,12 @@ class ProjectEditorViewModel(
                     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.US)
                     dueDateState.value = formatter.format(dueDate)
                 }
-                if (project.location != null) {
-                    project.location?.let {
-                        locationSelectionState.value = it.name
+                if (project.warehouse != null) {
+                    project.warehouse?.let {
+                        warehouseSelectionState.value = it.name
                     }
                 } else {
-                    locationSelectionState.value = defaultLocationText
+                    warehouseSelectionState.value = defaultWarehouseText
                 }
             }
         }

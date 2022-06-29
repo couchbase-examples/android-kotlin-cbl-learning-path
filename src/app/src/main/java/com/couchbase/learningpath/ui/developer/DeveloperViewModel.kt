@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.couchbase.learningpath.ui.developer
 
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 import com.couchbase.learningpath.data.project.ProjectRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class DeveloperViewModel(
     private val projectRepository: ProjectRepository,

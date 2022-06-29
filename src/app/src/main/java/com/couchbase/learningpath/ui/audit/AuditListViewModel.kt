@@ -37,7 +37,7 @@ class AuditListViewModel(
     @SuppressLint("NewApi")
     fun getAudits() {
         _auditFlow = null
-        var json = String(Base64.getDecoder().decode(projectJson))
+        val json = String(Base64.getDecoder().decode(projectJson))
         project = Json.decodeFromString<Project>(json)
         viewModelScope.launch(Dispatchers.IO) {
             _auditFlow = auditRepository.getAuditsByProjectId(project.projectId)

@@ -41,7 +41,7 @@ class AuditEditorViewModel(
                 }
             } else {
                 audit.value = Json.decodeFromString<Audit>(auditJson)
-                audit?.value?.let {
+                audit.value?.let {
                     count.value = it.count.toString()
                 }
             }
@@ -82,15 +82,12 @@ class AuditEditorViewModel(
     val onSaveAudit: () -> Unit = {
         viewModelScope.launch {
             if (projectId.value != "") {
-                audit?.value?.let {
+                audit.value?.let {
                     //clean up data - remove spaces at the end of strings
                     it.name = it.name.trim()
-                    it.notes?.let { notes ->
-                        it.notes = notes.trim()
-                    }
-                    it.partNumber?.let { partNumber ->
-                        it.partNumber = partNumber.trim()
-                    }
+                    it.notes = it.notes.trim()
+                    it.partNumber = it.partNumber.trim()
+
                     //add in the project of the audit
                     it.projectId = projectId.value
                     auditRepository.save(it)

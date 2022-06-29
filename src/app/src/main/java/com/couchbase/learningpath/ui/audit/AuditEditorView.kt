@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.couchbase.learningpath.ui.audit
 
 import androidx.compose.runtime.Composable
@@ -17,6 +19,7 @@ import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.ui.components.HorizontalDottedProgressBar
 import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
+import kotlinx.serialization.ExperimentalSerializationApi
 
 @Composable
 fun AuditEditorView(

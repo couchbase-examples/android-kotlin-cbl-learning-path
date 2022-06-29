@@ -21,11 +21,7 @@ class ReplicatorViewModel(private val replicatorService: ReplicatorService)
     val replicationStatus =  replicatorService.replicationStatus
     val isButtonActive = replicatorService.canStartReplication
 
-    var replicatorFlow: Flow<ReplicatorChange>? = null
-
-    fun updateStatus() {
-        replicatorService.calculateReplicationStatus()
-    }
+    private var replicatorFlow: Flow<ReplicatorChange>? = null
 
     fun clearLogs() {
         logMessages.clear()

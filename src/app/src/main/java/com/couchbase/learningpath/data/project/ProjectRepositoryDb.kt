@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.couchbase.learningpath.data.DatabaseManager
-import com.couchbase.learningpath.data.location.LocationRepository
+import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.models.Audit
-import com.couchbase.learningpath.models.Location
+import com.couchbase.learningpath.models.Warehouse
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.ProjectDao
 import com.couchbase.learningpath.services.AuthenticationService
@@ -32,10 +32,10 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class ProjectRepositoryDb(
     private val context: Context,
     private val authenticationService: AuthenticationService,
-    private val locationRepository: LocationRepository
+    private val warehouseRepository: WarehouseRepository
 ) : ProjectRepository {
-    private val projectType = "project"
-    private val auditType = "audit"
+    private val projectDocumentType = "project"
+    private val auditDocumentType = "audit"
 
     override val databaseName: String
         get() = DatabaseManager.getInstance(context).currentInventoryDatabaseName
@@ -54,7 +54,7 @@ class ProjectRepositoryDb(
                     .select(SelectResult.all()) // 2
                     .from(DataSource.database(database).`as`("item")) // 3
                     .where( //4
-                        Expression.property("type").equalTo(Expression.string(projectType)) // 4
+                        Expression.property("documentType").equalTo(Expression.string(projectDocumentType)) // 4
                             .and(Expression.property("team").equalTo(Expression.string(team)))
                     ) //4
 
@@ -125,18 +125,18 @@ class ProjectRepositoryDb(
                         modifiedOn = Date(),
                         team = team,
                         dueDate = dueDate,
-                        type = "project"
+                        documentType = "project"
                     )
                     )
         }
     }
 
-    override suspend fun updateProjectLocation(projectId: String, location: Location) {
+    override suspend fun updateProjectWarehouse(projectId: String, warehouse: Warehouse) {
         return withContext(Dispatchers.IO) {
             try {
                 val db = DatabaseManager.getInstance(context).inventoryDatabase
                 val project = get(projectId)
-                project.location = location
+                project.warehouse = warehouse
                 db?.let { database ->
                     val json = Json.encodeToString(project)
                     val doc = MutableDocument(project.projectId, json)
@@ -199,7 +199,7 @@ class ProjectRepositoryDb(
                         ) // 2
                         .from(DataSource.database(database)) //3
                         .where(
-                            Expression.property("type").equalTo(Expression.string(projectType))
+                            Expression.property("documentType").equalTo(Expression.string(projectDocumentType))
                         ) // 4
                     val results = query.execute().allResults() // 5
                     count = results[0].getInt("count") // 6
@@ -216,9 +216,9 @@ class ProjectRepositoryDb(
             try {
                 val currentUser = authenticationService.getCurrentUser()
                 val descriptionService = RandomDescriptionService()
-                val locations = locationRepository.get()
-                val locationsCount = locations.count() - 1
-                if (locationsCount > 0) {
+                val warehouses = warehouseRepository.get()
+                val warehouseCount = warehouses.count() - 1
+                if (warehouseCount > 0) {
                     val db = DatabaseManager.getInstance(context).inventoryDatabase
                     db?.let { database ->
                         // batch operations for saving multiple documents
@@ -232,7 +232,7 @@ class ProjectRepositoryDb(
                                     name = "Project ${(1..1000000).random()}",
                                     description = descriptionService.randomDescription(),
                                     isComplete = false,
-                                    type = projectType,
+                                    documentType = projectDocumentType,
                                     dueDate = SimpleDateFormat(
                                         "MM-dd-yyyy",
                                         Locale.US
@@ -242,7 +242,7 @@ class ProjectRepositoryDb(
                                     modifiedBy = currentUser.username,
                                     createdOn = Date(),
                                     modifiedOn = Date(),
-                                    location = locations[(0..locationsCount).random()]
+                                    warehouse = warehouses[(0..warehouseCount).random()]
                                 )
                                 val json = Json.encodeToString(document) // 4
                                 val doc = MutableDocument(document.projectId, json) // 5
@@ -255,7 +255,7 @@ class ProjectRepositoryDb(
                                         projectId = projectId,
                                         name = "Widget Item ${(1..1000000).random()}",
                                         count = (1..1000).random(),
-                                        type = auditType,
+                                        documentType = auditDocumentType,
                                         notes = descriptionService.randomDescription(),
                                         partNumber = (1..1000000).random().toString(),
                                         team = currentUser.team,

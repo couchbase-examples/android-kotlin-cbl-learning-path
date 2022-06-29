@@ -16,7 +16,7 @@ import java.net.URI
 @OptIn( ExperimentalCoroutinesApi::class)
 class ReplicatorServiceDb  (
     private val authenticationService: AuthenticationService,
-    private val context: Context) : ReplicatorService
+    val context: Context) : ReplicatorService
 {
     private val databaseManager = DatabaseManager.getInstance(context)
     private var replicatorManager : ReplicatorManager? = null

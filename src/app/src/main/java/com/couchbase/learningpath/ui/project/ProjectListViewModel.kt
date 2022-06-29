@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.couchbase.learningpath.ui.project
 
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +13,7 @@ import com.couchbase.learningpath.data.project.ProjectRepository
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.services.AuthenticationService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalCoroutinesApi
 class ProjectListViewModel(

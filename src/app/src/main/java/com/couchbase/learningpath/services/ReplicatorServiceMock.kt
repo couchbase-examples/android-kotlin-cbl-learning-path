@@ -3,12 +3,10 @@ package com.couchbase.learningpath.services
 import androidx.compose.runtime.mutableStateOf
 import com.couchbase.learningpath.data.replicator.ReplicatorConfig
 import com.couchbase.lite.ReplicatorChange
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @InternalCoroutinesApi
-@OptIn( ExperimentalCoroutinesApi::class)
 class ReplicatorServiceMock : ReplicatorService {
     //track replication state
     override var isReplicationStarted = false

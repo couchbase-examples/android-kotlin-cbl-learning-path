@@ -13,11 +13,11 @@ import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.services.ReplicatorService
 
-class LoginViewModel (
+class LoginViewModel(
     private val authenticationService: AuthenticationService,
     private val replicatorService: ReplicatorService,
-    private val context: WeakReference<Context>)
-    : ViewModel() {
+    private val context: WeakReference<Context>
+) : ViewModel() {
 
     private val _username = MutableLiveData("")
     val username: LiveData<String> = _username
@@ -36,20 +36,19 @@ class LoginViewModel (
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
-    fun login () : Boolean {
+    fun login(): Boolean {
         context.get()?.let { itContext ->
             _username.value?.let { uname ->
                 _password.value?.let { pwd ->
                     if (authenticationService.authenticatedUser(username = uname, password = pwd)) {
                         _isError.value = false
-                        authenticationService.getCurrentUser()?.let { user ->
-                            viewModelScope.launch(Dispatchers.IO) {
-                                //initialize database if needed
-                                DatabaseManager.getInstance(itContext).initializeDatabases(user)
-                                replicatorService.updateAuthentication(isReset = false)
-                            }
-                            return true
+                        val currentUser = authenticationService.getCurrentUser()
+                        viewModelScope.launch(Dispatchers.IO) {
+                            //initialize database if needed
+                            DatabaseManager.getInstance(itContext).initializeDatabases(currentUser)
+                            replicatorService.updateAuthentication(isReset = false)
                         }
+                        return true
                     }
                 }
             }

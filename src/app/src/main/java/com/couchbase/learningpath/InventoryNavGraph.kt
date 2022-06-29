@@ -105,7 +105,7 @@ fun InventoryNavGraph(
         }
 
         composable(MainDestinations.AUDIT_LIST_ROUTE_PATH){ backstackEntry ->
-            var projectJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_LIST_KEY_ID)
+            val projectJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_LIST_KEY_ID)
             projectJson?.let {
                 val viewModel = getViewModel<AuditListViewModel>()
                 viewModel.projectJson = it
@@ -124,8 +124,8 @@ fun InventoryNavGraph(
             var projectId = ""
             var auditJson = "create"
 
-            var argProjectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
-            var argAuditJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_EDITOR_KEY_ID )
+            val argProjectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
+            val argAuditJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_EDITOR_KEY_ID )
 
             argProjectId?.let {
                 projectId = it
@@ -144,9 +144,9 @@ fun InventoryNavGraph(
         composable(MainDestinations.LOCATION_ROUTE_PATH) {  backstackEntry ->
             val projectId = backstackEntry.arguments?.getString(MainDestinations.LOCATION_LIST_KEY_ID)
             projectId?.let {
-                val viewModel = getViewModel<LocationSelectionViewModel>()
+                val viewModel = getViewModel<WarehouseSelectionViewModel>()
                 viewModel.projectId(it)
-                LocationSelectionView(
+                WarehouseSelectionView(
                     viewModel = viewModel,
                     navigateUp = actions.upPress
                 )

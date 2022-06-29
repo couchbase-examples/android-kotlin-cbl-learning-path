@@ -12,15 +12,15 @@ import java.util.zip.ZipInputStream
 class DatabaseManager private constructor(private val context: Context) {
 
     var inventoryDatabase: Database? = null
-    var locationDatabase: Database? = null
+    var warehouseDatabase: Database? = null
 
     private val defaultInventoryDatabaseName = "inventory"
-    private val locationDatabaseName = "locations"
-    private val startingLocationFileName = "startinglocations.zip"
-    private val startingLocationDatabaseName = "startinglocations"
+    private val warehouseDatabaseName = "warehouse"
+    private val startingWarehouseFileName = "startingWarehouse.zip"
+    private val startingWarehouseDatabaseName = "startingWarehouse"
 
-    private val typeIndexName = "idxType"
-    private val typeAttributeName = "type"
+    private val documentTypeIndexName = "idxDocumentType"
+    private val documentTypeAttributeName = "documentType"
 
     private val teamIndexName = "idxTeam"
     private val teamAttributeName = "team"
@@ -28,8 +28,8 @@ class DatabaseManager private constructor(private val context: Context) {
     private val cityIndexName = "idxCityType"
     private val cityAttributeName = "city"
 
-    private val cityCountryIndexName = "idxCityCountryType"
-    private val countryAttributeName = "city"
+    private val cityStateIndexName = "idxCityStateType"
+    private val stateAttributeName = "state"
 
     private val auditIndexName = "idxAudit"
     private val projectIdAttributeName = "projectId"
@@ -47,14 +47,14 @@ class DatabaseManager private constructor(private val context: Context) {
 
     fun dispose() {
         inventoryDatabase?.close()
-        locationDatabase?.close()
+        warehouseDatabase?.close()
     }
 
     fun deleteDatabases() {
         try {
             closeDatabases()
             Database.delete(currentInventoryDatabaseName, context.filesDir)
-            Database.delete(locationDatabaseName, context.filesDir)
+            Database.delete(warehouseDatabaseName, context.filesDir)
         } catch (e: Exception) {
             android.util.Log.e(e.message, e.stackTraceToString())
         }
@@ -63,7 +63,7 @@ class DatabaseManager private constructor(private val context: Context) {
     fun closeDatabases() {
         try {
             inventoryDatabase?.close()
-            locationDatabase?.close()
+            warehouseDatabase?.close()
         } catch (e: java.lang.Exception) {
             android.util.Log.e(e.message, e.stackTraceToString())
         }
@@ -82,11 +82,11 @@ class DatabaseManager private constructor(private val context: Context) {
             currentInventoryDatabaseName = teamName.plus("_").plus(defaultInventoryDatabaseName)
             inventoryDatabase = Database(currentInventoryDatabaseName, dbConfig)
 
-            //setup the location Database
-            setupLocationDatabase(dbConfig)
+            //setup the warehouse Database
+            setupWarehouseDatabase(dbConfig)
 
             //create indexes for database queries
-            createTypeIndex(locationDatabase)
+            createTypeIndex(warehouseDatabase)
             createTypeIndex(inventoryDatabase)
 
             createTeamTypeIndex()
@@ -99,25 +99,25 @@ class DatabaseManager private constructor(private val context: Context) {
         }
     }
 
-    private fun setupLocationDatabase(dbConfig: DatabaseConfiguration) {
-        // create the locations database if it doesn't already exist
-        if (!Database.exists(locationDatabaseName, context.filesDir)) {
-            unzip(startingLocationFileName, File(context.filesDir.toString()))
+    private fun setupWarehouseDatabase(dbConfig: DatabaseConfiguration) {
+        // create the warehouse database if it doesn't already exist
+        if (!Database.exists(warehouseDatabaseName, context.filesDir)) {
+            unzip(startingWarehouseFileName, File(context.filesDir.toString()))
 
-            // copy the location database to the project database
+            // copy the warehouse database to the project database
             // never open the database directly as this will cause issues
             // with sync
-            val locationDbFile =
+            val warehouseDbFile =
                 File(
                     String.format(
                         "%s/%s",
                         context.filesDir,
-                        ("${startingLocationDatabaseName}.cblite2")
+                        ("${startingWarehouseDatabaseName}.cblite2")
                     )
                 )
-            Database.copy(locationDbFile, locationDatabaseName, dbConfig)
+            Database.copy(warehouseDbFile, warehouseDatabaseName, dbConfig)
         }
-        locationDatabase = Database(locationDatabaseName, dbConfig)
+        warehouseDatabase = Database(warehouseDatabaseName, dbConfig)
     }
 
     private fun createTeamTypeIndex(){
@@ -130,7 +130,7 @@ class DatabaseManager private constructor(private val context: Context) {
                     it.createIndex( // 2
                         teamIndexName, // 3
                         IndexBuilder.valueIndex(   // 4
-                            ValueIndexItem.property(typeAttributeName), // 5
+                            ValueIndexItem.property(documentTypeAttributeName), // 5
                             ValueIndexItem.property(teamAttributeName)) // 5
                     )
                 }
@@ -144,13 +144,13 @@ class DatabaseManager private constructor(private val context: Context) {
         try {
             inventoryDatabase?.let {  // 1
                 if (!it.indexes.contains(cityIndexName)) {
-                    // create index for Locations only return documents with
-                    // the type attribute set to location and the city attribute filtered
+                    // create index for Warehouse only return documents with
+                    // the type attribute set to warehouse and the city attribute filtered
                     // by value sent in using `like` statement
                     it.createIndex( // 3
                         cityIndexName, // 4
                         IndexBuilder.valueIndex(   // 5
-                            ValueIndexItem.property(typeAttributeName), // 5
+                            ValueIndexItem.property(documentTypeAttributeName), // 5
                             ValueIndexItem.property(cityAttributeName)) // 5
                     )
                 }
@@ -170,11 +170,11 @@ class DatabaseManager private constructor(private val context: Context) {
                     // by the value sent in using `like` statement
 
                     it.createIndex( // 3
-                        cityCountryIndexName, // 4
+                        cityStateIndexName, // 4
                         IndexBuilder.valueIndex(   // 5
-                            ValueIndexItem.property(typeAttributeName), // 5
+                            ValueIndexItem.property(documentTypeAttributeName), // 5
                             ValueIndexItem.property(cityAttributeName), // 5
-                            ValueIndexItem.property(countryAttributeName)) // 5
+                            ValueIndexItem.property(stateAttributeName)) // 5
                     )
                 }
             }
@@ -195,7 +195,7 @@ class DatabaseManager private constructor(private val context: Context) {
                     it.createIndex( // 3
                         auditIndexName, // 4
                         IndexBuilder.valueIndex(   // 5
-                            ValueIndexItem.property(typeAttributeName), // 5
+                            ValueIndexItem.property(documentTypeAttributeName), // 5
                             ValueIndexItem.property(projectIdAttributeName), // 5
                             ValueIndexItem.property(teamAttributeName)) // 5
                     )
@@ -212,11 +212,11 @@ class DatabaseManager private constructor(private val context: Context) {
         // create indexes for document type
         // create index for document type if it doesn't exist
         database?.let {
-            if (!it.indexes.contains(typeIndexName)) {
+            if (!it.indexes.contains(documentTypeIndexName)) {
                 it.createIndex(
-                    typeIndexName, IndexBuilder.valueIndex(
+                    documentTypeIndexName, IndexBuilder.valueIndex(
                         ValueIndexItem.expression(
-                            Expression.property(typeAttributeName)
+                            Expression.property(documentTypeAttributeName)
                         )
                     )
                 )

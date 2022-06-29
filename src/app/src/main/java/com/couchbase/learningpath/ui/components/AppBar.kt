@@ -27,7 +27,7 @@ fun InventoryAppBar(title: String = "",
 {
     val menuResource = stringResource(id = R.string.btnAppBarMenu)
 
-    LearningPathTheme() {
+    LearningPathTheme {
         TopAppBar(
             backgroundColor = MaterialTheme.colors.primaryVariant,
             contentColor = Color.White,

@@ -21,7 +21,7 @@ data class Audit (
     var projectId: String = "",
     var name: String = "",
     var count: Int = 0,
-    var type: String = "",
+    var documentType: String = "",
     var notes: String = "",
     var partNumber: String = "",
     var pictureMetadata: String? = null,
