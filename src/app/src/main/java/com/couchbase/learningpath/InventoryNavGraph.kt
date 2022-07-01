@@ -173,6 +173,12 @@ fun InventoryNavGraph(
 
             viewModel.projectId(projectId)
             viewModel.auditId(auditId)
+
+            viewModel.navigateUp = {
+                auditEditorViewModel.loadAudit()
+                actions.upPress()
+            }
+
             StockItemSelectionView(
                     viewModel = viewModel,
                     navigateUp = {

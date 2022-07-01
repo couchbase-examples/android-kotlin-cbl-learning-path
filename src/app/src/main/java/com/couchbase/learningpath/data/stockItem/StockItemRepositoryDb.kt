@@ -69,16 +69,20 @@ class StockItemRepositoryDb(
         try {
             val db = databaseResources.warehouseDatabase
             db?.let { database ->
-                var queryString = "SELECT * FROM _ as item WHERE documentType=\"item\" AND lower(name) LIKE '%${searchName.lowercase()}%'"  // 1
+                var queryString = "SELECT * FROM _ as item WHERE documentType=\"item\" AND lower(name) LIKE ('%' || \$parameterName || '%')"  // 1
+                var parameters = Parameters() // 2
+                parameters.setString("parameterName", searchName.lowercase()) // 3
                 searchDescription?.let { description ->
-                    if(description.isNotEmpty()){ //2
-                        queryString = queryString.plus( " AND lower(description) LIKE '%${description.lowercase()}%'")  // 3
+                    if(description.isNotEmpty()){  // 4
+                        queryString = queryString.plus( " AND lower(description) LIKE ('%' || \$parameterDescription || '%')")  // 5
+                        parameters.setString("parameterDescription", searchDescription.lowercase()) // 6
                     }
-                    var query = database.createQuery(queryString) // 4
-                    var results = query.execute().allResults() // 2
-                    results.forEach { result ->  // 6
-                        val stockItem = Json.decodeFromString<StockItemDao>(result.toJSON()).item // 7
-                        stockItems.add(stockItem) // 8
+                    var query = database.createQuery(queryString) // 7
+                    query.parameters = parameters // 8
+                    var results = query.execute().allResults() // 9
+                    results.forEach { result ->  // 10
+                        val stockItem = Json.decodeFromString<StockItemDao>(result.toJSON()).item // 11
+                        stockItems.add(stockItem) // 12
                     }
                 }
             }

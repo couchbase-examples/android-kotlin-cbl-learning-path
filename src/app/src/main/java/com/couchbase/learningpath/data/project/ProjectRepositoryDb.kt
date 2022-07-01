@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.couchbase.learningpath.data.DatabaseManager
+import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.stockItem.StockItemRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.models.Audit
@@ -32,6 +33,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class ProjectRepositoryDb(
     private val context: Context,
     private val authenticationService: AuthenticationService,
+    private val auditRepository: AuditRepository,
     private val warehouseRepository: WarehouseRepository,
     private val stockItemRepository: StockItemRepository,
 ) : ProjectRepository {
@@ -177,6 +179,7 @@ class ProjectRepositoryDb(
                     val projectDoc = database.getDocument(documentId)
                     projectDoc?.let { document ->
                         db.delete(document)
+                        auditRepository.deleteProjectAudits(projectId = documentId)
                         result = true
                     }
                 }

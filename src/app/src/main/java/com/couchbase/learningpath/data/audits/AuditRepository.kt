@@ -12,4 +12,5 @@ interface AuditRepository : Repository<Audit>  {
     fun getAuditsByProjectId(projectId: String): Flow<List<Audit>>?
     suspend fun get(projectId: String, auditId: String): Audit
     suspend fun updateAuditStockItem(projectId: String, auditId: String, stockItem: StockItem)
+    suspend fun deleteProjectAudits(projectId: String)
 }

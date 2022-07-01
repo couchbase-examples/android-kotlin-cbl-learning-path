@@ -45,7 +45,6 @@ fun StockItemSelectionView(
 
                 val onStockItemSelected: (StockItem) -> Unit  = { stockItem ->
                     viewModel.onStockItemSelected(stockItem)
-                    navigateUp()
                 }
 
                 StockItemSelector(

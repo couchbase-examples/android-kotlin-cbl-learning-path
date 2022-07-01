@@ -46,7 +46,6 @@ fun AuditEditorView(
                 modifier = Modifier.fillMaxSize()
             ) {
                 viewModel.navigateUpCallback = navigateUp
-
                 AuditEditor(
                     audit = viewModel.auditState.value,
                     stockItemSelection = viewModel.stockItemSelectionState.value,

@@ -44,7 +44,7 @@ fun AuditListView(
                     onNavClick = {
                         navigateToAuditEditor(
                             viewModel.project.projectId,
-                            "create"
+                            UUID.randomUUID().toString()
                         )
                     }
                 )

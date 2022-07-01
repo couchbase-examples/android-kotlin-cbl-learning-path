@@ -13,6 +13,7 @@ import com.couchbase.lite.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -74,7 +75,7 @@ class AuditRepositoryDb(
             val user = authenticationService.getCurrentUser()
             return@withContext Audit(
                 projectId = projectId,
-                auditId = UUID.randomUUID().toString(),
+                auditId = auditId,
                 stockItem =  null,
                 documentType = "audit",
                 createdOn = Date(),
@@ -114,6 +115,19 @@ class AuditRepositoryDb(
                 }
             } catch (e: Exception){
                 Log.e(e.message, e.stackTraceToString())
+            }
+        }
+    }
+
+    override suspend fun deleteProjectAudits(projectId: String) {
+        return withContext(Dispatchers.IO){
+            val flow = getAuditsByProjectId(projectId)
+            flow?.let { f ->
+                f.collect { items ->
+                    items.forEach { item ->
+                        delete(item.auditId)
+                    }
+                }
             }
         }
     }

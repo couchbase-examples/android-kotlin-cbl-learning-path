@@ -19,6 +19,8 @@ class StockItemSelectionViewModel(
     private var projectIdState = mutableStateOf<String?>(null)
     private var isLoading = mutableStateOf(false)
 
+    var navigateUp: () -> Unit =  { }
+
     val searchName = mutableStateOf("")
     val searchDescription = mutableStateOf("")
     val stockItemsState = mutableStateListOf<StockItem>()
@@ -68,6 +70,9 @@ class StockItemSelectionViewModel(
             auditIdState.value?.let { auditId ->
                 viewModelScope.launch(Dispatchers.IO) {
                     auditRepository.updateAuditStockItem(projectId, auditId, stockItem)
+                    withContext(Dispatchers.Main) {
+                        navigateUp()
+                    }
                 }
             }
         }

@@ -75,7 +75,7 @@ class InventoryApplication
             single { ReplicatorServiceDb(get(), this@InventoryApplication) as ReplicatorService }
             single { UserProfileRepository(this@InventoryApplication) as KeyValueRepository }
             single { WarehouseRepositoryDb(this@InventoryApplication) as WarehouseRepository }
-            single { ProjectRepositoryDb(this@InventoryApplication, get(), get(), get()) as ProjectRepository }
+            single { ProjectRepositoryDb(this@InventoryApplication, get(), get(), get(), get()) as ProjectRepository }
             single { StockItemRepositoryDb(this@InventoryApplication) as StockItemRepository }
             single { AuditRepositoryDb(this@InventoryApplication, get()) as AuditRepository }
 

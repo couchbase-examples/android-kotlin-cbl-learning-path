@@ -35,6 +35,9 @@ class AuditEditorViewModel(
             try {
                 val audit = auditRepository.get(projectId.value, auditId.value)
                 auditState.value = audit
+                //we need to set the auditId away from create if this is a new audit item
+                //as the uuid is assigned by the repository
+                auditId.value = audit.auditId
                 auditState.value?.let {
                     count.value = it.count.toString()
                     if (it.stockItem != null) {
@@ -105,9 +108,11 @@ class AuditEditorViewModel(
 
     val onStockItemSelection: () -> Unit = {
         viewModelScope.launch {
-            saveAudit()
-            withContext(Dispatchers.Main) {
-                navigateToListSelection(projectId.value, auditId.value)
+            auditState.value?.let {
+                saveAudit()
+                withContext(Dispatchers.Main) {
+                    navigateToListSelection(it.projectId, it.auditId)
+                }
             }
         }
     }
