@@ -74,7 +74,8 @@ fun ProjectEditor(
     onDescriptionChange: (String) -> Unit,
     onDateChanged: (Long?) -> Unit,
     onSaveProject: (navigateUp: Boolean) -> Unit,
-    errorMessage: String){
+    errorMessage: String
+){
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
@@ -129,7 +130,6 @@ fun ProjectEditor(
                         }
                     }
                 }
-
             }
             item {
                 Column(

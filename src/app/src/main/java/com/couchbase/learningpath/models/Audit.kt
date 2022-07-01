@@ -19,7 +19,7 @@ data class AuditDao(var item: Audit)
 data class Audit (
     var auditId: String = "",
     var projectId: String = "",
-    var stockItem: StockItem,
+    var stockItem: StockItem? = null,
     var count: Int = 0,
     var documentType: String = "",
     var notes: String = "",

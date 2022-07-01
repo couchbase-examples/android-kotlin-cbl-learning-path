@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.project.ProjectRepository
+import com.couchbase.learningpath.data.stockItem.StockItemRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.services.AuthenticationService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +22,7 @@ class DevDatabaseInfoViewModel(
     private val warehouseRepository: WarehouseRepository,
     private val projectRepository: ProjectRepository,
     private val auditRepository: AuditRepository,
+    private val stockItemRepository: StockItemRepository,
     authService: AuthenticationService
 ) : ViewModel() {
 
@@ -34,6 +36,7 @@ class DevDatabaseInfoViewModel(
     var currentUsername = mutableStateOf("")
     var numberOfUserProfiles = mutableStateOf(0)
     var numberOfWarehouses = mutableStateOf(0)
+    var numberOfStockItems = mutableStateOf(0)
     var numberOfProjects = mutableStateOf(0)
     var numberOfAudits = mutableStateOf(0)
     init {
@@ -41,6 +44,7 @@ class DevDatabaseInfoViewModel(
             updateUserProfileInfo()
             updateUserProfileCount()
             updateWarehouseCount()
+            updateStockItemCount()
             updateProjectCount()
             updateAuditCount()
         }
@@ -73,6 +77,17 @@ class DevDatabaseInfoViewModel(
             if (locationCount > 0) {
                 withContext(Dispatchers.Main) {
                     numberOfWarehouses.value = locationCount
+                }
+            }
+        }
+    }
+
+    private suspend fun updateStockItemCount() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val stockItemCount = stockItemRepository.count()
+            if (stockItemCount > 0) {
+                withContext(Dispatchers.Main) {
+                    numberOfStockItems.value = stockItemCount
                 }
             }
         }

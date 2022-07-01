@@ -43,6 +43,7 @@ fun DevDatabaseInfoView(
                     viewModel.currentTeam.value,
                     viewModel.numberOfUserProfiles.value,
                     viewModel.numberOfWarehouses.value,
+                    viewModel.numberOfStockItems.value,
                     viewModel.numberOfProjects.value,
                     viewModel.numberOfAudits.value,
                 )
@@ -61,6 +62,7 @@ fun DeveloperInfoWidget(
     currentTeam: String,
     numberOfUserProfiles: Int,
     numberOfWarehouses: Int,
+    numberOfStockItems: Int,
     numberOfProjects: Int,
     numberOfAudits: Int
 ) {
@@ -271,6 +273,27 @@ fun DeveloperInfoWidget(
                 modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
             )
         }
+        item {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Stock Items Count", fontWeight = FontWeight.Bold)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("$numberOfStockItems")
+            }
+            Divider(
+                color = Color.LightGray,
+                thickness = 2.dp,
+                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
+            )
+        }
     }
 }
 
@@ -284,7 +307,8 @@ fun DeveloperInfoWidgetPreview() {
     val currentUser = "demo@example.com"
     val currentTeam = "Santa Clara Team"
     val numberOfDocuments = 1000000000
-    val numberOfLocations = 1000000000
+    val numberOfWarehouseLocations = 1000000000
+    val numberOfStockItems = 10000
     val numberOfProjects = 1000000000
     val numberOfAudits = 100000
 
@@ -296,7 +320,8 @@ fun DeveloperInfoWidgetPreview() {
         currentUser = currentUser,
         currentTeam = currentTeam,
         numberOfUserProfiles = numberOfDocuments,
-        numberOfWarehouses = numberOfLocations,
+        numberOfWarehouses = numberOfWarehouseLocations,
+        numberOfStockItems = numberOfStockItems,
         numberOfProjects = numberOfProjects,
         numberOfAudits = numberOfAudits
     )

@@ -18,13 +18,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.couchbase.learningpath.data.DatabaseManager
+import com.couchbase.learningpath.data.stockItem.StockItemRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.Warehouse
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.ProjectDao
 import com.couchbase.learningpath.services.AuthenticationService
-import com.couchbase.learningpath.services.RandomDescriptionService
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalCoroutinesApi
@@ -32,7 +32,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class ProjectRepositoryDb(
     private val context: Context,
     private val authenticationService: AuthenticationService,
-    private val warehouseRepository: WarehouseRepository
+    private val warehouseRepository: WarehouseRepository,
+    private val stockItemRepository: StockItemRepository,
 ) : ProjectRepository {
     private val projectDocumentType = "project"
     private val auditDocumentType = "audit"
@@ -215,22 +216,26 @@ class ProjectRepositoryDb(
         return withContext(Dispatchers.IO) {
             try {
                 val currentUser = authenticationService.getCurrentUser()
-                val descriptionService = RandomDescriptionService()
                 val warehouses = warehouseRepository.get()
                 val warehouseCount = warehouses.count() - 1
-                if (warehouseCount > 0) {
+                val stockItems = stockItemRepository.get()
+                val stockItemsCount = stockItems.count() - 1
+
+                if (warehouseCount > 0 && stockItemsCount > 0) {
                     val db = DatabaseManager.getInstance(context).inventoryDatabase
                     db?.let { database ->
                         // batch operations for saving multiple documents
                         // this is a faster way to process groups of documents at once
                         // https://docs.couchbase.com/couchbase-lite/current/android/document.html#batch-operations
                         database.inBatch(UnitOfWork {   // 1
-                            for (count in 1..10) {      // 2
+                            for (count in 0..11) {      // 2
                                 val projectId = UUID.randomUUID().toString()
+                                val warehouse = warehouses[count]
+
                                 val document = Project(  //3
                                     projectId = projectId,
-                                    name = "Project ${(1..1000000).random()}",
-                                    description = descriptionService.randomDescription(),
+                                    name = "${warehouse.name} Audit",
+                                    description = "Audit of warehouse stock located in ${warehouse.city}, ${warehouse.state}.",
                                     isComplete = false,
                                     documentType = projectDocumentType,
                                     dueDate = SimpleDateFormat(
@@ -242,20 +247,22 @@ class ProjectRepositoryDb(
                                     modifiedBy = currentUser.username,
                                     createdOn = Date(),
                                     modifiedOn = Date(),
-                                    warehouse = warehouses[(0..warehouseCount).random()]
+                                    warehouse = warehouses[count]
                                 )
                                 val json = Json.encodeToString(document) // 4
                                 val doc = MutableDocument(document.projectId, json) // 5
                                 database.save(doc) // 6
 
                                 //create random audit items per project
-                                for (auditCount in 1..10){
+                                for (auditCount in 1..50){
+                                    val stockItem = stockItems[(0..stockItemsCount).random()]
                                     val auditDocument = Audit(
                                         auditId = UUID.randomUUID().toString(),
                                         projectId = projectId,
-                                        count = (1..1000).random(),
+                                        count = (1..100000).random(),
+                                        stockItem =  stockItem,
                                         documentType = auditDocumentType,
-                                        notes = descriptionService.randomDescription(),
+                                        notes = "Found item ${stockItem.name} - ${stockItem.description} in warehouse",
                                         team = currentUser.team,
                                         createdBy = currentUser.username,
                                         modifiedBy = currentUser.username,

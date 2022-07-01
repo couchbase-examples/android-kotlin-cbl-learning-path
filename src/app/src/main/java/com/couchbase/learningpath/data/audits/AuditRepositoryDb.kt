@@ -7,6 +7,7 @@ import android.util.Log
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.AuditDao
+import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.lite.*
 import kotlinx.coroutines.Dispatchers
@@ -74,6 +75,7 @@ class AuditRepositoryDb(
             return@withContext Audit(
                 projectId = projectId,
                 auditId = UUID.randomUUID().toString(),
+                stockItem =  null,
                 documentType = "audit",
                 createdOn = Date(),
                 modifiedOn =  Date(),
@@ -83,13 +85,13 @@ class AuditRepositoryDb(
         }
     }
 
-    override suspend fun save(audit: Audit) {
+    override suspend fun save(document: Audit) {
         return withContext(Dispatchers.IO){
             try {
                 val db = databaseResources.inventoryDatabase
                 db?.let { database ->
-                    val json = Json.encodeToString(audit)
-                    val doc = MutableDocument(audit.auditId, json)
+                    val json = Json.encodeToString(document)
+                    val doc = MutableDocument(document.auditId, json)
                     database.save(doc)
                 }
             }catch(e: Exception){
@@ -98,13 +100,31 @@ class AuditRepositoryDb(
         }
     }
 
-    override suspend fun delete(auditId: String): Boolean {
+    override suspend fun updateAuditStockItem(projectId: String, auditId: String, stockItem: StockItem) {
+        return withContext(Dispatchers.IO){
+            try {
+                val db = databaseResources.inventoryDatabase
+                val audit = get(projectId, auditId)
+                audit.stockItem = stockItem
+                audit.notes = "Found item ${stockItem.name} - ${stockItem.description} in warehouse"
+                db?.let { database ->
+                    val json = Json.encodeToString(audit)
+                    val doc = MutableDocument(audit.auditId, json)
+                    database.save(doc)
+                }
+            } catch (e: Exception){
+                Log.e(e.message, e.stackTraceToString())
+            }
+        }
+    }
+
+    override suspend fun delete(documentId: String): Boolean {
         return withContext(Dispatchers.IO) {
             var result = false
             try {
                 val db = databaseResources.inventoryDatabase
                 db?.let { database ->
-                    val doc = database.getDocument(auditId)
+                    val doc = database.getDocument(documentId)
                     doc?.let { document ->
                         db.delete(document)
                         result = true
