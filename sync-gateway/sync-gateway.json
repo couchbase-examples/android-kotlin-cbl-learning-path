@@ -116,7 +116,7 @@
 		},
 	  "import_filter":  ` function(doc) {
 		console.log("********Processing import filter - documents from couchbase server");
- 		if (doc.type == 'project' || doc.type == 'location' || doc.type == 'user' || doc.type == 'audit') {
+ 		if (doc.type == 'project' || doc.type == 'warehouse' || doc.type == 'user' || doc.type == 'audit' || doc.type == 'item') {
 			return true;
 		}
 		return false;
@@ -127,8 +127,8 @@
 		/* Data Validation */
 		validateNotEmpty("type", doc.type);
   
-		if (doc.type == 'location'){
-		  console.log("********Processing Location Docs - setting it to global/public");
+		if (doc.type == 'warehouse'){
+		  console.log("********Processing Warehouse Docs - setting it to global/public");
 		  channel('!');
 		} else {
 		  console.log("********Processing Team Docs");

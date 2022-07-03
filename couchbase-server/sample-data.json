@@ -1,7 +1,7 @@
 [
     {
         "name": "Santa Clare Warehouse 100",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo@example.com",
         "dueDate": "1704064749000",
@@ -28,7 +28,7 @@
     },
     {
         "name": "Santa Clara Warehouse 101",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo1@example.com",
         "dueDate": "1704064749000",
@@ -55,7 +55,7 @@
     },
     {
         "name": "Santa Clara Warehouse 102",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo1@example.com",
         "dueDate": "1704064749000",
@@ -82,7 +82,7 @@
     },
     {
         "name": "Houston Warehouse 200",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo3@example.com",
         "dueDate": "1704064749000",
@@ -109,7 +109,7 @@
     },
     {
         "name": "Houston Warehouse 201",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo2@example.com",
         "dueDate": "1704064749000",
@@ -136,7 +136,7 @@
     },
     {
         "name": "Houston Warehouse 202",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo2@example.com",
         "dueDate": "1704064749000",
@@ -163,7 +163,7 @@
     },
     {
         "name": "Jacksonville Warehouse 300",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo4@example.com",
         "dueDate": "1704064749000",
@@ -190,7 +190,7 @@
     },
     {
         "name": "Jacksonville Warehouse 301",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo4@example.com",
         "dueDate": "1704064749000",
@@ -217,7 +217,7 @@
     },
     {
         "name": "Jacksonville Warehouse 302",
-        "type": "project",
+        "documentType": "project",
         "modifiedOn": "1651533549000",
         "createdBy": "demo5@example.com",
         "dueDate": "1704064749000",

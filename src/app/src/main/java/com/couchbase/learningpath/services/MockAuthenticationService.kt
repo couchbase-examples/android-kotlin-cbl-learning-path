@@ -49,9 +49,5 @@ class MockAuthenticationService : AuthenticationService {
         _mockUsers["demo13@example.com"] = User("demo13@example.com", "P@ssw0rd12", "team8")
         _mockUsers["demo14@example.com"] = User("demo14@example.com", "P@ssw0rd12", "team9")
         _mockUsers["demo15@example.com"] = User("demo15@example.com", "P@ssw0rd12", "team10")
-        _mockUsers["demo16@example.com"] = User("demo16@example.com", "P@ssw0rd12", "team11")
-        _mockUsers["demo17@example.com"] = User("demo17@example.com", "P@ssw0rd12", "team11")
-        _mockUsers["demo18@example.com"] = User("demo18@example.com", "P@ssw0rd12", "team12")
-        _mockUsers["demo19@example.com"] = User("demo19@example.com", "P@ssw0rd12", "team12")
     }
 }

@@ -40,6 +40,8 @@ services:
     tty: true      
     networks:
       - workshop
+    entrypoint: [""]
+    command: sh -c "/opt/couchbase-sync-gateway/init/init-syncgateway.sh"
 networks:
   workshop:
     driver: bridge
