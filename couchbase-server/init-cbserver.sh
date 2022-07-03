@@ -1,6 +1,6 @@
 #!/bin/bash
 # used to start couchbase server - can't get around this as docker compose only allows you to start one command - so we have to start couchbase like the standard couchbase Dockerfile would 
-# https://github.com/couchbase/docker/blob/master/enterprise/couchbase-server/7.0.3/Dockerfile#L82
+# https://github.com/couchbase/docker/blob/master/enterprise/couchbase-server/7.1.1/Dockerfile
 
 /entrypoint.sh couchbase-server & 
 
