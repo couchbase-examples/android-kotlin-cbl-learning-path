@@ -58,7 +58,7 @@ class WarehouseRepositoryDb(context: Context) : WarehouseRepository {
                         .where(whereQueryExpression) // <4>
 
                     //loop through results and add to list
-                    query.execute().allResults().forEach { item ->
+                    query.execute().allResults().forEach { item ->  // <5>
                         val json = item.toJSON()
                         val warehouse = Json.decodeFromString<WarehouseDao>(json).item
                         warehouses.add(warehouse)
