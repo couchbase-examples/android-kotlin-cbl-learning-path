@@ -45,14 +45,14 @@ class WarehouseSelectionViewModel(
             if (searchCity.value.length >= 2) {  // <2>
                 isLoading.value = true
                 val warehouses = warehouseRepository  // <3>
-                    .getByCityState(searchCity.value, searchState.value) // <4>
-                if (warehouses.isNotEmpty()) { // <5>
+                    .getByCityState(searchCity.value, searchState.value) // <3>
+                if (warehouses.isNotEmpty()) { // <4>
                     withContext(Dispatchers.Main) {
                         warehousesState.clear()
                         warehousesState.addAll(warehouses)
                         isLoading.value = false
                     }
-                } else {  // <6>
+                } else {  // <5>
                     withContext(Dispatchers.Main) {
                         warehousesState.clear()
                         locationStatusMessage.value = "No Locations Found"
