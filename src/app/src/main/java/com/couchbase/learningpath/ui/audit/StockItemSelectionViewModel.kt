@@ -43,18 +43,18 @@ class StockItemSelectionViewModel(
     }
 
     val onSearch: () -> Unit = {
-        viewModelScope.launch {
-            if (searchName.value.length >= 2) {
+        viewModelScope.launch {  // <1>
+            if (searchName.value.length >= 2) {  // <2>
                 isLoading.value = true
                 val foundItems = stockItemRepository
-                    .getByNameDescription(searchName.value, searchDescription.value)
-                if (foundItems.isNotEmpty()) {
+                    .getByNameDescription(searchName.value, searchDescription.value) // <3>
+                if (foundItems.isNotEmpty()) { // <4>
                     withContext(Dispatchers.Main) {
                         stockItemsState.clear()
                         stockItemsState.addAll(foundItems)
                         isLoading.value = false
                     }
-                } else {
+                } else {  // <5>
                     withContext(Dispatchers.Main) {
                         stockItemsState.clear()
                         statusMessage.value = "No stock items Found"
