@@ -116,7 +116,7 @@
 		},
 	  "import_filter":  ` function(doc) {
 		console.log("********Processing import filter - documents from couchbase server");
- 		if (doc.type == 'project' || doc.type == 'warehouse' || doc.type == 'user' || doc.type == 'audit' || doc.type == 'item') {
+ 		if (doc.documentType == 'project' || doc.documentType == 'warehouse' || doc.documentType == 'user' || doc.documentType == 'audit' || doc.documentType == 'item') {
 			return true;
 		}
 		return false;
@@ -125,9 +125,9 @@
 		function sync(doc, oldDoc) {
 	  
 		/* Data Validation */
-		validateNotEmpty("type", doc.type);
+		validateNotEmpty("documentType", doc.documentType);
   
-		if (doc.type == 'warehouse'){
+		if (doc.documentType == 'warehouse'){
 		  console.log("********Processing Warehouse Docs - setting it to global/public");
 		  channel('!');
 		} else {
@@ -157,7 +157,7 @@
 		}
 	// get type property
 	function getType() {
-	  return (isDelete() ? oldDoc.type : doc.type);
+	  return (isDelete() ? oldDoc.documentType : doc.documentType);
 	}
   
 	// get email Id property
