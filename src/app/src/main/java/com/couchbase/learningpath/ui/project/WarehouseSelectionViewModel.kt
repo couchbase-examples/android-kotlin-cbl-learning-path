@@ -36,23 +36,23 @@ class WarehouseSelectionViewModel(
         searchCity.value = newValue
     }
 
-    val onSearchCountryChanged: (String) -> Unit = { newValue ->
+    val onSearchStateChanged: (String) -> Unit = { newValue ->
         searchState.value = newValue
     }
 
     val onSearch: () -> Unit = {
-        viewModelScope.launch {
-            if (searchCity.value.length >= 2) {
+        viewModelScope.launch {  // <1>
+            if (searchCity.value.length >= 2) {  // <2>
                 isLoading.value = true
-                val warehouses = warehouseRepository
-                    .getByCityState(searchCity.value, searchState.value)
-                if (warehouses.isNotEmpty()) {
+                val warehouses = warehouseRepository  // <3>
+                    .getByCityState(searchCity.value, searchState.value) // <4>
+                if (warehouses.isNotEmpty()) { // <5>
                     withContext(Dispatchers.Main) {
                         warehousesState.clear()
                         warehousesState.addAll(warehouses)
                         isLoading.value = false
                     }
-                } else {
+                } else {  // <6>
                     withContext(Dispatchers.Main) {
                         warehousesState.clear()
                         locationStatusMessage.value = "No Locations Found"

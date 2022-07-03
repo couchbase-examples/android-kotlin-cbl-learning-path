@@ -49,7 +49,7 @@ fun WarehouseSelectionView(
                     searchCity = viewModel.searchCity.value,
                     searchState = viewModel.searchState.value,
                     onSearchCityChanged = viewModel.onSearchCityChanged,
-                    onSearchStateChanged = viewModel.onSearchCountryChanged,
+                    onSearchStateChanged = viewModel.onSearchStateChanged,
                     onSearch = viewModel.onSearch,
                     warehouseStatusMessage = viewModel.locationStatusMessage.value,
                     warehouses = viewModel.warehousesState,

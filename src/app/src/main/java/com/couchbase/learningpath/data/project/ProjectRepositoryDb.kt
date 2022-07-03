@@ -53,23 +53,23 @@ class ProjectRepositoryDb(
             // method isn't available  work around is to do your entire statement without the as
             // function call and add that in last
             db?.let { database ->
-                val query = QueryBuilder        // 1
-                    .select(SelectResult.all()) // 2
-                    .from(DataSource.database(database).`as`("item")) // 3
+                val query = QueryBuilder        // <1>
+                    .select(SelectResult.all()) // <2>
+                    .from(DataSource.database(database).`as`("item")) // <3>
                     .where( //4
-                        Expression.property("documentType").equalTo(Expression.string(projectDocumentType)) // 4
+                        Expression.property("documentType").equalTo(Expression.string(projectDocumentType)) // <4>
                             .and(Expression.property("team").equalTo(Expression.string(team)))
-                    ) //4
+                    ) // <4>
 
                 // create a flow to return the results dynamically as needed - more information on
                 // CoRoutine Flows can be found at
                 // https://developer.android.com/kotlin/flow
-                val flow = query        // 1
-                    .queryChangeFlow()  // 2
-                    .map { qc -> mapQueryChangeToProject(qc) } // 3
-                    .flowOn(Dispatchers.IO)  // 4
-                query.execute()  // 5
-                return flow  // 6
+                val flow = query        // <1>
+                    .queryChangeFlow()  // <1>
+                    .map { qc -> mapQueryChangeToProject(qc) } // <2>
+                    .flowOn(Dispatchers.IO)  // <3>
+                query.execute()  // <4>
+                return flow  // <5>
             }
         } catch (e: Exception) {
             Log.e(e.message, e.stackTraceToString())
