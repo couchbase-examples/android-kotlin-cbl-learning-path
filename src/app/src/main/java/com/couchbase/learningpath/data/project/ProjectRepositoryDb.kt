@@ -218,11 +218,11 @@ class ProjectRepositoryDb(
     override suspend fun loadSampleData() {
         return withContext(Dispatchers.IO) {
             try {
-                val currentUser = authenticationService.getCurrentUser()
-                val warehouses = warehouseRepository.get()
-                val warehouseCount = warehouses.count() - 1
-                val stockItems = stockItemRepository.get()
-                val stockItemsCount = stockItems.count() - 1
+                val currentUser = authenticationService.getCurrentUser() // <1>
+                val warehouses = warehouseRepository.get()  // <2>
+                val warehouseCount = warehouses.count() - 1  // <3>
+                val stockItems = stockItemRepository.get()   // <4>
+                val stockItemsCount = stockItems.count() - 1 // <5>
 
                 if (warehouseCount > 0 && stockItemsCount > 0) {
                     val db = DatabaseManager.getInstance(context).inventoryDatabase
@@ -230,12 +230,12 @@ class ProjectRepositoryDb(
                         // batch operations for saving multiple documents
                         // this is a faster way to process groups of documents at once
                         // https://docs.couchbase.com/couchbase-lite/current/android/document.html#batch-operations
-                        database.inBatch(UnitOfWork {   // 1
-                            for (count in 0..11) {      // 2
+                        database.inBatch(UnitOfWork {   // <1>
+                            for (count in 0..11) {      // <2>
                                 val projectId = UUID.randomUUID().toString()
-                                val warehouse = warehouses[count]
+                                val warehouse = warehouses[count] // <3>
 
-                                val document = Project(  //3
+                                val document = Project(  // <4>
                                     projectId = projectId,
                                     name = "${warehouse.name} Audit",
                                     description = "Audit of warehouse stock located in ${warehouse.city}, ${warehouse.state}.",
@@ -252,11 +252,11 @@ class ProjectRepositoryDb(
                                     modifiedOn = Date(),
                                     warehouse = warehouses[count]
                                 )
-                                val json = Json.encodeToString(document) // 4
-                                val doc = MutableDocument(document.projectId, json) // 5
-                                database.save(doc) // 6
+                                val json = Json.encodeToString(document) // <5>
+                                val doc = MutableDocument(document.projectId, json) // <6>
+                                database.save(doc) // <7>
 
-                                //create random audit items per project
+                                //create random audit items per project // <8>
                                 for (auditCount in 1..50){
                                     val stockItem = stockItems[(0..stockItemsCount).random()]
                                     val auditDocument = Audit(

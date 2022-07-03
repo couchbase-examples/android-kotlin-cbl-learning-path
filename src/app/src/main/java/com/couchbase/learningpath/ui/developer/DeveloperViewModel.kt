@@ -18,8 +18,8 @@ class DeveloperViewModel(
     var toastMessage = mutableStateOf("")
 
     val onLoadSampleData: () -> Unit = {
-        viewModelScope.launch(Dispatchers.IO){
-            projectRepository.loadSampleData()
+        viewModelScope.launch(Dispatchers.IO){ // <1>
+            projectRepository.loadSampleData()  // <2>
             toastMessage.value = "Load Sample Data Completed"
         }
     }
