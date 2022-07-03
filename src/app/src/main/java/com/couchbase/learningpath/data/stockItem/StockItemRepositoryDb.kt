@@ -65,31 +65,39 @@ class StockItemRepositoryDb(
         searchName: String,
         searchDescription: String?
     ): List<StockItem> {
-        val stockItems = mutableListOf<StockItem>()
-        try {
-            val db = databaseResources.warehouseDatabase
-            db?.let { database ->
-                var queryString = "SELECT * FROM _ as item WHERE documentType=\"item\" AND lower(name) LIKE ('%' || \$parameterName || '%')"  // 1
-                var parameters = Parameters() // 2
-                parameters.setString("parameterName", searchName.lowercase()) // 3
-                searchDescription?.let { description ->
-                    if(description.isNotEmpty()){  // 4
-                        queryString = queryString.plus( " AND lower(description) LIKE ('%' || \$parameterDescription || '%')")  // 5
-                        parameters.setString("parameterDescription", searchDescription.lowercase()) // 6
-                    }
-                    var query = database.createQuery(queryString) // 7
-                    query.parameters = parameters // 8
-                    var results = query.execute().allResults() // 9
-                    results.forEach { result ->  // 10
-                        val stockItem = Json.decodeFromString<StockItemDao>(result.toJSON()).item // 11
-                        stockItems.add(stockItem) // 12
+        return withContext(Dispatchers.IO) {
+            val stockItems = mutableListOf<StockItem>()
+            try {
+                val db = databaseResources.warehouseDatabase
+                db?.let { database ->
+                    var queryString =
+                        "SELECT * FROM _ as item WHERE documentType=\"item\" AND lower(name) LIKE ('%' || \$parameterName || '%')"  // 1
+                    var parameters = Parameters() // 2
+                    parameters.setString("parameterName", searchName.lowercase()) // 3
+                    searchDescription?.let { description ->
+                        if (description.isNotEmpty()) {  // 4
+                            queryString =
+                                queryString.plus(" AND lower(description) LIKE ('%' || \$parameterDescription || '%')")  // 5
+                            parameters.setString(
+                                "parameterDescription",
+                                searchDescription.lowercase()
+                            ) // 6
+                        }
+                        var query = database.createQuery(queryString) // 7
+                        query.parameters = parameters // 8
+                        var results = query.execute().allResults() // 9
+                        results.forEach { result ->  // 10
+                            val stockItem =
+                                Json.decodeFromString<StockItemDao>(result.toJSON()).item // 11
+                            stockItems.add(stockItem) // 12
+                        }
                     }
                 }
-            }
 
-        } catch (e: java.lang.Exception){
-            Log.e(e.message, e.stackTraceToString())
+            } catch (e: java.lang.Exception) {
+                Log.e(e.message, e.stackTraceToString())
+            }
+            return@withContext stockItems
         }
-        return stockItems
     }
 }
