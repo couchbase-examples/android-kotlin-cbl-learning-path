@@ -10,8 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.decodeFromString
 import java.lang.NumberFormatException
 import java.util.*
 
@@ -19,83 +17,125 @@ import java.util.*
 class AuditEditorViewModel(
     private val auditRepository: AuditRepository
 ) : ViewModel() {
-    var audit = mutableStateOf<Audit?>(null)
 
+    private val defaultStockItemText: String = "No Stock Item Selected"
+    var auditState = mutableStateOf<Audit?>(null)
+    var auditId = mutableStateOf("")
     var projectId = mutableStateOf("")
-    private var auditJson = mutableStateOf("")
-
     var count = mutableStateOf("")
+    val stockItemSelectionState = mutableStateOf(defaultStockItemText)
+    val errorMessageState = mutableStateOf("")
 
     var navigateUpCallback: () -> Unit = { }
+    var navigateToListSelection: (String, String) -> Unit =
+        { projectId: String, auditId: String -> }
 
-    fun getAudit(projectId: String, auditJson: String) {
-        this.projectId.value = projectId
-        this.auditJson.value = auditJson
+    fun loadAudit() {
         viewModelScope.launch {
-            if (auditJson == "" || auditJson == "create") {
+            try {
+                val audit = auditRepository.get(projectId.value, auditId.value)
+                auditState.value = audit
+                //we need to set the auditId away from create if this is a new audit item
+                //as the uuid is assigned by the repository
+                auditId.value = audit.auditId
+                auditState.value?.let {
+                    count.value = it.count.toString()
+                    if (it.stockItem != null) {
+                        it.stockItem?.let { stockItem ->
+                            stockItemSelectionState.value = stockItem.name
+                        }
+                    } else {
+                        stockItemSelectionState.value = defaultStockItemText
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(e.message, e.stackTraceToString())
+            }
+        }
+    }
+
+    fun getAudit(projectId: String, auditId: String) {
+        this.projectId.value = projectId
+        this.auditId.value = auditId
+        viewModelScope.launch {
+            if (auditId == "" || auditId == "create") {
                 if (projectId != "") {
-                    audit.value = auditRepository.get(
+                    auditState.value = auditRepository.get(
                         projectId = projectId,
                         auditId = UUID.randomUUID().toString()
                     )
                 }
             } else {
-                audit.value = Json.decodeFromString<Audit>(auditJson)
-                audit?.value?.let {
-                    count.value = it.count.toString()
-                }
+                loadAudit()
             }
         }
-    }
-
-    val onNameChanged: (String) -> Unit = { newValue ->
-        val p = audit.value?.copy()
-        p?.name = newValue
-        audit.value = p
     }
 
     val onCountChanged: (String) -> Unit = { newValue ->
         if (newValue != "") {
             try {
-                audit.value?.count = newValue.toInt()
+                auditState.value?.count = newValue.toInt()
                 count.value = newValue
-            } catch (nfe: NumberFormatException){
+            } catch (nfe: NumberFormatException) {
                 Log.e("Error", nfe.message.toString())
             }
         }
     }
 
     val onNotesChanged: (String) -> Unit = { newValue ->
-        val a = audit.value?.copy()
+        val a = auditState.value?.copy()
         a?.notes = newValue
-        audit.value = a
+        auditState.value = a
     }
 
-    val onPartNumberChanged: (String) -> Unit = { newValue ->
-        viewModelScope.launch(Dispatchers.Main) {
-            val a = audit.value?.copy()
-            a?.partNumber = newValue
-            audit.value = a
+    private fun saveAudit() {
+        viewModelScope.launch {
+            auditState.value?.let {
+                try {
+                    errorMessageState.value = ""
+                    //just in case the project isn't set for some reason
+                    it.projectId = projectId.value
+                    //trim any notes that were entered
+                    it.notes = it.notes.trim()
+                    auditRepository.save(it)
+                } catch (e: Exception){
+                    Log.e(e.message, e.stackTraceToString())
+                    errorMessageState.value = e.message.toString()
+                }
+            }
+        }
+    }
+
+    val onStockItemSelection: () -> Unit = {
+        viewModelScope.launch {
+            auditState.value?.let {
+                saveAudit()
+                withContext(Dispatchers.Main) {
+                    navigateToListSelection(it.projectId, it.auditId)
+                }
+            }
         }
     }
 
     val onSaveAudit: () -> Unit = {
         viewModelScope.launch {
             if (projectId.value != "") {
-                audit?.value?.let {
-                    //clean up data - remove spaces at the end of strings
-                    it.name = it.name.trim()
-                    it.notes?.let { notes ->
-                        it.notes = notes.trim()
-                    }
-                    it.partNumber?.let { partNumber ->
-                        it.partNumber = partNumber.trim()
-                    }
-                    //add in the project of the audit
-                    it.projectId = projectId.value
-                    auditRepository.save(it)
-                    withContext(Dispatchers.Main) {
-                        navigateUpCallback()
+                auditState.value?.let {
+                    if (it.count <= 0) {
+                        errorMessageState.value = "Error: Count must be greater than zero"
+                    } else if (it.stockItem == null) {
+                        errorMessageState.value = "Error: Must select stock item before saving"
+                    } else {
+                        errorMessageState.value = ""
+                        //clean up data - remove spaces at the end of strings
+                        it.notes = it.notes.trim()
+
+                        //add in the project of the audit
+                        it.projectId = projectId.value
+                        auditRepository.save(it)
+                        withContext(Dispatchers.Main) {
+                                navigateUpCallback()
+                        }
                     }
                 }
             }

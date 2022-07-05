@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.couchbase.learningpath.ui.project
 
 import android.annotation.SuppressLint
@@ -21,6 +23,7 @@ import java.util.Base64
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
+import kotlinx.serialization.ExperimentalSerializationApi
 
 @SuppressLint("NewApi")
 @ExperimentalMaterialApi
@@ -96,7 +99,7 @@ fun ProjectCard(project: Project,
                     }
                 }
             }
-            project.location?.name?.let {
+            project.warehouse?.name?.let {
                 Row(modifier = Modifier
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
                     Icon(
@@ -161,9 +164,9 @@ fun ProjectCardPreview() {
         name = "Test Project",
         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         isComplete = false,
-        type = "project",
+        documentType = "project",
         dueDate = Date(),
-        location = null,
+        warehouse = null,
         team = "Test Team",
         createdBy = "demo@example.com",
         modifiedBy = "demo@example.com",

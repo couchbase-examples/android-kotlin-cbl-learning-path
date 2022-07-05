@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.couchbase.learningpath.ui.project
 
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +25,7 @@ import com.couchbase.learningpath.ui.components.AddButton
 import com.couchbase.learningpath.ui.components.HorizontalDottedProgressBar
 import com.couchbase.learningpath.ui.components.NoItemsFound
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
+import kotlinx.serialization.ExperimentalSerializationApi
 
 
 @ExperimentalMaterialApi
@@ -125,9 +128,9 @@ fun ProjectListPreview() {
         name = "Test Project",
         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         isComplete = false,
-        type = "project",
+        documentType = "project",
         dueDate = Date(),
-        location = null,
+        warehouse = null,
         team = "Test Team",
         createdBy = "demo@example.com",
         modifiedBy = "demo@example.com",

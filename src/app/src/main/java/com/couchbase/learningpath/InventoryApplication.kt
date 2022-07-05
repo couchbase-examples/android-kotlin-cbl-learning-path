@@ -14,11 +14,13 @@ import java.lang.ref.WeakReference
 import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.audits.AuditRepositoryDb
-import com.couchbase.learningpath.data.location.LocationRepository
-import com.couchbase.learningpath.data.location.LocationRepositoryDb
 import com.couchbase.learningpath.data.project.ProjectRepository
 import com.couchbase.learningpath.data.project.ProjectRepositoryDb
+import com.couchbase.learningpath.data.stockItem.StockItemRepository
+import com.couchbase.learningpath.data.stockItem.StockItemRepositoryDb
 import com.couchbase.learningpath.data.userprofile.UserProfileRepository
+import com.couchbase.learningpath.data.warehouse.WarehouseRepository
+import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.learningpath.services.ReplicatorService
@@ -26,13 +28,14 @@ import com.couchbase.learningpath.services.ReplicatorServiceDb
 import com.couchbase.learningpath.ui.MainViewModel
 import com.couchbase.learningpath.ui.audit.AuditEditorViewModel
 import com.couchbase.learningpath.ui.audit.AuditListViewModel
+import com.couchbase.learningpath.ui.audit.StockItemSelectionViewModel
 import com.couchbase.learningpath.ui.developer.DevDatabaseInfoViewModel
 import com.couchbase.learningpath.ui.developer.DeveloperViewModel
 import com.couchbase.learningpath.ui.developer.ReplicatorConfigViewModel
 import com.couchbase.learningpath.ui.developer.ReplicatorViewModel
 import com.couchbase.learningpath.ui.login.LoginViewModel
 import com.couchbase.learningpath.ui.profile.UserProfileViewModel
-import com.couchbase.learningpath.ui.project.LocationSelectionViewModel
+import com.couchbase.learningpath.ui.project.WarehouseSelectionViewModel
 import com.couchbase.learningpath.ui.project.ProjectEditorViewModel
 import com.couchbase.learningpath.ui.project.ProjectListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,8 +74,9 @@ class InventoryApplication
             single { MockAuthenticationService() as AuthenticationService }
             single { ReplicatorServiceDb(get(), this@InventoryApplication) as ReplicatorService }
             single { UserProfileRepository(this@InventoryApplication) as KeyValueRepository }
-            single { LocationRepositoryDb(this@InventoryApplication) as LocationRepository }
-            single { ProjectRepositoryDb(this@InventoryApplication, get(), get()) as ProjectRepository }
+            single { WarehouseRepositoryDb(this@InventoryApplication) as WarehouseRepository }
+            single { ProjectRepositoryDb(this@InventoryApplication, get(), get(), get(), get()) as ProjectRepository }
+            single { StockItemRepositoryDb(this@InventoryApplication) as StockItemRepository }
             single { AuditRepositoryDb(this@InventoryApplication, get()) as AuditRepository }
 
             viewModel { MainViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
@@ -80,12 +84,13 @@ class InventoryApplication
             viewModel { ProjectListViewModel(get(), get()) }
             viewModel { ProjectEditorViewModel(get()) }
             viewModel { AuditListViewModel(get())}
-            viewModel { AuditEditorViewModel(get())}
+            viewModel { AuditEditorViewModel(get()) as AuditEditorViewModel}
 
-            viewModel { LocationSelectionViewModel(get(), get()) }
+            viewModel { WarehouseSelectionViewModel(get(), get()) }
+            viewModel { StockItemSelectionViewModel(get(), get()) }
             viewModel { UserProfileViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
             viewModel { DeveloperViewModel(get()) }
-            viewModel { DevDatabaseInfoViewModel(get(), get(), get(), get(), get()) }
+            viewModel { DevDatabaseInfoViewModel(get(), get(), get(), get(), get(), get()) }
             viewModel { ReplicatorViewModel(get())}
             viewModel { ReplicatorConfigViewModel(get())}
 

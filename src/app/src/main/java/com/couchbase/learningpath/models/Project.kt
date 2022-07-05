@@ -22,10 +22,10 @@ data class Project (
     var name: String = "",
     var description: String = "",
     var isComplete: Boolean = false,
-    var type: String = "",
+    var documentType: String = "",
     @Serializable(with = DateSerializer::class)
     var dueDate: Date? = null,
-    var location: Location? = null,
+    var warehouse: Warehouse? = null,
 
     //security tracking
     var team: String = "",

@@ -18,13 +18,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.couchbase.learningpath.data.DatabaseManager
-import com.couchbase.learningpath.data.location.LocationRepository
+import com.couchbase.learningpath.data.audits.AuditRepository
+import com.couchbase.learningpath.data.stockItem.StockItemRepository
+import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.models.Audit
-import com.couchbase.learningpath.models.Location
+import com.couchbase.learningpath.models.Warehouse
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.ProjectDao
 import com.couchbase.learningpath.services.AuthenticationService
-import com.couchbase.learningpath.services.RandomDescriptionService
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalCoroutinesApi
@@ -32,10 +33,12 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class ProjectRepositoryDb(
     private val context: Context,
     private val authenticationService: AuthenticationService,
-    private val locationRepository: LocationRepository
+    private val auditRepository: AuditRepository,
+    private val warehouseRepository: WarehouseRepository,
+    private val stockItemRepository: StockItemRepository,
 ) : ProjectRepository {
-    private val projectType = "project"
-    private val auditType = "audit"
+    private val projectDocumentType = "project"
+    private val auditDocumentType = "audit"
 
     override val databaseName: String
         get() = DatabaseManager.getInstance(context).currentInventoryDatabaseName
@@ -50,23 +53,23 @@ class ProjectRepositoryDb(
             // method isn't available  work around is to do your entire statement without the as
             // function call and add that in last
             db?.let { database ->
-                val query = QueryBuilder        // 1
-                    .select(SelectResult.all()) // 2
-                    .from(DataSource.database(database).`as`("item")) // 3
+                val query = QueryBuilder        // <1>
+                    .select(SelectResult.all()) // <2>
+                    .from(DataSource.database(database).`as`("item")) // <3>
                     .where( //4
-                        Expression.property("type").equalTo(Expression.string(projectType)) // 4
+                        Expression.property("documentType").equalTo(Expression.string(projectDocumentType)) // <4>
                             .and(Expression.property("team").equalTo(Expression.string(team)))
-                    ) //4
+                    ) // <4>
 
                 // create a flow to return the results dynamically as needed - more information on
                 // CoRoutine Flows can be found at
                 // https://developer.android.com/kotlin/flow
-                val flow = query        // 1
-                    .queryChangeFlow()  // 2
-                    .map { qc -> mapQueryChangeToProject(qc) } // 3
-                    .flowOn(Dispatchers.IO)  // 4
-                query.execute()  // 5
-                return flow  // 6
+                val flow = query        // <1>
+                    .queryChangeFlow()  // <1>
+                    .map { qc -> mapQueryChangeToProject(qc) } // <2>
+                    .flowOn(Dispatchers.IO)  // <3>
+                query.execute()  // <4>
+                return flow  // <5>
             }
         } catch (e: Exception) {
             Log.e(e.message, e.stackTraceToString())
@@ -125,18 +128,18 @@ class ProjectRepositoryDb(
                         modifiedOn = Date(),
                         team = team,
                         dueDate = dueDate,
-                        type = "project"
+                        documentType = "project"
                     )
                     )
         }
     }
 
-    override suspend fun updateProjectLocation(projectId: String, location: Location) {
+    override suspend fun updateProjectWarehouse(projectId: String, warehouse: Warehouse) {
         return withContext(Dispatchers.IO) {
             try {
                 val db = DatabaseManager.getInstance(context).inventoryDatabase
                 val project = get(projectId)
-                project.location = location
+                project.warehouse = warehouse
                 db?.let { database ->
                     val json = Json.encodeToString(project)
                     val doc = MutableDocument(project.projectId, json)
@@ -176,6 +179,7 @@ class ProjectRepositoryDb(
                     val projectDoc = database.getDocument(documentId)
                     projectDoc?.let { document ->
                         db.delete(document)
+                        auditRepository.deleteProjectAudits(projectId = documentId)
                         result = true
                     }
                 }
@@ -199,7 +203,7 @@ class ProjectRepositoryDb(
                         ) // 2
                         .from(DataSource.database(database)) //3
                         .where(
-                            Expression.property("type").equalTo(Expression.string(projectType))
+                            Expression.property("documentType").equalTo(Expression.string(projectDocumentType))
                         ) // 4
                     val results = query.execute().allResults() // 5
                     count = results[0].getInt("count") // 6
@@ -214,25 +218,29 @@ class ProjectRepositoryDb(
     override suspend fun loadSampleData() {
         return withContext(Dispatchers.IO) {
             try {
-                val currentUser = authenticationService.getCurrentUser()
-                val descriptionService = RandomDescriptionService()
-                val locations = locationRepository.get()
-                val locationsCount = locations.count() - 1
-                if (locationsCount > 0) {
+                val currentUser = authenticationService.getCurrentUser() // <1>
+                val warehouses = warehouseRepository.get()  // <2>
+                val warehouseCount = warehouses.count() - 1  // <3>
+                val stockItems = stockItemRepository.get()   // <4>
+                val stockItemsCount = stockItems.count() - 1 // <5>
+
+                if (warehouseCount > 0 && stockItemsCount > 0) {
                     val db = DatabaseManager.getInstance(context).inventoryDatabase
                     db?.let { database ->
                         // batch operations for saving multiple documents
                         // this is a faster way to process groups of documents at once
                         // https://docs.couchbase.com/couchbase-lite/current/android/document.html#batch-operations
-                        database.inBatch(UnitOfWork {   // 1
-                            for (count in 1..10) {      // 2
+                        database.inBatch(UnitOfWork {   // <1>
+                            for (count in 0..11) {      // <2>
                                 val projectId = UUID.randomUUID().toString()
-                                val document = Project(  //3
+                                val warehouse = warehouses[count] // <3>
+
+                                val document = Project(  // <4>
                                     projectId = projectId,
-                                    name = "Project ${(1..1000000).random()}",
-                                    description = descriptionService.randomDescription(),
+                                    name = "${warehouse.name} Audit",
+                                    description = "Audit of warehouse stock located in ${warehouse.city}, ${warehouse.state}.",
                                     isComplete = false,
-                                    type = projectType,
+                                    documentType = projectDocumentType,
                                     dueDate = SimpleDateFormat(
                                         "MM-dd-yyyy",
                                         Locale.US
@@ -242,22 +250,22 @@ class ProjectRepositoryDb(
                                     modifiedBy = currentUser.username,
                                     createdOn = Date(),
                                     modifiedOn = Date(),
-                                    location = locations[(0..locationsCount).random()]
+                                    warehouse = warehouses[count]
                                 )
-                                val json = Json.encodeToString(document) // 4
-                                val doc = MutableDocument(document.projectId, json) // 5
-                                database.save(doc) // 6
+                                val json = Json.encodeToString(document) // <5>
+                                val doc = MutableDocument(document.projectId, json) // <6>
+                                database.save(doc) // <7>
 
-                                //create random audit items per project
-                                for (auditCount in 1..10){
+                                //create random audit items per project // <8>
+                                for (auditCount in 1..50){
+                                    val stockItem = stockItems[(0..stockItemsCount).random()]
                                     val auditDocument = Audit(
                                         auditId = UUID.randomUUID().toString(),
                                         projectId = projectId,
-                                        name = "Widget Item ${(1..1000000).random()}",
-                                        count = (1..1000).random(),
-                                        type = auditType,
-                                        notes = descriptionService.randomDescription(),
-                                        partNumber = (1..1000000).random().toString(),
+                                        count = (1..100000).random(),
+                                        stockItem =  stockItem,
+                                        documentType = auditDocumentType,
+                                        notes = "Found item ${stockItem.name} - ${stockItem.description} in warehouse",
                                         team = currentUser.team,
                                         createdBy = currentUser.username,
                                         modifiedBy = currentUser.username,

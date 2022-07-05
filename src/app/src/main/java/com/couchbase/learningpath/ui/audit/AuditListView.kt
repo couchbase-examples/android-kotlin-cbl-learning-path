@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 
 import com.couchbase.learningpath.models.Audit
+import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.ui.components.*
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +44,7 @@ fun AuditListView(
                     onNavClick = {
                         navigateToAuditEditor(
                             viewModel.project.projectId,
-                            "create"
+                            UUID.randomUUID().toString()
                         )
                     }
                 )
@@ -105,13 +106,11 @@ fun AuditListPreview() {
     val audit = Audit(
         auditId = "",
         projectId = "",
-        name = "Test Audit",
+        stockItem = StockItem("000-000-0000", name = "Test Item", description = "Test Item Description", price = 0.0F, documentType="item"),
         count = 100,
         notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        partNumber = "123456789",
         team = "Test Team",
-        type = "Test Type",
-        pictureMetadata = null,
+        documentType = "Test Type",
         createdBy = "demo@example.com",
         modifiedBy = "demo@example.com",
         createdOn = Date(),

@@ -45,22 +45,22 @@
 		"username": "admin",
 		"password": "P@$$w0rd",
 	   "users": { 
-		 "demo@example.com":  { "password": "password", "admin_roles": ["team1"] },
-		 "demo1@example.com": { "password": "password", "admin_roles": ["team1"] },
-		 "demo2@example.com": { "password": "password", "admin_roles": ["team2"] },
-		 "demo3@example.com": { "password": "password", "admin_roles": ["team2"] },
-		 "demo4@example.com": { "password": "password", "admin_roles": ["team3"] },
-		 "demo5@example.com": { "password": "password", "admin_roles": ["team3"] },
-		 "demo6@example.com": { "password": "password", "admin_roles": ["team4"] },
-		 "demo7@example.com": { "password": "password", "admin_roles": ["team4"] },
-		 "demo8@example.com": { "password": "password", "admin_roles": ["team5"] },
-		 "demo9@example.com": { "password": "password", "admin_roles": ["team5"] },
-		 "demo10@example.com": { "password": "password", "admin_roles": ["team6"] },
-		 "demo11@example.com": { "password": "password", "admin_roles": ["team6"] },
-		 "demo12@example.com": { "password": "password", "admin_roles": ["team7"] },
-		 "demo13@example.com": { "password": "password", "admin_roles": ["team8"] },
-		 "demo14@example.com": { "password": "password", "admin_roles": ["team9"] },
-		 "demo15@example.com": { "password": "password", "admin_roles": ["team10"] }
+		"demo@example.com":  { "password": "P@ssw0rd12", "admin_roles": ["team1"] },
+		"demo1@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team1"] },
+		"demo2@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team2"] },
+		"demo3@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team2"] },
+		"demo4@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team3"] },
+		"demo5@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team3"] },
+		"demo6@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team4"] },
+		"demo7@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team4"] },
+		"demo8@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team5"] },
+		"demo9@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team5"] },
+		"demo10@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team6"] },
+		"demo11@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team6"] },
+		"demo12@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team7"] },
+		"demo13@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team8"] },
+		"demo14@example.com": { "password": "P@ssword12", "admin_roles": ["team9"] },
+		"demo15@example.com": { "password": "P@ssw0rd12", "admin_roles": ["team10"] }
 		},
 		"roles": {
 		  "team1": {
@@ -116,7 +116,7 @@
 		},
 	  "import_filter":  ` function(doc) {
 		console.log("********Processing import filter - documents from couchbase server");
- 		if (doc.type == 'project' || doc.type == 'location' || doc.type == 'user' || doc.type == 'audit') {
+ 		if (doc.documentType == 'project' || doc.documentType == 'warehouse' || doc.documentType == 'user' || doc.documentType == 'audit' || doc.documentType == 'item') {
 			return true;
 		}
 		return false;
@@ -125,10 +125,10 @@
 		function sync(doc, oldDoc) {
 	  
 		/* Data Validation */
-		validateNotEmpty("type", doc.type);
+		validateNotEmpty("documentType", doc.documentType);
   
-		if (doc.type == 'location'){
-		  console.log("********Processing Location Docs - setting it to global/public");
+		if (doc.documentType == 'warehouse'){
+		  console.log("********Processing Warehouse Docs - setting it to global/public");
 		  channel('!');
 		} else {
 		  console.log("********Processing Team Docs");
@@ -157,7 +157,7 @@
 		}
 	// get type property
 	function getType() {
-	  return (isDelete() ? oldDoc.type : doc.type);
+	  return (isDelete() ? oldDoc.documentType : doc.documentType);
 	}
   
 	// get email Id property

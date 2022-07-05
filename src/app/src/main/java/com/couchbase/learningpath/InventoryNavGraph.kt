@@ -10,10 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.couchbase.learningpath.ui.audit.AuditEditorView
-import com.couchbase.learningpath.ui.audit.AuditEditorViewModel
-import com.couchbase.learningpath.ui.audit.AuditListView
-import com.couchbase.learningpath.ui.audit.AuditListViewModel
+import com.couchbase.learningpath.ui.audit.*
 import com.couchbase.learningpath.ui.developer.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,6 +51,9 @@ object MainDestinations {
     const val AUDIT_EDITOR_ROUTE_PATH = "auditEditor/{projectId}/{audit}"
     const val AUDIT_EDITOR_ROUTE = "auditEditor"
     const val AUDIT_EDITOR_KEY_ID = "audit"
+
+    const val STOCK_ITEM_ROUTE_PATH = "stock_item_list/{projectId}/{audit}"
+    const val STOCK_ITEM_LIST_ROUTE = "stock_item_list"
 }
 
 //main function for handling navigation graph in the app
@@ -67,7 +67,6 @@ fun InventoryNavGraph(
     scope: CoroutineScope = rememberCoroutineScope(),
     startDestination: String = MainDestinations.LOGIN_ROUTE) {
     val actions = remember(navController) { MainActions(navController) }
-
     NavHost(navController = navController,
         startDestination = startDestination) {
 
@@ -88,6 +87,22 @@ fun InventoryNavGraph(
                 viewModel = getViewModel<ProjectListViewModel>())
         }
 
+        composable(MainDestinations.AUDIT_LIST_ROUTE_PATH){ backstackEntry ->
+            val projectJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_LIST_KEY_ID)
+            projectJson?.let {
+                val viewModel = getViewModel<AuditListViewModel>()
+                viewModel.projectJson = it
+                viewModel.getAudits()
+                AuditListView(
+                    viewModel = viewModel,
+                    actions.upPress,
+                    actions.navigateToAuditEditor,
+                    scaffoldState = scaffoldState,
+                    snackBarCoroutineScope = scope
+                )
+            }
+        }
+
         composable(MainDestinations.PROJECT_EDITOR_ROUTE_PATH ) { backstackEntry ->
             val projectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
             val viewModel = getViewModel<ProjectEditorViewModel>()
@@ -104,54 +119,73 @@ fun InventoryNavGraph(
                 scaffoldState = scaffoldState)
         }
 
-        composable(MainDestinations.AUDIT_LIST_ROUTE_PATH){ backstackEntry ->
-            var projectJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_LIST_KEY_ID)
-            projectJson?.let {
-                val viewModel = getViewModel<AuditListViewModel>()
-                viewModel.projectJson = it
-                viewModel.getAudits()
-                AuditListView(
-                    viewModel = viewModel,
-                    actions.upPress,
-                    actions.navigateToAuditEditor,
-                    scaffoldState = scaffoldState,
-                    snackBarCoroutineScope = scope
-                )
-            }
-        }
-
         composable(MainDestinations.AUDIT_EDITOR_ROUTE_PATH){ backstackEntry ->
             var projectId = ""
-            var auditJson = "create"
+            var auditId = "create"
 
-            var argProjectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
-            var argAuditJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_EDITOR_KEY_ID )
+            val argProjectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
+            val argAuditId = backstackEntry.arguments?.getString(MainDestinations.AUDIT_EDITOR_KEY_ID )
 
             argProjectId?.let {
                 projectId = it
             }
-            argAuditJson?.let {
-                auditJson = it
+            argAuditId?.let {
+                auditId = it
             }
+            val viewModel = getViewModel<AuditEditorViewModel>()
+                viewModel.getAudit(projectId = projectId, auditId = auditId)
+                viewModel.navigateToListSelection = actions.navigateToStockItemListSelector
 
             AuditEditorView(
-                viewModel = getViewModel<AuditEditorViewModel>(),
-                projectId = projectId,
-                auditJson = auditJson,
-                navigateUp = actions.upPress)
+                viewModel = viewModel,
+                navigateUp = actions.upPress
+            )
         }
 
         composable(MainDestinations.LOCATION_ROUTE_PATH) {  backstackEntry ->
             val projectId = backstackEntry.arguments?.getString(MainDestinations.LOCATION_LIST_KEY_ID)
             projectId?.let {
-                val viewModel = getViewModel<LocationSelectionViewModel>()
+                val viewModel = getViewModel<WarehouseSelectionViewModel>()
                 viewModel.projectId(it)
-                LocationSelectionView(
+                WarehouseSelectionView(
                     viewModel = viewModel,
                     navigateUp = actions.upPress
                 )
             }
         }
+
+        composable(MainDestinations.STOCK_ITEM_ROUTE_PATH) {  backstackEntry ->
+            var projectId = ""
+            var auditId = ""
+
+            val argProjectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
+            val argAuditId = backstackEntry.arguments?.getString(MainDestinations.AUDIT_EDITOR_KEY_ID )
+
+            argProjectId?.let {
+                projectId = it
+            }
+            argAuditId?.let {
+                auditId = it
+            }
+
+            val viewModel = getViewModel<StockItemSelectionViewModel>()
+            val auditEditorViewModel = getViewModel<AuditEditorViewModel>()
+
+            viewModel.projectId(projectId)
+            viewModel.auditId(auditId)
+
+            viewModel.navigateUp = {
+                auditEditorViewModel.loadAudit()
+                actions.upPress()
+            }
+
+            StockItemSelectionView(
+                    viewModel = viewModel,
+                    navigateUp = {
+                        auditEditorViewModel.loadAudit()
+                        actions.upPress() }
+            )
+       }
 
         composable(MainDestinations.USERPROFILE_ROUTE) {
             UserProfileView(
@@ -174,6 +208,7 @@ fun InventoryNavGraph(
                 navigateUp = actions.upPress,
                 viewModel = getViewModel<DevDatabaseInfoViewModel>())
         }
+
         composable(MainDestinations.REPLICATOR_ROUTE){
             ReplicatorView(
                 viewModel = getViewModel<ReplicatorViewModel>(),
@@ -182,6 +217,7 @@ fun InventoryNavGraph(
                 scaffoldState = scaffoldState
             )
         }
+
         composable(MainDestinations.REPLICATOR_SETTINGS_ROUTE){
             ReplicatorConfigView(
                 viewModel = getViewModel<ReplicatorConfigViewModel>(),
@@ -189,6 +225,7 @@ fun InventoryNavGraph(
                 scaffoldState = scaffoldState
             )
         }
+
         composable(MainDestinations.LOGOUT_ROUTE){
         }
     }
@@ -198,8 +235,13 @@ fun InventoryNavGraph(
  * Models the navigation actions in the app.
  */
 class MainActions(navController: NavHostController) {
+
     val navigateToLocationListSelector: (String) -> Unit = {projectId: String ->
         navController.navigate("${MainDestinations.LOCATION_LIST_ROUTE}/$projectId")
+    }
+
+    val navigateToStockItemListSelector: (String, String) -> Unit = { projectId: String, auditId: String ->
+        navController.navigate("${MainDestinations.STOCK_ITEM_LIST_ROUTE}/$projectId/$auditId")
     }
     val navigateToProjectEditor: (String) -> Unit = { projectId: String ->
         navController.navigate("${MainDestinations.PROJECT_EDITOR_ROUTE}/$projectId")

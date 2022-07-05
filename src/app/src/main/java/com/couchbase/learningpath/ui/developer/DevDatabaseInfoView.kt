@@ -37,12 +37,13 @@ fun DevDatabaseInfoView(
                 DeveloperInfoWidget(
                     viewModel.inventoryDatabaseName.value,
                     viewModel.inventoryDatabaseLocation.value,
-                    viewModel.locationDatabaseName,
+                    viewModel.warehouseDatabaseName,
                     viewModel.locationDatabaseLocation,
                     viewModel.currentUsername.value,
                     viewModel.currentTeam.value,
                     viewModel.numberOfUserProfiles.value,
-                    viewModel.numberOfLocations.value,
+                    viewModel.numberOfWarehouses.value,
+                    viewModel.numberOfStockItems.value,
                     viewModel.numberOfProjects.value,
                     viewModel.numberOfAudits.value,
                 )
@@ -55,12 +56,13 @@ fun DevDatabaseInfoView(
 fun DeveloperInfoWidget(
     inventoryDatabaseName: String,
     inventoryDatabaseLocation: String?,
-    locationDatabaseName: () -> String?,
-    locationDatabaseLocation: () -> String?,
+    warehouseDatabaseName: () -> String?,
+    warehouseDatabaseLocation: () -> String?,
     currentUser: String,
     currentTeam: String,
     numberOfUserProfiles: Int,
-    numberOfLocations: Int,
+    numberOfWarehouses: Int,
+    numberOfStockItems: Int,
     numberOfProjects: Int,
     numberOfAudits: Int
 ) {
@@ -202,14 +204,14 @@ fun DeveloperInfoWidget(
                 modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
             )
         }
-        locationDatabaseLocation()?.let {
+        warehouseDatabaseLocation()?.let {
             item {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Location Database Path", fontWeight = FontWeight.Bold)
+                    Text("Warehouse Database Path", fontWeight = FontWeight.Bold)
                 }
             }
             item {
@@ -227,14 +229,14 @@ fun DeveloperInfoWidget(
                 )
             }
         }
-        locationDatabaseName()?.let {
+        warehouseDatabaseName()?.let {
             item {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Location Database Name", fontWeight = FontWeight.Bold)
+                    Text("Warehouse Database Name", fontWeight = FontWeight.Bold)
                 }
                 Row(
                     horizontalArrangement = Arrangement.Start,
@@ -256,14 +258,35 @@ fun DeveloperInfoWidget(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Location Count", fontWeight = FontWeight.Bold)
+                Text("Warehouse Count", fontWeight = FontWeight.Bold)
             }
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("$numberOfLocations")
+                Text("$numberOfWarehouses")
+            }
+            Divider(
+                color = Color.LightGray,
+                thickness = 2.dp,
+                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp)
+            )
+        }
+        item {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Stock Items Count", fontWeight = FontWeight.Bold)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("$numberOfStockItems")
             }
             Divider(
                 color = Color.LightGray,
@@ -279,24 +302,26 @@ fun DeveloperInfoWidget(
 fun DeveloperInfoWidgetPreview() {
     val inventoryDatabaseName = "inventoryDummy"
     val inventoryDatabaseLocation = "/blah/inventory"
-    val locationDatabaseName = "locationDummy"
-    val locationDatabaseLocation = "/blah/location"
+    val warehouseDatabaseName = "warehouseDummy"
+    val warehouseDatabaseLocation = "/blah/warehouse"
     val currentUser = "demo@example.com"
     val currentTeam = "Santa Clara Team"
     val numberOfDocuments = 1000000000
-    val numberOfLocations = 1000000000
+    val numberOfWarehouseLocations = 1000000000
+    val numberOfStockItems = 10000
     val numberOfProjects = 1000000000
     val numberOfAudits = 100000
 
     DeveloperInfoWidget(
         inventoryDatabaseName = inventoryDatabaseName,
         inventoryDatabaseLocation = inventoryDatabaseLocation,
-        locationDatabaseName =  { locationDatabaseName },
-        locationDatabaseLocation = { locationDatabaseLocation},
+        warehouseDatabaseName =  { warehouseDatabaseName },
+        warehouseDatabaseLocation = { warehouseDatabaseLocation},
         currentUser = currentUser,
         currentTeam = currentTeam,
         numberOfUserProfiles = numberOfDocuments,
-        numberOfLocations = numberOfLocations,
+        numberOfWarehouses = numberOfWarehouseLocations,
+        numberOfStockItems = numberOfStockItems,
         numberOfProjects = numberOfProjects,
         numberOfAudits = numberOfAudits
     )

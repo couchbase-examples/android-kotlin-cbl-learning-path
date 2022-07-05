@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.couchbase.learningpath.ui.developer
 
 import androidx.compose.runtime.mutableStateOf
@@ -9,15 +11,18 @@ import kotlinx.coroutines.withContext
 
 import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.data.audits.AuditRepository
-import com.couchbase.learningpath.data.location.LocationRepository
 import com.couchbase.learningpath.data.project.ProjectRepository
+import com.couchbase.learningpath.data.stockItem.StockItemRepository
+import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.services.AuthenticationService
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class DevDatabaseInfoViewModel(
     private val userProfileRepository: KeyValueRepository,
-    private val locationRepository: LocationRepository,
+    private val warehouseRepository: WarehouseRepository,
     private val projectRepository: ProjectRepository,
     private val auditRepository: AuditRepository,
+    private val stockItemRepository: StockItemRepository,
     authService: AuthenticationService
 ) : ViewModel() {
 
@@ -25,19 +30,21 @@ class DevDatabaseInfoViewModel(
     var inventoryDatabaseName = mutableStateOf(userProfileRepository.inventoryDatabaseName())
     var inventoryDatabaseLocation =
         mutableStateOf(userProfileRepository.inventoryDatabaseLocation())
-    var locationDatabaseName = locationRepository.locationDatabaseName
-    var locationDatabaseLocation = locationRepository.locationDatabaseLocation
+    var warehouseDatabaseName = warehouseRepository.warehouseDatabaseName
+    var locationDatabaseLocation = warehouseRepository.warehouseDatabaseLocation
     var currentTeam = mutableStateOf("")
     var currentUsername = mutableStateOf("")
     var numberOfUserProfiles = mutableStateOf(0)
-    var numberOfLocations = mutableStateOf(0)
+    var numberOfWarehouses = mutableStateOf(0)
+    var numberOfStockItems = mutableStateOf(0)
     var numberOfProjects = mutableStateOf(0)
     var numberOfAudits = mutableStateOf(0)
     init {
         viewModelScope.launch {
             updateUserProfileInfo()
             updateUserProfileCount()
-            updateLocationCount()
+            updateWarehouseCount()
+            updateStockItemCount()
             updateProjectCount()
             updateAuditCount()
         }
@@ -64,12 +71,23 @@ class DevDatabaseInfoViewModel(
         }
     }
 
-    private suspend fun updateLocationCount() {
+    private suspend fun updateWarehouseCount() {
         viewModelScope.launch(Dispatchers.IO) {
-            val locationCount = locationRepository.locationCount()
+            val locationCount = warehouseRepository.warehouseCount()
             if (locationCount > 0) {
                 withContext(Dispatchers.Main) {
-                    numberOfLocations.value = locationCount
+                    numberOfWarehouses.value = locationCount
+                }
+            }
+        }
+    }
+
+    private suspend fun updateStockItemCount() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val stockItemCount = stockItemRepository.count()
+            if (stockItemCount > 0) {
+                withContext(Dispatchers.Main) {
+                    numberOfStockItems.value = stockItemCount
                 }
             }
         }

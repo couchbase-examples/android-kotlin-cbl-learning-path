@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.couchbase.learningpath.ui.project
 
 import androidx.compose.foundation.layout.*
@@ -21,6 +23,7 @@ import com.couchbase.learningpath.ui.components.HorizontalDottedProgressBar
 import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
+import kotlinx.serialization.ExperimentalSerializationApi
 
 @Composable
 fun ProjectEditorView(
@@ -49,7 +52,7 @@ fun ProjectEditorView(
 
                 ProjectEditor(
                     project = viewModel.projectState.value,
-                    locationSelection = viewModel.locationSelectionState.value,
+                    locationSelection = viewModel.warehouseSelectionState.value,
                     dueDate = viewModel.dueDateState.value,
                     onNameChange = viewModel.onNameChanged,
                     onDescriptionChange = viewModel.onDescriptionChanged,
@@ -71,7 +74,8 @@ fun ProjectEditor(
     onDescriptionChange: (String) -> Unit,
     onDateChanged: (Long?) -> Unit,
     onSaveProject: (navigateUp: Boolean) -> Unit,
-    errorMessage: String){
+    errorMessage: String
+){
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
@@ -126,7 +130,6 @@ fun ProjectEditor(
                         }
                     }
                 }
-
             }
             item {
                 Column(
