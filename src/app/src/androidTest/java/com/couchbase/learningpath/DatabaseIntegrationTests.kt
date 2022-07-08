@@ -13,17 +13,19 @@ import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.User
+import com.couchbase.learningpath.models.Warehouse
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.lite.CouchbaseLiteException
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
+import com.couchbase.lite.Dictionary
+import junit.framework.Assert.assertNull
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -50,20 +52,35 @@ class DatabaseIntegrationTests {
     private val demoUser1Username = "demo@example.com"
     private val demoUser1Password = "P@ssw0rd12"
     private val demoUser1Team = "team1"
+    private val demoUser1Surname = "Doe"
+    private val demoUser1GivenName = "Jane"
+    private val demoUser1JobTitle = "Software Developer"
 
     private val demoUser2Username = "demo2@example.com"
     private val demoUser2Password = "P@ssw0rd12"
     private val demoUser2Team = "team2"
+    private val demoUser2Surname = "Smith"
+    private val demoUser2GivenName = "Bob"
+    private val demoUser2JobTitle = "QA Engineer"
 
-    @Before fun setup() {
+    @Before
+    fun setup() {
         try {
             //arrange database
             context = ApplicationProvider.getApplicationContext()
             databaseManager = DatabaseManager.getInstance(context)
 
             //arrange test users
-            user1 = User(username = demoUser1Username, password = demoUser1Password, team = demoUser1Team)
-            user2 = User(username = demoUser2Username, password = demoUser2Password, team = demoUser2Team)
+            user1 = User(
+                username = demoUser1Username,
+                password = demoUser1Password,
+                team = demoUser1Team
+            )
+            user2 = User(
+                username = demoUser2Username,
+                password = demoUser2Password,
+                team = demoUser2Team
+            )
 
             //setup databases for use
             //if a test fails the database will be dirty, this
@@ -85,18 +102,20 @@ class DatabaseIntegrationTests {
                 authenticationService = authenticationService,
                 auditRepository = auditRepository,
                 warehouseRepository = warehouseRepository,
-                stockItemRepository = stockItemRepository)
+                stockItemRepository = stockItemRepository
+            )
 
             //load sample data
             runTest {
                 projectRepository.loadSampleData()
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(e.message, e.stackTraceToString())
         }
     }
 
-    @After fun cleanUp() {
+    @After
+    fun cleanUp() {
         try {
             databaseManager.closeDatabases()
             databaseManager.deleteDatabases()
@@ -105,8 +124,8 @@ class DatabaseIntegrationTests {
         }
     }
 
-    @Test fun databaseSetupTest(){
-
+    @Test
+    fun databaseSetupTest() {
         //arrange
         databaseManager.closeDatabases()
         databaseManager.initializeDatabases(user2)
@@ -128,6 +147,142 @@ class DatabaseIntegrationTests {
     }
 
     @Test
+    fun testUserProfileCount() {
+        //arrange
+        runTest {
+            val dict = getDemoUser1ProfileDictionary()
+
+            //act
+            val preCount = userProfileRepository.count()
+            val didSave = userProfileRepository.save(dict)
+            val postCount = userProfileRepository.count()
+
+            //assert
+            assertTrue(didSave)
+            assertEquals(0, preCount)
+            assertEquals(1, postCount)
+
+            userProfileRepository.delete("user::${user1.username}")
+        }
+    }
+
+    @Test
+    fun testSaveGetUserProfile() {
+        //arrange
+        runTest {
+            val dict = getDemoUser1ProfileDictionary()
+
+            //act
+            userProfileRepository.save(dict)
+            val demoUser1UserProfile = userProfileRepository.get(user1.username)
+
+            //assert
+            assertEquals(demoUser1GivenName, demoUser1UserProfile["givenName"])
+            assertEquals(demoUser1Surname, demoUser1UserProfile["surname"])
+            assertEquals(demoUser1JobTitle, demoUser1UserProfile["jobTitle"])
+            assertEquals(user1.username, demoUser1UserProfile["email"])
+
+            //cleanup
+            userProfileRepository.delete("user::${user1.username}")
+        }
+    }
+
+    @Test
+    fun testProjectCount() {
+        //arrange
+        runTest {
+            //act
+            val projectCount = projectRepository.count()
+
+            //assert
+            assertEquals(12, projectCount)
+        }
+    }
+
+    @Test
+    fun testGetProjectDocuments() {
+        //arrange
+        runTest {
+            //act
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val projectsTeam2 = projectRepository.getDocuments(user2.team).first()
+
+            //assert
+            assertEquals(12, projects.count())
+            assertEquals(0, projectsTeam2.count())
+        }
+    }
+
+    @Test
+    fun testGetProject() {
+        //arrange
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val firstProject = projects.first()
+            //act
+            val project = projectRepository.get(firstProject.projectId)
+
+            //assert
+            assertNotNull(project)
+            assertEquals(firstProject.name, project.name)
+        }
+    }
+
+    @Test
+    fun testUpdateProjectWarehouse() {
+        //arrange
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val secondProject = projects[1]
+            val warehouses = warehouseRepository.get()
+            val warehouse = warehouses[warehouses.count() - 2]
+            //act
+            projectRepository.updateProjectWarehouse(secondProject.projectId, warehouse)
+            val updatedProject = projectRepository.get(secondProject.projectId)
+
+            //assert
+            assertNotNull(updatedProject)
+            assertEquals(updatedProject.warehouse, warehouse)
+            assertNotEquals(secondProject.warehouse, warehouse)
+        }
+    }
+
+    @Test
+    fun testProjectSave() {
+        //arrange
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val thirdProject = projects[3]
+            thirdProject.name = "Updated Name"
+            thirdProject.description = "Updated Description"
+            //act
+            projectRepository.save(thirdProject)
+            val updatedProject = projectRepository.get(thirdProject.projectId)
+
+            //assert
+            assertNotNull(updatedProject)
+            assertEquals("Updated Name", updatedProject.name)
+            assertEquals("Updated Description", updatedProject.description)
+        }
+    }
+
+    @Test
+    fun testProjectDelete() {
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val deleteProject = projects[projects.count() - 1]
+            //act
+            val result = projectRepository.delete(deleteProject.projectId)
+            val updatedProject = projectRepository.get(deleteProject.projectId)
+
+            //assert
+            assertTrue(result)
+            assertNotNull(updatedProject)
+            assertNotEquals(deleteProject.name, updatedProject.name)
+        }
+    }
+
+    @Test
     fun testWarehousePrebuiltDatabaseCount() {
         //arrange
         runTest {
@@ -141,93 +296,63 @@ class DatabaseIntegrationTests {
         }
     }
 
-    @Test fun testProjectCount(){
+    @Test fun testGetWarehouse(){
         //arrange
         runTest {
             //act
-            val projectCount = projectRepository.count()
+            val warehouses = warehouseRepository.get()
 
             //assert
-            assertEquals(12, projectCount)
+            assertNotNull(warehouses)
+            assertEquals(50, warehouses.count())
         }
     }
 
-    @Test fun testGetProjectDocuments() {
+    @Test fun testWarehouseGetByCityState(){
         //arrange
         runTest {
-            //act
-            val collectJob = launch(UnconfinedTestDispatcher()) {
-                val flow = projectRepository.getDocuments(user1.team)
-                flow.collect { projects ->
-                    //assert
-                    assertEquals(12, projects.count())
-                }
-            }
-            collectJob.cancel()
-        }
+           //act
+            val warehouses = warehouseRepository.get()
+            val warehouse1 = warehouses[0]
+            val warehouse1CitySearch = warehouse1.city.substring(0, 3)
+            val warehouse2 = warehouses[1]
+            val warehouse2CitySearch = warehouse2.city.substring(0, 3)
+            val warehouse2StateSearch = warehouse2.state.substring(0,1)
 
-        runTest {
-                //act
-            val collectJob = launch(UnconfinedTestDispatcher()) {
-                val projectTeam2 = projectRepository.getDocuments(user2 .team)
-                    .collect { projects ->
-                //assert
-                    assertEquals(0, projects.count())
-                }
-            }
-            collectJob.cancel()
-        }
-    }
+            val warehouseResults1 = warehouseRepository.getByCityState(warehouse1CitySearch, null)
+            val warehouseResults2 = warehouseRepository.getByCityState(warehouse2CitySearch, warehouse2StateSearch)
 
-    @Test fun testGetProject(){
-        //arrange
-        runTest{
-            val collectJob = launch(UnconfinedTestDispatcher()) {
-                projectRepository.getDocuments(user1 .team)
-                    .collect { projects ->
-                        val firstProject = projects[0]
-                        //act
-                        val project = projectRepository.get(firstProject.projectId)
+            //assert
+            assertNotNull(warehouseResults1)
+            assertEquals(2, warehouseResults1.count())
+            assertEquals(warehouse1.city, warehouseResults1.first().city)
 
-                        //assert
-                        assertNotNull(project)
-                        assertEquals(firstProject.name, project.name)
-                    }
-            }
-            collectJob.cancel()
+            assertNotNull(warehouseResults2)
+            assertEquals(1, warehouseResults2.count())
+            assertEquals(warehouse2.city, warehouseResults2.first().city)
+            assertEquals(warehouse2.state, warehouseResults2.first().state)
         }
     }
 
-    @Test fun testUpdateProjectWarehouse(){
-        //arrange
-
-        //act
-
-        //assert
-        throw Exception("Not Implemented")
-
+    private fun getDemoUser1ProfileDictionary(): MutableMap<String, String> {
+        val dict = mutableMapOf<String, String>()
+        dict["givenName"] = demoUser1GivenName
+        dict["surname"] = demoUser1Surname
+        dict["jobTitle"] = demoUser1JobTitle
+        dict["team"] = user1.team
+        dict["email"] = user1.username
+        dict["documentType"] = "user"
+        return dict
     }
 
-    @Test fun testProjectSave(){
-        //arrange
-
-        //act
-
-
-        //assert
-        throw Exception("Not Implemented")
+    private fun getDemoUser2ProfileDictionary(): MutableMap<String, String> {
+        val dict = mutableMapOf<String, String>()
+        dict["givenName"] = demoUser2GivenName
+        dict["surname"] = demoUser2Surname
+        dict["jobTitle"] = demoUser2JobTitle
+        dict["team"] = user2.team
+        dict["email"] = user2.username
+        dict["documentType"] = "user"
+        return dict
     }
-
-    @Test fun testProjectDelete(){
-        //arrange
-
-        //act
-
-
-        //assert
-        throw Exception("Not Implemented")
-    }
-
-
-
 }
