@@ -8,8 +8,11 @@ import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.data.stockItem.StockItemRepositoryDb
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
+import com.couchbase.learningpath.models.Audit
+import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.models.User
 import com.couchbase.lite.CouchbaseLiteException
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -19,7 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class DatabaseIntegrationTests {
+class AuditIntegrationTests {
 
     lateinit var context: Context
     lateinit var databaseManager: DatabaseManager
@@ -28,64 +31,63 @@ class DatabaseIntegrationTests {
     private val demoUser1Password = "P@ssw0rd12"
     private val demoUser1Team = "team1"
 
-    private val demoUser2Username = "demo2@example.com"
-    private val demoUser2Password = "P@ssw0rd12"
-    private val demoUser2Team = "team2"
-
     @Before
     fun setup() {
         try {
             context = ApplicationProvider.getApplicationContext()
             databaseManager = DatabaseManager.getInstance(context)
+            val user1 = User(username = demoUser1Username, password = demoUser1Password, team = demoUser1Team)
+            databaseManager.initializeDatabases(user1)
+
         }catch (e: Exception){
             Log.e(e.message, e.stackTraceToString())
         }
     }
 
     @Test
-    fun databaseSetupTest(){
-        //arrange
-        val user1 = User(username = demoUser1Username, password = demoUser1Password, team = demoUser1Team)
-        val user2 = User(username = demoUser2Username, password = demoUser2Password, team = demoUser2Team)
-
-        //act
-        databaseManager.initializeDatabases(user1)
-
-        //assert
-        assertNotNull(databaseManager.inventoryDatabase)
-        assertNotNull(databaseManager.warehouseDatabase)
-
-        assertEquals("team1_inventory", databaseManager.inventoryDatabase?.name)
-        assertEquals("warehouse", databaseManager.warehouseDatabase?.name)
+    fun testAuditGet() {
 
         //arrange
-        databaseManager.closeDatabases()
-        databaseManager.initializeDatabases(user2)
-
-        //assert
-        assertEquals("team2_inventory", databaseManager.inventoryDatabase?.name)
-        assertEquals("warehouse", databaseManager.warehouseDatabase?.name)
-    }
-
-    @Test
-    fun testWarehousePrebuiltDatabaseCount() {
-
-        //arrange
-        val user1 = User(username = demoUser1Username, password = demoUser1Password, team = demoUser1Team)
-        databaseManager.initializeDatabases(user1)
-        val warehouseRepository = WarehouseRepositoryDb(context)
-        val stockItemRepository = StockItemRepositoryDb(context)
-
 
         //act
         runTest {
-            val warehouseCount = warehouseRepository.warehouseCount()
-            val stockItemCount = stockItemRepository.count()
-
-            //assert
-            assertEquals(50, warehouseCount)
-            assertEquals(3000, stockItemCount)
+            throw Exception("Not Implemented")
         }
+        //assert
+    }
+
+    @Test
+    fun testGetAuditsByProjectId(){
+        //arrange
+
+        //act
+
+
+        //assert
+      throw Exception("Not Implemented")
+    }
+
+    @Test
+    fun testUpdateAuditStockItem(){
+        //arrange
+
+        //act
+
+
+        //assert
+        throw Exception("Not Implemented")
+
+    }
+
+    @Test
+    fun testDeleteProjectAudits(){
+        //arrange
+
+        //act
+
+
+        //assert
+        throw Exception("Not Implemented")
     }
 
     @After
