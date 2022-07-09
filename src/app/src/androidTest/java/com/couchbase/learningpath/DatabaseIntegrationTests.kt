@@ -11,9 +11,7 @@ import com.couchbase.learningpath.data.stockItem.StockItemRepositoryDb
 import com.couchbase.learningpath.data.userprofile.UserProfileRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
-import com.couchbase.learningpath.models.Project
-import com.couchbase.learningpath.models.User
-import com.couchbase.learningpath.models.Warehouse
+import com.couchbase.learningpath.models.*
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.lite.CouchbaseLiteException
 import com.couchbase.lite.Dictionary
@@ -296,7 +294,8 @@ class DatabaseIntegrationTests {
         }
     }
 
-    @Test fun testGetWarehouse(){
+    @Test
+    fun testGetWarehouse() {
         //arrange
         runTest {
             //act
@@ -308,19 +307,21 @@ class DatabaseIntegrationTests {
         }
     }
 
-    @Test fun testWarehouseGetByCityState(){
+    @Test
+    fun testWarehouseGetByCityState() {
         //arrange
         runTest {
-           //act
+            //act
             val warehouses = warehouseRepository.get()
             val warehouse1 = warehouses[0]
             val warehouse1CitySearch = warehouse1.city.substring(0, 3)
             val warehouse2 = warehouses[1]
             val warehouse2CitySearch = warehouse2.city.substring(0, 3)
-            val warehouse2StateSearch = warehouse2.state.substring(0,1)
+            val warehouse2StateSearch = warehouse2.state.substring(0, 1)
 
             val warehouseResults1 = warehouseRepository.getByCityState(warehouse1CitySearch, null)
-            val warehouseResults2 = warehouseRepository.getByCityState(warehouse2CitySearch, warehouse2StateSearch)
+            val warehouseResults2 =
+                warehouseRepository.getByCityState(warehouse2CitySearch, warehouse2StateSearch)
 
             //assert
             assertNotNull(warehouseResults1)
@@ -334,6 +335,112 @@ class DatabaseIntegrationTests {
         }
     }
 
+    @Test
+    fun testGetAuditsByProjectId() {
+        //arrange
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val project = projects.first()
+
+            //act
+            val audits = auditRepository.getAuditsByProjectId(project.projectId)?.first()
+
+            //assert
+            assertNotNull(audits)
+            assertEquals(50, audits?.count())
+        }
+    }
+
+    @Test
+    fun testGetAudit() {
+        //arrange
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val project = projects.first()
+            val audits = auditRepository.getAuditsByProjectId(project.projectId)?.first()
+            val audit = audits?.first()
+
+            //arrange
+            assertNotNull(audit)
+            audit?.let {
+                val testAudit =
+                    auditRepository.get(projectId = project.projectId, auditId = it.auditId)
+
+                //assert
+                assertNotNull(testAudit)
+                assertEquals(it.auditId, testAudit.auditId)
+                assertEquals(it.stockItem, testAudit.stockItem)
+                assertEquals(it.notes, testAudit.notes)
+                assertEquals(it.count, testAudit.count)
+                assertEquals(it.team, testAudit.team)
+            }
+        }
+    }
+
+    @Test
+    fun testUpdateAuditStockItem() {
+        //arrange
+        runTest {
+            val projects = projectRepository.getDocuments(user1.team).first()
+            val project = projects.first()
+            val audits = auditRepository.getAuditsByProjectId(project.projectId)?.first()
+            val audit = audits?.first()
+
+            //arrange
+            assertNotNull(audit)
+            audit?.let {
+                val stockItems = stockItemRepository.get()
+                val stockItem = stockItems.random()
+                auditRepository.updateAuditStockItem(it.projectId, it.auditId, stockItem)
+                val testAudit = auditRepository.get(it.projectId, it.auditId)
+
+                //assert
+                assertNotNull(testAudit)
+                assertEquals(stockItem, testAudit.stockItem)
+            }
+        }
+    }
+
+    @Test
+    fun testGetStockItems() {
+        //arrange
+        runTest {
+            //act
+            val stockItems = stockItemRepository.get()
+
+            //assert
+            assertEquals(3000, stockItems.count())
+        }
+    }
+
+    @Test
+    fun testStockItemCount(){
+        //arrange
+        runTest {
+            //act
+            val stockItemCount = stockItemRepository.count()
+
+            //assert
+            assertEquals(3000, stockItemCount)
+        }
+    }
+
+    @Test
+    fun testGetStockItemsByNameDescription(){
+        //arrange
+        runTest {
+            val stockItems = stockItemRepository.get()
+            val stockItem = stockItems.first()
+            //act
+            val testStockItemsByName = stockItemRepository.getByNameDescription(stockItem.name.substring(0,5), null)
+            val testStockItemsByNameDescription = stockItemRepository.getByNameDescription(stockItem.name.substring(0, 2), stockItem.description.substring(0, 2))
+
+            //assert
+            assertTrue(testStockItemsByName.contains(stockItem))
+            assertTrue(testStockItemsByNameDescription.contains(stockItem))
+        }
+    }
+
     private fun getDemoUser1ProfileDictionary(): MutableMap<String, String> {
         val dict = mutableMapOf<String, String>()
         dict["givenName"] = demoUser1GivenName
@@ -341,17 +448,6 @@ class DatabaseIntegrationTests {
         dict["jobTitle"] = demoUser1JobTitle
         dict["team"] = user1.team
         dict["email"] = user1.username
-        dict["documentType"] = "user"
-        return dict
-    }
-
-    private fun getDemoUser2ProfileDictionary(): MutableMap<String, String> {
-        val dict = mutableMapOf<String, String>()
-        dict["givenName"] = demoUser2GivenName
-        dict["surname"] = demoUser2Surname
-        dict["jobTitle"] = demoUser2JobTitle
-        dict["team"] = user2.team
-        dict["email"] = user2.username
         dict["documentType"] = "user"
         return dict
     }
