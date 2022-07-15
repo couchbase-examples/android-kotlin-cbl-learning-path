@@ -43,7 +43,9 @@ class AuditListViewModel(
             _auditFlow = auditRepository.getAuditsByProjectId(project.projectId)
             _auditFlow?.let { f ->
                 f.collect {
-                    _audits.postValue(it)
+                    viewModelScope.launch(Dispatchers.Main){
+                        _audits.postValue(it)
+                    }
                 }
             }
         }
