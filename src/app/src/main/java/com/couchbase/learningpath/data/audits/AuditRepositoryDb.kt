@@ -7,15 +7,13 @@ import android.util.Log
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.AuditDao
+import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.lite.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
@@ -35,8 +33,9 @@ class AuditRepositoryDb(
         try {
             val db = databaseResources.inventoryDatabase
             val team = authenticationService.getCurrentUser().team
-            db?.let  { database ->
-                val query = database.createQuery("SELECT * FROM _ AS item WHERE documentType=\"audit\" AND projectId=\$auditProjectId AND team=\$auditTeam") // 1
+            db?.let { database ->
+                val query =
+                    database.createQuery("SELECT * FROM _ AS item WHERE documentType=\"audit\" AND projectId=\$auditProjectId AND team=\$auditTeam") // 1
 
                 val parameters = Parameters() // 2
                 parameters.setValue("auditProjectId", projectId) // 2
@@ -45,24 +44,24 @@ class AuditRepositoryDb(
 
                 val flow = query // 4
                     .queryChangeFlow() // 5
-                    .map { qc -> mapQueryChangeToAudit(qc)} // 6
+                    .map { qc -> mapQueryChangeToAudit(qc) } // 6
                     .flowOn(Dispatchers.IO) // 7
                 query.execute() // 8
                 return flow // 9
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(e.message, e.stackTraceToString())
         }
         return null
     }
 
     override suspend fun get(projectId: String, auditId: String): Audit {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
                 val db = databaseResources.inventoryDatabase
                 db?.let { database ->
                     val doc = database.getDocument(auditId)
-                    doc?.let { document  ->
+                    doc?.let { document ->
                         val json = document.toJSON()
                         json?.let {
                             return@withContext Json.decodeFromString<Audit>(it)
@@ -76,18 +75,19 @@ class AuditRepositoryDb(
             return@withContext Audit(
                 projectId = projectId,
                 auditId = auditId,
-                stockItem =  null,
+                stockItem = null,
                 documentType = "audit",
                 createdOn = Date(),
-                modifiedOn =  Date(),
+                modifiedOn = Date(),
                 createdBy = user.username,
                 modifiedBy = user.username,
-                team = user.team)
+                team = user.team
+            )
         }
     }
 
     override suspend fun save(document: Audit) {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
                 val db = databaseResources.inventoryDatabase
                 db?.let { database ->
@@ -95,14 +95,18 @@ class AuditRepositoryDb(
                     val doc = MutableDocument(document.auditId, json)
                     database.save(doc)
                 }
-            }catch(e: Exception){
+            } catch (e: Exception) {
                 Log.e(e.message, e.stackTraceToString())
             }
         }
     }
 
-    override suspend fun updateAuditStockItem(projectId: String, auditId: String, stockItem: StockItem) {
-        return withContext(Dispatchers.IO){
+    override suspend fun updateAuditStockItem(
+        projectId: String,
+        auditId: String,
+        stockItem: StockItem
+    ) {
+        return withContext(Dispatchers.IO) {
             try {
                 val db = databaseResources.inventoryDatabase
                 val audit = get(projectId, auditId)
@@ -113,20 +117,19 @@ class AuditRepositoryDb(
                     val doc = MutableDocument(audit.auditId, json)
                     database.save(doc)
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e(e.message, e.stackTraceToString())
             }
         }
     }
 
     override suspend fun deleteProjectAudits(projectId: String) {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             val flow = getAuditsByProjectId(projectId)
             flow?.let { f ->
-                f.collect { items ->
-                    items.forEach { item ->
-                        delete(item.auditId)
-                    }
+                val items =  f.single()
+                items.forEach { item ->
+                    delete(item.auditId)
                 }
             }
         }
@@ -144,7 +147,7 @@ class AuditRepositoryDb(
                         result = true
                     }
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e(e.message, e.stackTraceToString())
             }
             return@withContext result
@@ -157,7 +160,8 @@ class AuditRepositoryDb(
             try {
                 val db = DatabaseManager.getInstance(context).inventoryDatabase
                 db?.let { database ->
-                    val query =  database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE documentType=\"audit\"") // 1
+                    val query =
+                        database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE documentType=\"audit\"") // 1
                     val results = query.execute().allResults() // 2
                     count = results[0].getInt("count") // 3
                 }
@@ -168,7 +172,7 @@ class AuditRepositoryDb(
         }
     }
 
-    private fun mapQueryChangeToAudit (queryChange: QueryChange) : List<Audit> {
+    private fun mapQueryChangeToAudit(queryChange: QueryChange): List<Audit> {
         val audits = mutableListOf<Audit>()
         queryChange.results?.let { results ->
             results.forEach { result ->

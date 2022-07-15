@@ -3,6 +3,7 @@ package com.couchbase.learningpath.ui.components
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -96,7 +97,7 @@ fun Drawer(
                     }){
                     Text(
                         "Update User Profile",
-                        color = Color.White,
+                        color = if(  isSystemInDarkTheme())  {Color.White } else { Color.Black },
                         style = TextStyle(textDecoration = TextDecoration.Underline)
                     )
                 }

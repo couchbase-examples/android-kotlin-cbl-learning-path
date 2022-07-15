@@ -16,12 +16,15 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class StockItemRepositoryDb(
-    var context: Context) : StockItemRepository {
+    var context: Context
+) : StockItemRepository {
     private val databaseResources: DatabaseManager = DatabaseManager.getInstance(context)
     private val documentType = "item"
 
-    override val databaseName: () -> String? =  { DatabaseManager.getInstance(context).warehouseDatabase?.name }
-    override val databaseLocation: () -> String? = { DatabaseManager.getInstance(context).warehouseDatabase?.path }
+    override val databaseName: () -> String? =
+        { DatabaseManager.getInstance(context).warehouseDatabase?.name }
+    override val databaseLocation: () -> String? =
+        { DatabaseManager.getInstance(context).warehouseDatabase?.path }
 
     override suspend fun get(): List<StockItem> {
         return withContext(Dispatchers.IO) {
@@ -50,7 +53,8 @@ class StockItemRepositoryDb(
             try {
                 val db = DatabaseManager.getInstance(context).warehouseDatabase
                 db?.let { database ->
-                    val query =  database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE documentType=\"$documentType\"") // 1
+                    val query =
+                        database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE documentType=\"$documentType\"") // 1
                     val results = query.execute().allResults() // 2
                     count = results[0].getInt("count") // 3
                 }
@@ -83,14 +87,14 @@ class StockItemRepositoryDb(
                                 searchDescription.lowercase()
                             ) // 6
                         }
-                        var query = database.createQuery(queryString) // 7
-                        query.parameters = parameters // 8
-                        var results = query.execute().allResults() // 9
-                        results.forEach { result ->  // 10
-                            val stockItem =
-                                Json.decodeFromString<StockItemDao>(result.toJSON()).item // 11
-                            stockItems.add(stockItem) // 12
-                        }
+                    }
+                    var query = database.createQuery(queryString) // 7
+                    query.parameters = parameters // 8
+                    var results = query.execute().allResults() // 9
+                    results.forEach { result ->  // 10
+                        val stockItem =
+                            Json.decodeFromString<StockItemDao>(result.toJSON()).item // 11
+                        stockItems.add(stockItem) // 12
                     }
                 }
 

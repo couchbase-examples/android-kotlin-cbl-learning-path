@@ -104,7 +104,7 @@ class UserProfileViewModel(
             profile["jobTitle"] = jobTitle.value as Any
             profile["email"] = emailAddress.value as Any
             profile["team"] = team.value as Any
-            profile["type"] = "user" as Any
+            profile["documentType"] = "user" as Any
             profilePic.value?.let {
                 val outputStream = ByteArrayOutputStream()
                 it.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)

@@ -179,7 +179,6 @@ class ProjectRepositoryDb(
                     val projectDoc = database.getDocument(documentId)
                     projectDoc?.let { document ->
                         db.delete(document)
-                        auditRepository.deleteProjectAudits(projectId = documentId)
                         result = true
                     }
                 }
