@@ -56,8 +56,6 @@ fun ProjectListView(
                 // https://developer.android.com/jetpack/compose/libraries#streams
                 val projectList by viewModel.repositoryFlow.collectAsState(initial = listOf())
 
-                //we will handle this in a future tutorial
-
                 ProjectList(
                     items = projectList,
                     isLoading = viewModel.isLoading.value,
