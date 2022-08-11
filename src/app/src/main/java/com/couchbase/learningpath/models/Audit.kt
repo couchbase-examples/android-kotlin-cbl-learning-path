@@ -20,7 +20,7 @@ data class Audit (
     var auditId: String = "",
     var projectId: String = "",
     var stockItem: StockItem? = null,
-    var count: Int = 0,
+    var auditCount: Int = 0,
     var documentType: String = "",
     var notes: String = "",
     //security tracking

@@ -129,7 +129,7 @@ fun AuditCard(
 
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = audit.count.toString(),
+                    text = audit.auditCount.toString(),
                     style = MaterialTheme.typography.caption,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -166,7 +166,7 @@ fun AuditCardPreview() {
         auditId = "",
         projectId = "",
         stockItem = StockItem("000-000-0000", name = "Test Item", description = "Test Item Description", price = 0.0F, documentType="item"),
-        count = 100,
+        auditCount = 100,
         notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         team = "Test Team",
         documentType = "Test Type",

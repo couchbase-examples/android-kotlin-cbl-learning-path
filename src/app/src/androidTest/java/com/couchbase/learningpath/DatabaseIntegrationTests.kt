@@ -9,18 +9,11 @@ import com.couchbase.learningpath.data.audits.AuditRepositoryDb
 import com.couchbase.learningpath.data.project.ProjectRepositoryDb
 import com.couchbase.learningpath.data.stockItem.StockItemRepositoryDb
 import com.couchbase.learningpath.data.userprofile.UserProfileRepository
-import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.models.*
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.lite.CouchbaseLiteException
-import com.couchbase.lite.Dictionary
-import junit.framework.Assert.assertNull
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.*
 import org.junit.Assert.*
@@ -371,7 +364,7 @@ class DatabaseIntegrationTests {
                 assertEquals(it.auditId, testAudit.auditId)
                 assertEquals(it.stockItem, testAudit.stockItem)
                 assertEquals(it.notes, testAudit.notes)
-                assertEquals(it.count, testAudit.count)
+                assertEquals(it.auditCount, testAudit.auditCount)
                 assertEquals(it.team, testAudit.team)
             }
         }

@@ -39,7 +39,7 @@ class AuditEditorViewModel(
                 //as the uuid is assigned by the repository
                 auditId.value = audit.auditId
                 auditState.value?.let {
-                    count.value = it.count.toString()
+                    count.value = it.auditCount.toString()
                     if (it.stockItem != null) {
                         it.stockItem?.let { stockItem ->
                             stockItemSelectionState.value = stockItem.name
@@ -74,7 +74,7 @@ class AuditEditorViewModel(
     val onCountChanged: (String) -> Unit = { newValue ->
         if (newValue != "") {
             try {
-                auditState.value?.count = newValue.toInt()
+                auditState.value?.auditCount = newValue.toInt()
                 count.value = newValue
             } catch (nfe: NumberFormatException) {
                 Log.e("Error", nfe.message.toString())
@@ -121,7 +121,7 @@ class AuditEditorViewModel(
         viewModelScope.launch {
             if (projectId.value != "") {
                 auditState.value?.let {
-                    if (it.count <= 0) {
+                    if (it.auditCount <= 0) {
                         errorMessageState.value = "Error: Count must be greater than zero"
                     } else if (it.stockItem == null) {
                         errorMessageState.value = "Error: Must select stock item before saving"

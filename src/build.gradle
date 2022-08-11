@@ -15,7 +15,7 @@ buildscript {
         coroutines_tests_version = '1.6.3'
 
         //couchbase
-        couchbase_lite_version = '3.0.0'
+        couchbase_lite_version = '3.0.2'
     }
 
     repositories {

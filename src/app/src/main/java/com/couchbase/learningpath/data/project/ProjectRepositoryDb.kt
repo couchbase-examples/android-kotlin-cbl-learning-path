@@ -3,7 +3,6 @@ package com.couchbase.learningpath.data.project
 import android.content.Context
 import android.util.Log
 import com.couchbase.lite.*
-import com.couchbase.lite.Function
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -197,7 +196,7 @@ class ProjectRepositoryDb(
                 db?.let { database ->
                     val query = QueryBuilder  // 1
                         .select(
-                            SelectResult.expression(Function.count(Expression.string("*")))
+                            SelectResult.expression(com.couchbase.lite.Function.count(Expression.string("*")))
                                 .`as`("count")
                         ) // 2
                         .from(DataSource.database(database)) //3
@@ -261,7 +260,7 @@ class ProjectRepositoryDb(
                                     val auditDocument = Audit(
                                         auditId = UUID.randomUUID().toString(),
                                         projectId = projectId,
-                                        count = (1..100000).random(),
+                                        auditCount = (1..100000).random(),
                                         stockItem =  stockItem,
                                         documentType = auditDocumentType,
                                         notes = "Found item ${stockItem.name} - ${stockItem.description} in warehouse",
