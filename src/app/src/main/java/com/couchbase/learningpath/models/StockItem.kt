@@ -19,6 +19,7 @@ data class StockItem (
     var name: String = "",
     var price: Float,
     var description: String = "",
+    var style: String = "",
     var documentType: String = "item") {
 
     fun toJson(): String {

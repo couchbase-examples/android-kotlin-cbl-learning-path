@@ -21,5 +21,6 @@ data class Warehouse(
     val yearToDateBalance: Double,
     val latitude: Double,
     val longitude: Double,
-    val documentType: String
+    val documentType: String,
+    val shippingTo: List<String>,
     )

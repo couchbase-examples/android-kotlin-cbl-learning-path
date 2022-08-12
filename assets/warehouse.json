@@ -11,7 +11,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 32.3803024,
 		"longitude": -121.9674197,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["AZ","CA","HI","NV"]
 	},
 	{
 		"warehouseId": "cd7a3e29-0d50-4dee-8ca3-fd1bb43c2f6f",
@@ -25,7 +26,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 29.749907,
 		"longitude": -95.358421,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["AR","LA","NM","OK","TX"]
 	},
 	{
 		"warehouseId": "73c56048-2a67-4ae6-aaa7-12ff3f94eb8f",
@@ -39,7 +41,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 30.332184,
 		"longitude": -81.655647,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["AL","FL","MS"]
 	},
 	{
 		"warehouseId": "5a7ea984-bd9c-4eb5-a7b1-12c90f3d27c2",
@@ -53,7 +56,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 40.7838289,
 		"longitude": -73.9753697,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["CT","MA","ME","NH","NJ","NY","RI","VT"]
 	},
 	{
 		"warehouseId": "711fc3c9-2124-406f-a2a1-e64230584a65",
@@ -67,7 +71,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 41.881832,
 		"longitude": -87.623177,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["IA","IL","IN","MN","WI"]
 	},
 	{
 		"warehouseId": "db5f8bdc-10e2-4655-9b11-17697f485033",
@@ -81,7 +86,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 33.753746,
 		"longitude": -84.386330,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["GA","NC","SC"]
 	},
 	{
 		"warehouseId": "f650bba6-8ad4-40a9-a86e-e9c19b43ad96",
@@ -95,7 +101,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 47.608013,
 		"longitude": -122.335167,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["AK","ID","OR","WA"]
 	},
 	{
 		"warehouseId": "d7890874-f4ce-4f35-9cd0-bb1b3d35721b",
@@ -109,7 +116,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 39.742043,
 		"longitude": -104.991531,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["CO","MT","UT","WY"]
 	},
 	{
 		"warehouseId": "4d0d7c69-a380-4db1-941c-8f4348aa62e8",
@@ -123,7 +131,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 39.952583,
 		"longitude": -75.165222,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["DC","DE","MD","PA","VA","WV"]
 	},
 	{
 		"warehouseId": "073ab6ef-27c7-4176-ae53-5cf27ac5fd0e",
@@ -137,7 +146,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 42.331429,
 		"longitude": -83.045753,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["MI","OH"]
 	},
 	{
 		"warehouseId": "c7187f89-a11d-44f8-9f00-2385cd1a22d6",
@@ -151,7 +161,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 39.099724,
 		"longitude": -94.578331,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["KS","ND","NE","SD"]
 	},
 	{
 		"warehouseId": "baedfbed-e5a5-4d2a-a3ad-f163ab2bb5f7",
@@ -165,7 +176,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 36.174465,
 		"longitude": -86.767960,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": ["KY","MO","TN"]
 	},
 	{
 		"warehouseId": "ee9a33c9-9c89-4638-9370-e3260049dc8b",
@@ -179,7 +191,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 42.361145,
 		"longitude": -71.057083,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "f4c27781-ba5e-470f-adbe-fcb932ff2de7",
@@ -193,7 +206,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 39.983334,
 		"longitude": -82.983330,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "ad811114-4c3a-460d-b6f9-4eb68a1bebb5",
@@ -207,10 +221,11 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 34.052235,
 		"longitude": -118.243683,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
-		"warehouseId": "db5f8bdc-10e2-4655-9b11-17697f485033",
+		"warehouseId": "346f23a5-e6c3-4b7f-9bca-b2ec2c7f0ba9",
 		"name": "Charlotte Warehouse",
 		"address1": "711225 Galy Drive",
 		"address2": "",
@@ -221,7 +236,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 35.227085,
 		"longitude": -80.843124,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "0f6caf8f-87b2-4376-b7cb-ff3cad386671",
@@ -235,7 +251,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 40.735657,
 		"longitude": -74.172363,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "b7b98ed8-2d44-4dd4-9f48-24a335f2d397",
@@ -249,7 +266,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 36.863140,
 		"longitude": -76.015778,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 
 	{
@@ -264,7 +282,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 33.448376,
 		"longitude": -112.074036,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "19f944e1-55fc-4fcd-83d5-a9c0e21cba48",
@@ -278,7 +297,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 39.791000,
 		"longitude": -86.148003,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 
 	{
@@ -293,7 +313,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 32.715736,
 		"longitude": -117.161087,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "b72dadb5-1467-4015-8377-d37d02ab3ff5",
@@ -307,7 +328,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 30.26666,
 		"longitude": -97.733330,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "db696b48-b761-4d4c-a694-10f3d103b634",
@@ -321,7 +343,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 40.440624,
 		"longitude": -79.995888,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "af5ff80b-ddf6-4383-a3b8-f014cc762b19",
@@ -335,7 +358,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 46.547581,
 		"longitude": -87.395592,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "c27a86ce-d304-4162-a72a-187bed306715",
@@ -363,7 +387,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 43.038902,
 		"longitude": -87.906471,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "a1d10cf3-bd04-4e1d-9cc2-4a0753bacfa2",
@@ -377,7 +402,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 44.986656,
 		"longitude": -93.258133,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "8d22fc89-d173-4e60-8c6d-d929a15c9151",
@@ -419,7 +445,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 29.951065,
 		"longitude": -90.071533,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "ec76473f-f578-4bcc-9d9c-cd2e7e74aac5",
@@ -433,7 +460,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 38.328732,
 		"longitude": -85.764771,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "c9e85806-e277-4967-bdb7-4eace4a31fc0",
@@ -447,10 +475,11 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 45.523064,
 		"longitude": -122.676483,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
-		"warehouseId": "c9e85806-e277-4967-bdb7-4eace4a31fc0",
+		"warehouseId": "91d60dcf-62e8-416d-aa71-cd7232a5a051",
 		"name": "Oklahoma City Warehouse",
 		"address1": "456 Bricktown Drive",
 		"address2": "",
@@ -461,7 +490,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 35.481918,
 		"longitude":  -97.508469,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "3f6ed69f-459e-400a-8210-653ccec5c20b",
@@ -475,7 +505,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 41.186390,
 		"longitude":  -73.195557,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "1cf8058b-997c-4251-b13b-47fb9badfbef",
@@ -503,7 +534,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 41.619549,
 		"longitude":  -93.598022,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "bbd5c361-029d-4036-91b9-7d78ed17e2e5",
@@ -517,10 +549,11 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 36.114647,
 		"longitude": -115.172813,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
-		"warehouseId": "bbd5c361-029d-4036-91b9-7d78ed17e2e5",
+		"warehouseId": "c5ff96c0-ec71-467d-81f8-3adcc7e981da",
 		"name": "Little Rock Warehouse",
 		"address1": "9213 Arch Drive",
 		"address2": "",
@@ -531,7 +564,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 34.746483,
 		"longitude": -92.289597,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "ddeae878-5472-42cd-95e1-443310ca2765",
@@ -545,7 +579,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 32.298756,
 		"longitude": -90.184807,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "1d305e3c-a791-4686-9b6e-d86e9064c352",
@@ -559,7 +594,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 37.697948,
 		"longitude": -97.314835,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "aba89c9a-99d9-458e-acb1-a2bbef823bd4",
@@ -573,7 +609,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 35.106766,
 		"longitude": -106.629181,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "c53fc742-2049-42fa-a22d-c7e0c885e48e",
@@ -587,7 +624,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 41.257160,
 		"longitude": 95.995102,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "68c27f3e-948f-4b46-af26-9119a143ca6f",
@@ -601,7 +639,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 38.349497,
 		"longitude": -81.633294,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "d83244a5-92d4-401b-916a-a0d91cbfe957",
@@ -615,7 +654,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 43.618881,
 		"longitude": -116.215019,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "98b800ee-fb36-4c14-80aa-b523e8d6af06",
@@ -629,7 +669,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 21.315603,
 		"longitude": -157.858093,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "f219f87f-06a2-4abc-b260-d7b8e648e428",
@@ -657,7 +698,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 44.310624,
 		"longitude": -69.779490,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "d03c8adb-c4b0-4066-b590-3873b1c935b1",
@@ -671,10 +713,11 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 45.787636,
 		"longitude": -108.489304,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
-		"warehouseId": "d03c8adb-c4b0-4066-b590-3873b1c935b1",
+		"warehouseId": "632d93a4-6bb9-4882-8ff7-bca907e2c35a",
 		"name": "Providence Warehouse",
 		"address1": "1900 S Atwells Avenue",
 		"address2": "",
@@ -685,7 +728,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 41.825226,
 		"longitude": -71.418884,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "24ce5a31-e19f-4260-854c-e5e1b658d286",
@@ -699,7 +743,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 39.739071,
 		"longitude": -75.539787,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "c9f4815b-02e1-48c7-b8e5-bf15960c0013",
@@ -713,7 +758,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 61.217381,
 		"longitude": -149.863129,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "852db688-f1fc-49c0-92c7-f3a22e1ee527",
@@ -727,7 +773,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 44.475883,
 		"longitude": -73.212074,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "c7106ac4-fd55-4f60-99c0-4079d60573e6",
@@ -741,10 +788,11 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 41.161079,
 		"longitude": -104.805450,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
-		"warehouseId": "c7106ac4-fd55-4f60-99c0-4079d60573e6",
+		"warehouseId": "1735ff2b-b4d7-49fc-b939-a4d731c1649a",
 		"name": "Sioux Falls Warehouse",
 		"address1": "987 Falls Park",
 		"address2": "",
@@ -755,7 +803,8 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 43.536285,
 		"longitude": -96.731780,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	},
 	{
 		"warehouseId": "6343fd74-7d9a-4d69-80b1-21a446e69beb",
@@ -769,6 +818,7 @@
 		"yearToDateBalance": 0.00,
 		"latitude": 46.877186,
 		"longitude": -96.789803,
-		"documentType": "warehouse"
+		"documentType": "warehouse",
+		"shippingTo": []
 	}
 ]

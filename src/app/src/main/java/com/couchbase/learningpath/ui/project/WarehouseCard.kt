@@ -106,7 +106,8 @@ fun WarehouseCardPreview() {
         yearToDateBalance = 0.00,
         latitude = 123.12,
         longitude = 123.12,
-        documentType = "warehouse"
+        documentType = "warehouse",
+        shippingTo = listOf("")
     )
     val onWarehouseSelected: (Warehouse) -> Unit = { _: Warehouse -> }
     val scaffoldState: ScaffoldState = rememberScaffoldState()

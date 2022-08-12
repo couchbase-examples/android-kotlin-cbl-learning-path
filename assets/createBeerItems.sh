@@ -25,10 +25,11 @@ do
 	
 	json=$(cat $filename | jq $itemIndex) #get the full json of an item
 	id=$(echo $json | jq $idIndex) #get the value of the itemId field
+	fullJson=$(echo $json | jq '.documentType="item"')
 
 	# add to the database (if you are on a different platform 
 	# change the folder location of cblite)
-	./mac/cblite put --create $dbFileName $id "$json"
+	./mac/cblite put --create $dbFileName $id "$fullJson"
 done
 
 # you can check by listing the files in the database
