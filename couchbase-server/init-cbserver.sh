@@ -60,7 +60,7 @@ if ! [ -f "$FILE" ]; then
 
   /opt/couchbase/bin/curl -v http://localhost:8093/query/service \
   -u $COUCHBASE_ADMINISTRATOR_USERNAME:$COUCHBASE_ADMINISTRATOR_PASSWORD \
-  -d 'statement=CREATE INDEX idx_projects_type on projects(type)'
+  -d 'statement=CREATE INDEX idx_projects_type on projects(documentType)'
       
   sleep 2s
 
