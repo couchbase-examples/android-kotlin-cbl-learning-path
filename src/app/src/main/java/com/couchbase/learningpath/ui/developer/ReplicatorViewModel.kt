@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
+import kotlin.math.log
 
 class ReplicatorViewModel(private val replicatorService: ReplicatorService)
     : ViewModel() {
@@ -46,15 +47,31 @@ class ReplicatorViewModel(private val replicatorService: ReplicatorService)
                     logMessages.add("INFORMATION:: Getting Replication Change Flow...")
                     replicatorFlow = replicatorService.getReplicatorChangeFlow()
                     replicatorFlow?.let { flowChange ->
-                        flowChange.collect {  replicatorChange ->
+                        logMessages.add("INFORMATION:: Collecting Replicator Changes")
+                        flowChange.collect { replicatorChange ->
                             logMessages.add("INFORMATION:: Collecting Replication Change Flow...")
 
                             when (replicatorChange.status.activityLevel){
-                                ReplicatorActivityLevel.OFFLINE -> replicationStatus.value = ReplicationStatus.OFFLINE
-                                ReplicatorActivityLevel.IDLE -> replicationStatus.value = ReplicationStatus.IDlE
-                                ReplicatorActivityLevel.STOPPED -> replicationStatus.value = ReplicationStatus.STOPPED
-                                ReplicatorActivityLevel.BUSY -> replicationStatus.value = ReplicationStatus.BUSY
-                                ReplicatorActivityLevel.CONNECTING -> replicationStatus.value = ReplicationStatus.CONNECTING
+                                ReplicatorActivityLevel.OFFLINE -> {
+                                    replicationStatus.value = ReplicationStatus.OFFLINE
+                                    logMessages.add("INFORMATION:: returned Status OFFLINE...")
+                                }
+                                ReplicatorActivityLevel.IDLE -> {
+                                    replicationStatus.value = ReplicationStatus.IDlE
+                                    logMessages.add("INFORMATION:: returned Status IDLE...")
+                                }
+                                ReplicatorActivityLevel.STOPPED -> {
+                                    replicationStatus.value = ReplicationStatus.STOPPED
+                                    logMessages.add("INFORMATION:: returned Status STOPPED...")
+                                }
+                                ReplicatorActivityLevel.BUSY -> {
+                                    replicationStatus.value = ReplicationStatus.BUSY
+                                    logMessages.add("INFORMATION:: returned Status BUSY...")
+                                }
+                                ReplicatorActivityLevel.CONNECTING -> {
+                                    replicationStatus.value = ReplicationStatus.CONNECTING
+                                    logMessages.add("INFORMATION:: returned Status CONNECTING...")
+                                }
                             }
                             replicatorChange.status.error?.let { error ->
                                 logMessages.add("ERROR:: ${error.code} - ${error.message}")
@@ -62,8 +79,14 @@ class ReplicatorViewModel(private val replicatorService: ReplicatorService)
                             logMessages.add("INFORMATION:: Checking replication progress...")
                             if (replicatorChange.status.progress.completed == replicatorChange.status.progress.total){
                                 replicationProgress.value = "Completed"
+                                logMessages.add("INFORMATION:: returned STATUS Completed...")
                             } else {
-                                replicationProgress.value = "${replicatorChange.status.progress.total / replicatorChange.status.progress.completed}"
+                                if (replicatorChange.status.activityLevel == ReplicatorActivityLevel.IDLE && replicatorChange.status.progress.total.toInt() == 1 ) {
+                                    replicationProgress.value = "Completed"
+                                    } else {
+                                    replicationProgress.value =
+                                        "${replicatorChange.status.progress.total / replicatorChange.status.progress.completed}"
+                                }
                             }
                         }
                     }
