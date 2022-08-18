@@ -77,16 +77,12 @@ class ReplicatorViewModel(private val replicatorService: ReplicatorService)
                                 logMessages.add("ERROR:: ${error.code} - ${error.message}")
                             }
                             logMessages.add("INFORMATION:: Checking replication progress...")
-                            if (replicatorChange.status.progress.completed == replicatorChange.status.progress.total){
+                            if (replicatorChange.status.progress.completed == replicatorChange.status.progress.total || replicatorChange.status.progress.completed.toInt() == 0){
                                 replicationProgress.value = "Completed"
                                 logMessages.add("INFORMATION:: returned STATUS Completed...")
                             } else {
-                                if (replicatorChange.status.activityLevel == ReplicatorActivityLevel.IDLE && replicatorChange.status.progress.total.toInt() == 1 ) {
-                                    replicationProgress.value = "Completed"
-                                    } else {
-                                    replicationProgress.value =
-                                        "${replicatorChange.status.progress.total / replicatorChange.status.progress.completed}"
-                                }
+                                replicationProgress.value =
+                                    "${replicatorChange.status.progress.total / replicatorChange.status.progress.completed}"
                             }
                         }
                     }
