@@ -22,5 +22,5 @@ data class Warehouse(
     val latitude: Double,
     val longitude: Double,
     val documentType: String,
-    val shippingTo: List<String>,
+    val shippingTo: List<String>? = null,
     )
