@@ -47,42 +47,44 @@ class ReplicatorViewModel(private val replicatorService: ReplicatorService)
                     logMessages.add("INFORMATION:: Getting Replication Change Flow...")
                     replicatorFlow = replicatorService.getReplicatorChangeFlow()
                     replicatorFlow?.let { flowChange ->
-                        logMessages.add("INFORMATION:: Collecting Replicator Changes")
-                        flowChange.collect { replicatorChange ->
-                            logMessages.add("INFORMATION:: Collecting Replication Change Flow...")
+                        viewModelScope.launch(Dispatchers.Main) {
+                            logMessages.add("INFORMATION:: Collecting Replicator Changes")
+                            flowChange.collect { replicatorChange ->
+                                logMessages.add("INFORMATION:: Collecting Replication Change Flow...")
 
-                            when (replicatorChange.status.activityLevel){
-                                ReplicatorActivityLevel.OFFLINE -> {
-                                    replicationStatus.value = ReplicationStatus.OFFLINE
-                                    logMessages.add("INFORMATION:: returned Status OFFLINE...")
+                                when (replicatorChange.status.activityLevel) {
+                                    ReplicatorActivityLevel.OFFLINE -> {
+                                        replicationStatus.value = ReplicationStatus.OFFLINE
+                                        logMessages.add("INFORMATION:: returned Status OFFLINE...")
+                                    }
+                                    ReplicatorActivityLevel.IDLE -> {
+                                        replicationStatus.value = ReplicationStatus.IDlE
+                                        logMessages.add("INFORMATION:: returned Status IDLE...")
+                                    }
+                                    ReplicatorActivityLevel.STOPPED -> {
+                                        replicationStatus.value = ReplicationStatus.STOPPED
+                                        logMessages.add("INFORMATION:: returned Status STOPPED...")
+                                    }
+                                    ReplicatorActivityLevel.BUSY -> {
+                                        replicationStatus.value = ReplicationStatus.BUSY
+                                        logMessages.add("INFORMATION:: returned Status BUSY...")
+                                    }
+                                    ReplicatorActivityLevel.CONNECTING -> {
+                                        replicationStatus.value = ReplicationStatus.CONNECTING
+                                        logMessages.add("INFORMATION:: returned Status CONNECTING...")
+                                    }
                                 }
-                                ReplicatorActivityLevel.IDLE -> {
-                                    replicationStatus.value = ReplicationStatus.IDlE
-                                    logMessages.add("INFORMATION:: returned Status IDLE...")
+                                replicatorChange.status.error?.let { error ->
+                                    logMessages.add("ERROR:: ${error.code} - ${error.message}")
                                 }
-                                ReplicatorActivityLevel.STOPPED -> {
-                                    replicationStatus.value = ReplicationStatus.STOPPED
-                                    logMessages.add("INFORMATION:: returned Status STOPPED...")
+                                logMessages.add("INFORMATION:: Checking replication progress...")
+                                if (replicatorChange.status.progress.completed == replicatorChange.status.progress.total || replicatorChange.status.progress.completed.toInt() == 0) {
+                                    replicationProgress.value = "Completed"
+                                    logMessages.add("INFORMATION:: returned STATUS Completed...")
+                                } else {
+                                    replicationProgress.value =
+                                        "${replicatorChange.status.progress.total / replicatorChange.status.progress.completed}"
                                 }
-                                ReplicatorActivityLevel.BUSY -> {
-                                    replicationStatus.value = ReplicationStatus.BUSY
-                                    logMessages.add("INFORMATION:: returned Status BUSY...")
-                                }
-                                ReplicatorActivityLevel.CONNECTING -> {
-                                    replicationStatus.value = ReplicationStatus.CONNECTING
-                                    logMessages.add("INFORMATION:: returned Status CONNECTING...")
-                                }
-                            }
-                            replicatorChange.status.error?.let { error ->
-                                logMessages.add("ERROR:: ${error.code} - ${error.message}")
-                            }
-                            logMessages.add("INFORMATION:: Checking replication progress...")
-                            if (replicatorChange.status.progress.completed == replicatorChange.status.progress.total || replicatorChange.status.progress.completed.toInt() == 0){
-                                replicationProgress.value = "Completed"
-                                logMessages.add("INFORMATION:: returned STATUS Completed...")
-                            } else {
-                                replicationProgress.value =
-                                    "${replicatorChange.status.progress.total / replicatorChange.status.progress.completed}"
                             }
                         }
                     }
