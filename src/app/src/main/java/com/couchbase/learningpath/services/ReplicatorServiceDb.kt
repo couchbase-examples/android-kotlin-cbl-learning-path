@@ -30,7 +30,7 @@ class ReplicatorServiceDb  (
         ReplicatorConfig(
         username = loggedInUser.username,
         password = loggedInUser.password,
-        endpointUrl = "ws://10.0.2.2:4984/projects",
+            endpointUrl = "ws://10.0.2.2:4984/projects",
         replicatorType = "PUSH AND PULL",
         heartBeat = 60L,
         continuous = true,
@@ -114,6 +114,9 @@ class ReplicatorServiceDb  (
 
     override fun startReplication() {
         try {
+            if (databaseManager.inventoryDatabase == null){
+                databaseManager.initializeDatabases(authenticationService.getCurrentUser())
+            }
             replicatorManager?.replicator?.start()
             isReplicationStarted = true
         } catch (e: Exception){
@@ -125,7 +128,6 @@ class ReplicatorServiceDb  (
         try {
             replicatorManager?.replicator?.stop()
             isReplicationStarted = false
-            canStartReplication.value = false
         } catch (e: Exception){
             Log.e(e.message, e.stackTraceToString())
         }

@@ -17,6 +17,7 @@ import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Composable
 fun WarehouseSelectionView(
@@ -60,6 +61,7 @@ fun WarehouseSelectionView(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Composable
 fun WarehouseSelector(
@@ -138,6 +140,7 @@ fun WarehouseSelector(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable

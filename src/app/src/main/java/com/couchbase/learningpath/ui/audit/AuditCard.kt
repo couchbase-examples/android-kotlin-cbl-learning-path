@@ -80,7 +80,6 @@ fun AuditCard(
                             onDismissRequest = { expanded = false })
                         {
                             DropdownMenuItem(onClick = {
-                                val auditJson = audit.toJson()
                                 onEditChange(audit.projectId, audit.auditId)
                             }) {
                                 Text("Edit")

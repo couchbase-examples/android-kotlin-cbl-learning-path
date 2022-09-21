@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import com.couchbase.learningpath.data.project.ProjectRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@kotlinx.serialization.ExperimentalSerializationApi
 class DeveloperViewModel(
     private val projectRepository: ProjectRepository,
 ) : ViewModel() {

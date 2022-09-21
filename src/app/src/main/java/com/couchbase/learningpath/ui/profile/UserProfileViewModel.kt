@@ -65,7 +65,7 @@ class UserProfileViewModel(
                     userProfile["imageData"]?.let {
                         val blob = userProfile["imageData"] as Blob
                         val d = Drawable.createFromStream(blob.contentStream, "res")
-                        profilePic.value = d.toBitmap()
+                        profilePic.value = d?.toBitmap()
                     }
                 }
             }

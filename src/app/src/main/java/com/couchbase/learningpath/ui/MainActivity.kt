@@ -1,6 +1,7 @@
 package com.couchbase.learningpath.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
@@ -31,6 +32,7 @@ import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @ExperimentalCoroutinesApi
 class MainActivity : ComponentActivity() {
@@ -151,10 +153,18 @@ fun MainView(startDatabase: () -> Unit,
     DisposableEffect(lifecycleOwner) {
         // Create an observer that triggers our remembered callbacks
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) {
-                currentOnStart()
-            } else if (event == Lifecycle.Event.ON_PAUSE) {
-                currentOnStop()
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    Log.w("event","DEBUG:  DANGER, WILL ROBINSON!!  opening the database due to event: ${event.name}")
+                    currentOnStart()
+                }
+                Lifecycle.Event.ON_PAUSE, Lifecycle.Event.ON_STOP -> {
+                    Log.w("event","DEBUG:  DANGER, WILL ROBINSON!!  closing the database due to event: ${event.name}")
+                    currentOnStop()
+                }
+                else -> {
+                    Log.w("event","DEBUG:  DANGER, WILL ROBINSON!!  Event happened that we don't handle ${event.name}")
+                }
             }
         }
         // Add the observer to the lifecycle

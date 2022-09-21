@@ -1,6 +1,7 @@
 package com.couchbase.learningpath.ui.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -96,7 +97,12 @@ fun LoginWindow(
         Image(
             rememberDrawablePainter(drawable = ContextCompat.getDrawable(context, R.drawable.logo)),
             contentDescription = "Logo",
-            modifier = Modifier.padding(bottom = 32.dp)
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .clickable {
+                    onUsernameChanged("demo@example.com")
+                    onPasswordChanged("P@ssw0rd12")
+                }
         )
         OutlinedTextField(
             modifier = Modifier.semantics { contentDescription = usernameResource },

@@ -15,6 +15,7 @@ import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Composable
 fun StockItemCard(
@@ -66,6 +67,7 @@ fun StockItemCard(
 }
 
 @ExperimentalMaterialApi
+@kotlinx.serialization.ExperimentalSerializationApi
 @Preview(showBackground = true)
 @Composable
 fun StockItemCardPreview() {

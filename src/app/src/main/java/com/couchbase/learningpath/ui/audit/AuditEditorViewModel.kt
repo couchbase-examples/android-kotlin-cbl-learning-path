@@ -28,7 +28,7 @@ class AuditEditorViewModel(
 
     var navigateUpCallback: () -> Unit = { }
     var navigateToListSelection: (String, String) -> Unit =
-        { projectId: String, auditId: String -> }
+        { _: String, _: String -> }
 
     fun loadAudit() {
         viewModelScope.launch {

@@ -15,6 +15,7 @@ import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.models.Warehouse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@kotlinx.serialization.ExperimentalSerializationApi
 class WarehouseSelectionViewModel(
     private val projectRepository: ProjectRepository,
     private val warehouseRepository: WarehouseRepository

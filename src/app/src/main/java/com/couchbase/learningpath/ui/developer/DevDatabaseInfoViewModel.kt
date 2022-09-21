@@ -17,6 +17,7 @@ import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.services.AuthenticationService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@kotlinx.serialization.ExperimentalSerializationApi
 class DevDatabaseInfoViewModel(
     private val userProfileRepository: KeyValueRepository,
     private val warehouseRepository: WarehouseRepository,

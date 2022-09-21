@@ -282,7 +282,7 @@ class DatabaseIntegrationTests {
             val stockItemCount = stockItemRepository.count()
 
             //assert
-            assertEquals(50, warehouseCount)
+            assertEquals(55, warehouseCount)
             assertEquals(3000, stockItemCount)
         }
     }
@@ -296,7 +296,7 @@ class DatabaseIntegrationTests {
 
             //assert
             assertNotNull(warehouses)
-            assertEquals(50, warehouses.count())
+            assertEquals(55, warehouses.count())
         }
     }
 

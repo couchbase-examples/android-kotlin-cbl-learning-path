@@ -21,6 +21,7 @@ import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
 
 //this screen shows stats about information in the database and location of the database
+@kotlinx.serialization.ExperimentalSerializationApi
 @Composable
 fun DeveloperView(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
@@ -54,6 +55,7 @@ fun DeveloperView(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Composable
 fun DeveloperWidget(
     toastMessage: String?,
@@ -122,6 +124,7 @@ fun DeveloperWidget(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Preview(showBackground = true)
 @Composable
 fun DeveloperWidgetPreview() {

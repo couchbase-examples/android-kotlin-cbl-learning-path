@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@kotlinx.serialization.ExperimentalSerializationApi
 class StockItemSelectionViewModel(
     private val auditRepository: AuditRepository,
     private val stockItemRepository: StockItemRepository

@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.couchbase.learningpath.ui.components.InventoryAppBar
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Composable
 fun DevDatabaseInfoView(
     navigateUp: () -> Unit,
@@ -52,6 +53,7 @@ fun DevDatabaseInfoView(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Composable
 fun DeveloperInfoWidget(
     inventoryDatabaseName: String,
@@ -297,6 +299,7 @@ fun DeveloperInfoWidget(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Preview(showBackground = true)
 @Composable
 fun DeveloperInfoWidgetPreview() {

@@ -57,6 +57,7 @@ object MainDestinations {
 }
 
 //main function for handling navigation graph in the app
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @ExperimentalCoroutinesApi
 @Composable

@@ -20,6 +20,7 @@ import com.couchbase.learningpath.ui.project.WarehouseSelector
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Composable
 fun StockItemSelectionView(
@@ -61,7 +62,7 @@ fun StockItemSelectionView(
         }
     }
 }
-
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Composable
 fun StockItemSelector(
@@ -139,6 +140,7 @@ fun StockItemSelector(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
