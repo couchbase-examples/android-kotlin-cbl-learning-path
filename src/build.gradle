@@ -14,7 +14,7 @@ buildscript {
         kotlinx_serialization_json = '1.4.0'
         constraints_compose_version = '1.0.1'
         annotation_experimental_version = '1.3.0'
-        coroutines_tests_version = '1.6.3'
+        coroutines_tests_version = '1.6.4'
 
         //couchbase
         couchbase_lite_version = '3.0.2'
