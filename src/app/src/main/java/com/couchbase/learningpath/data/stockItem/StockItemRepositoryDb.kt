@@ -2,9 +2,7 @@
 
 package com.couchbase.learningpath.data.stockItem
 
-import android.content.Context
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.models.StockItemDao
@@ -16,21 +14,20 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class StockItemRepositoryDb(
-    var context: Context
+    private val databaseManager: DatabaseManager
 ) : StockItemRepository {
-    private val databaseResources: DatabaseManager = DatabaseManager.getInstance(context)
     private val documentType = "item"
 
     override val databaseName: () -> String? =
-        { DatabaseManager.getInstance(context).warehouseDatabase?.name }
+        { databaseManager.warehouseDatabase?.name }
     override val databaseLocation: () -> String? =
-        { DatabaseManager.getInstance(context).warehouseDatabase?.path }
+        { databaseManager.warehouseDatabase?.path }
 
     override suspend fun get(): List<StockItem> {
         return withContext(Dispatchers.IO) {
             val stockItems = mutableListOf<StockItem>()
             try {
-                val db = databaseResources.warehouseDatabase
+                val db = databaseManager.warehouseDatabase
                 db?.let { database ->
                     val query =
                         database.createQuery("SELECT * FROM _ AS item WHERE documentType=\"$documentType\"")
@@ -51,7 +48,7 @@ class StockItemRepositoryDb(
         return withContext(Dispatchers.IO) {
             var count = 0
             try {
-                val db = DatabaseManager.getInstance(context).warehouseDatabase
+                val db = databaseManager.warehouseDatabase
                 db?.let { database ->
                     val query =
                         database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE documentType=\"$documentType\"") // 1
@@ -72,7 +69,7 @@ class StockItemRepositoryDb(
         return withContext(Dispatchers.IO) {
             val stockItems = mutableListOf<StockItem>()
             try {
-                val db = databaseResources.warehouseDatabase
+                val db = databaseManager.warehouseDatabase
                 db?.let { database ->
                     var queryString =
                         "SELECT * FROM _ as item WHERE documentType=\"item\" AND lower(name) LIKE ('%' || \$parameterName || '%')"  // 1

@@ -1,6 +1,5 @@
 package com.couchbase.learningpath.services
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.couchbase.learningpath.data.DatabaseManager
@@ -16,9 +15,8 @@ import java.net.URI
 @OptIn( ExperimentalCoroutinesApi::class)
 class ReplicatorServiceDb  (
     private val authenticationService: AuthenticationService,
-    val context: Context) : ReplicatorService
-{
-    private val databaseManager = DatabaseManager.getInstance(context)
+    private val databaseManager: DatabaseManager
+) : ReplicatorService {
     private var replicatorManager : ReplicatorManager? = null
     private var loggedInUser = authenticationService.getCurrentUser()
 

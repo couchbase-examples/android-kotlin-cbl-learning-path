@@ -1,6 +1,5 @@
 package com.couchbase.learningpath.data.userprofile
 
-import android.content.Context
 import com.couchbase.lite.CouchbaseLiteException
 import com.couchbase.lite.MutableDocument
 
@@ -9,15 +8,17 @@ import com.couchbase.learningpath.data.KeyValueRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UserProfileRepository(var context: Context) : KeyValueRepository {
+class UserProfileRepository(
+    private val databaseManager: DatabaseManager
+) : KeyValueRepository {
     private val userProfileType = "user"
 
     override fun inventoryDatabaseName(): String {
-        return DatabaseManager.getInstance(context).currentInventoryDatabaseName
+        return databaseManager.currentInventoryDatabaseName
     }
 
     override fun inventoryDatabaseLocation(): String? {
-        return DatabaseManager.getInstance(context).inventoryDatabase?.path
+        return databaseManager.inventoryDatabase?.path
     }
 
     override suspend fun get(currentUser: String): Map<String, Any> {
@@ -25,7 +26,7 @@ class UserProfileRepository(var context: Context) : KeyValueRepository {
             val results = HashMap<String, Any>()  //  <1>
             results["email"] = currentUser as Any  //  <2>
 
-            val database = DatabaseManager.getInstance(context).inventoryDatabase
+            val database = databaseManager.inventoryDatabase
             database?.let { db ->
                 val documentId = getCurrentUserDocumentId(currentUser)
                 val doc = db.getDocument(documentId)  //  <3>
@@ -57,7 +58,7 @@ class UserProfileRepository(var context: Context) : KeyValueRepository {
             val documentId = getCurrentUserDocumentId(email)
             val mutableDocument = MutableDocument(documentId, data)
             try {
-                val database = DatabaseManager.getInstance(context).inventoryDatabase
+                val database = databaseManager.inventoryDatabase
                 database?.save(mutableDocument)
             } catch (e: CouchbaseLiteException) {
                 android.util.Log.e(e.message, e.stackTraceToString())
@@ -69,7 +70,7 @@ class UserProfileRepository(var context: Context) : KeyValueRepository {
 
     override suspend fun count(): Int {
         return withContext(Dispatchers.IO) {
-            val database = DatabaseManager.getInstance(context).inventoryDatabase
+            val database = databaseManager.inventoryDatabase
             database?.let { db ->
                 val query = "SELECT COUNT(*) AS count FROM _ WHERE documentType='$userProfileType'"
                 val results = db.createQuery(query).execute().allResults()
@@ -82,7 +83,7 @@ class UserProfileRepository(var context: Context) : KeyValueRepository {
     suspend fun delete(documentId: String): Boolean {
         return withContext(Dispatchers.IO) {
             var result = false
-            val database = DatabaseManager.getInstance(context).inventoryDatabase
+            val database = databaseManager.inventoryDatabase
             database?.let { db ->
                 val document = db.getDocument(documentId)
                 document?.let {

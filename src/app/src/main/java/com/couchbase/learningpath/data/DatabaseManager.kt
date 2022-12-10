@@ -2,14 +2,13 @@ package com.couchbase.learningpath.data
 
 import android.content.Context
 import com.couchbase.learningpath.models.User
-import com.couchbase.learningpath.util.Singleton
 import com.couchbase.lite.*
 import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-class DatabaseManager private constructor(private val context: Context) {
+class DatabaseManager(private val context: Context) {
 
     var inventoryDatabase: Database? = null
     var warehouseDatabase: Database? = null
@@ -253,6 +252,4 @@ class DatabaseManager private constructor(private val context: Context) {
             stream.close()
         }
     }
-
-    companion object : Singleton<DatabaseManager, Context>(::DatabaseManager)
 }

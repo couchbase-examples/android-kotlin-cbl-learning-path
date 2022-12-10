@@ -91,7 +91,6 @@ class DatabaseIntegrationTests {
             projectRepository = ProjectRepositoryDb(
                 context = context,
                 authenticationService = authenticationService,
-                auditRepository = auditRepository,
                 warehouseRepository = warehouseRepository,
                 stockItemRepository = stockItemRepository
             )

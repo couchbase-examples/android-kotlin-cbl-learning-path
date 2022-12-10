@@ -1,6 +1,5 @@
 package com.couchbase.learningpath.data.warehouse
 
-import android.content.Context
 import android.util.Log
 import com.couchbase.lite.*
 import com.couchbase.lite.Function
@@ -14,8 +13,9 @@ import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Warehouse
 import com.couchbase.learningpath.models.WarehouseDao
 
-class WarehouseRepositoryDb(context: Context) : WarehouseRepository {
-    private val databaseResources: DatabaseManager = DatabaseManager.getInstance(context)
+class WarehouseRepositoryDb(
+    private val databaseManager: DatabaseManager
+) : WarehouseRepository {
     private val documentType = "warehouse"
 
     private val cityAttributeName = "city"
@@ -27,7 +27,7 @@ class WarehouseRepositoryDb(context: Context) : WarehouseRepository {
         return withContext(Dispatchers.IO){
             val warehouses = mutableListOf<Warehouse>()
             try {
-                val db = databaseResources.warehouseDatabase
+                val db = databaseManager.warehouseDatabase
                 db?.let { database ->
                     //search by city
                     var whereQueryExpression = Function
@@ -75,7 +75,7 @@ class WarehouseRepositoryDb(context: Context) : WarehouseRepository {
         return withContext(Dispatchers.IO) {
             val locations = mutableListOf<Warehouse>()
             try {
-                val db = databaseResources.warehouseDatabase
+                val db = databaseManager.warehouseDatabase
                 db?.let {
                     val query = QueryBuilder
                         .select(SelectResult.all())
@@ -99,7 +99,7 @@ class WarehouseRepositoryDb(context: Context) : WarehouseRepository {
             var resultCount = 0
             val countAliasName = "count"
             try {
-                val db = databaseResources.warehouseDatabase
+                val db = databaseManager.warehouseDatabase
                 db?.let {
                     val query = QueryBuilder  // <1>
                         .select(SelectResult.expression(Function.count(Expression.string("*"))).`as`(countAliasName)) // <2>
@@ -115,7 +115,7 @@ class WarehouseRepositoryDb(context: Context) : WarehouseRepository {
         }
     }
 
-    override val warehouseDatabaseName: () -> String? =  { DatabaseManager.getInstance(context).warehouseDatabase?.name }
+    override val warehouseDatabaseName: () -> String? =  { databaseManager.warehouseDatabase?.name }
 
-    override val warehouseDatabaseLocation: () -> String? = { DatabaseManager.getInstance(context).warehouseDatabase?.path }
+    override val warehouseDatabaseLocation: () -> String? = { databaseManager.warehouseDatabase?.path }
 }
