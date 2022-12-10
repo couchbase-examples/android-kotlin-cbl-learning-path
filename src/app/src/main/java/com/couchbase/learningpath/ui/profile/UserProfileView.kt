@@ -18,6 +18,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +43,15 @@ import com.couchbase.learningpath.ui.theme.Red500
 fun UserProfileView(
     openDrawer: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    viewModel: UserProfileViewModel) {
+    viewModel: UserProfileViewModel
+) {
+    val givenName by viewModel.givenName.observeAsState("")
+    val surname by viewModel.surname.observeAsState("")
+    val jobTitle by viewModel.jobTitle.observeAsState("")
+    val profilePic by viewModel.profilePic.observeAsState()
+    val emailAddress by viewModel.emailAddress.observeAsState("")
+    val team by viewModel.team.observeAsState("")
+    val toastMessage by viewModel.toastMessage.observeAsState()
 
     LearningPathTheme {
         // A surface container using the 'background' color from the theme
@@ -59,17 +68,17 @@ fun UserProfileView(
             )
             {
                 UserProfileFormWidget(
-                    viewModel.givenName.value,
+                    givenName,
                     viewModel.onGivenNameChanged,
-                    viewModel.surname.value,
+                    surname,
                     viewModel.onSurnameChanged,
-                    viewModel.jobTitle.value,
+                    jobTitle,
                     viewModel.onJobTitleChanged,
-                    viewModel.profilePic.value,
+                    profilePic,
                     viewModel.onProfilePicChanged,
-                    viewModel.emailAddress.value,
-                    viewModel.team.value,
-                    viewModel.toastMessage.value,
+                    emailAddress,
+                    team,
+                    toastMessage,
                     viewModel.onSave,
                     viewModel.clearToastMessage
                 )
