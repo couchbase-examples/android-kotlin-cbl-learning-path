@@ -134,8 +134,8 @@ fun InventoryNavGraph(
                 auditId = it
             }
             val viewModel = getViewModel<AuditEditorViewModel>()
-                viewModel.getAudit(projectId = projectId, auditId = auditId)
-                viewModel.navigateToListSelection = actions.navigateToStockItemListSelector
+            viewModel.getAudit(projectId = projectId, auditId = auditId)
+            viewModel.navigateToListSelection = actions.navigateToStockItemListSelector
 
             AuditEditorView(
                 viewModel = viewModel,

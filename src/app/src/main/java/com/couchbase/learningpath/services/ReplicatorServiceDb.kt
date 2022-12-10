@@ -7,13 +7,11 @@ import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.data.replicator.ReplicatorConfig
 import com.couchbase.learningpath.data.replicator.ReplicatorManager
 import com.couchbase.lite.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import java.net.URI
 
 @InternalCoroutinesApi
-@OptIn( ExperimentalCoroutinesApi::class)
 class ReplicatorServiceDb  (
     private val authenticationService: AuthenticationService,
     val context: Context) : ReplicatorService
@@ -28,15 +26,15 @@ class ReplicatorServiceDb  (
     //if your sync gateway server is running on a different IP change it here
     override var replicationConfig = mutableStateOf(
         ReplicatorConfig(
-        username = loggedInUser.username,
-        password = loggedInUser.password,
+            username = loggedInUser.username,
+            password = loggedInUser.password,
             endpointUrl = "ws://10.0.2.2:4984/projects",
-        replicatorType = "PUSH AND PULL",
-        heartBeat = 60L,
-        continuous = true,
-        selfSignedCert = true)
+            replicatorType = "PUSH AND PULL",
+            heartBeat = 60L,
+            continuous = true,
+            selfSignedCert = true
+        )
     )
-
 
     override val replicationStatus = mutableStateOf("")
     override val replicationTypes = listOf("PUSH AND PULL", "PUSH", "PULL")

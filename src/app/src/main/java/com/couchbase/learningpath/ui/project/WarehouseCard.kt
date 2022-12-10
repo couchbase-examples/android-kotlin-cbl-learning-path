@@ -119,13 +119,13 @@ fun WarehouseCardPreview() {
                 InventoryAppBar(title = "Warehouse Selection",
                     navigationIcon = Icons.Filled.Menu,
                     navigationOnClick = { })
-            })
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 WarehouseCard(
                     warehouse = warehouse,
                     onWarehouseSelected = onWarehouseSelected

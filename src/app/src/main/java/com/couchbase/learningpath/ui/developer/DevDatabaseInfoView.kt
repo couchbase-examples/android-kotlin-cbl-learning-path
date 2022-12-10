@@ -28,13 +28,13 @@ fun DevDatabaseInfoView(
                 InventoryAppBar(title = "Developer - Database Information",
                     navigationIcon = Icons.Filled.ArrowBack,
                     navigationOnClick = { navigateUp() })
-            })
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 DeveloperInfoWidget(
                     viewModel.inventoryDatabaseName.value,
                     viewModel.inventoryDatabaseLocation.value,

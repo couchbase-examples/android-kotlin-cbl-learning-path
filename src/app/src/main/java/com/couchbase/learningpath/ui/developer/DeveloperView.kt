@@ -36,14 +36,13 @@ fun DeveloperView(
                 InventoryAppBar(title = "Developer",
                     navigationIcon = Icons.Filled.Menu,
                     navigationOnClick = { openDrawer() })
-            })
-
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 DeveloperWidget(
                     toastMessage = viewModel.toastMessage.value,
                     onLoadSampleData = viewModel.onLoadSampleData,

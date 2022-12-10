@@ -33,12 +33,12 @@ fun ReplicatorConfigView(
                     navigationIcon = Icons.Filled.ArrowBack,
                     navigationOnClick = { navigateUp() }
                 )
-            })
-
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
+                    .padding(padding)
             ) {
                 ReplicatorConfigOptions(
                     serverUrl = viewModel.serverUrlState.value,

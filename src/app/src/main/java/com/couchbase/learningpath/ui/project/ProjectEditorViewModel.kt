@@ -21,7 +21,9 @@ class ProjectEditorViewModel(
 ) : ViewModel() {
 
     private val defaultWarehouseText: String = "No Warehouse Selected"
-    var projectState = mutableStateOf<Project?>(null)
+
+    @OptIn(ExperimentalSerializationApi::class)
+    val projectState = mutableStateOf<Project?>(null)
 
     val dueDateState = mutableStateOf("Select Due Date")
     val warehouseSelectionState = mutableStateOf(defaultWarehouseText)

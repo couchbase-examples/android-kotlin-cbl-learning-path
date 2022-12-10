@@ -11,8 +11,6 @@ import com.couchbase.lite.ReplicatorChange
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
-import kotlin.math.log
 
 class ReplicatorViewModel(private val replicatorService: ReplicatorService)
     : ViewModel() {

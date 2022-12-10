@@ -4,7 +4,6 @@ package com.couchbase.learningpath.data.stockItem
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.models.StockItemDao
@@ -34,7 +33,7 @@ class StockItemRepositoryDb(
                 db?.let { database ->
                     val query =
                         database.createQuery("SELECT * FROM _ AS item WHERE documentType=\"$documentType\"")
-                    var results = query.execute().allResults()
+                    val results = query.execute().allResults()
                     results.forEach { result ->
                         val stockItem = Json.decodeFromString<StockItemDao>(result.toJSON()).item
                         stockItems.add(stockItem)
@@ -76,7 +75,7 @@ class StockItemRepositoryDb(
                 db?.let { database ->
                     var queryString =
                         "SELECT * FROM _ as item WHERE documentType=\"item\" AND lower(name) LIKE ('%' || \$parameterName || '%')"  // 1
-                    var parameters = Parameters() // 2
+                    val parameters = Parameters() // 2
                     parameters.setString("parameterName", searchName.lowercase()) // 3
                     searchDescription?.let { description ->
                         if (description.isNotEmpty()) {  // 4
@@ -88,9 +87,9 @@ class StockItemRepositoryDb(
                             ) // 6
                         }
                     }
-                    var query = database.createQuery(queryString) // 7
+                    val query = database.createQuery(queryString) // 7
                     query.parameters = parameters // 8
-                    var results = query.execute().allResults() // 9
+                    val results = query.execute().allResults() // 9
                     results.forEach { result ->  // 10
                         val stockItem =
                             Json.decodeFromString<StockItemDao>(result.toJSON()).item // 11

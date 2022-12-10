@@ -7,12 +7,10 @@ import android.util.Log
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.AuditDao
-import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.lite.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -21,7 +19,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.*
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class AuditRepositoryDb(
     var context: Context,
     private val authenticationService: AuthenticationService
