@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -80,19 +79,13 @@ class MainActivity : ComponentActivity() {
                             drawerState = drawerState,
                             gesturesEnabled = drawerState.isOpen,
                             drawerContent = {
-                                val givenName by profileViewModel.givenName.observeAsState()
-                                val surname by profileViewModel.surname.observeAsState()
-                                val emailAddress by profileViewModel.emailAddress.observeAsState()
-                                val team by profileViewModel.team.observeAsState()
-                                val profilePic by profileViewModel.profilePic.observeAsState()
-
                                 Drawer(
                                     modifier = Modifier.semantics { contentDescription = "{$menuResource}1" },
-                                    firstName = givenName,
-                                    lastName =  surname,
-                                    email = emailAddress,
-                                    team = team,
-                                    profilePicture = profilePic,
+                                    firstName = profileViewModel.givenName,
+                                    lastName =  profileViewModel.surname,
+                                    email = profileViewModel.emailAddress,
+                                    team = profileViewModel.team,
+                                    profilePicture = profileViewModel.profilePic,
                                     onClicked = { route ->
                                         scope.launch {
                                             drawerState.close()
