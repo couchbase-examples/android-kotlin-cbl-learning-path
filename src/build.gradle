@@ -21,11 +21,11 @@ buildscript {
     }
 
     repositories {
+        google()
+        mavenCentral()
         maven {
             url "https://mobile.maven.couchbase.com/maven2/dev/"
         }
-        google()
-        mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
