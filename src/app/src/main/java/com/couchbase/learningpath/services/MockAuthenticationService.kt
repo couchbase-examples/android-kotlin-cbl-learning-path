@@ -2,9 +2,14 @@ package com.couchbase.learningpath.services
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class MockAuthenticationService : AuthenticationService {
+class MockAuthenticationService(
+    private val databaseManager: DatabaseManager
+) : AuthenticationService {
 
     private var _user = MutableLiveData<User?>()
     private var _mockUsers = HashMap<String, User>()
@@ -15,11 +20,17 @@ class MockAuthenticationService : AuthenticationService {
         return _user.value ?: User("", "", "")
     }
 
-    override fun authenticatedUser(username: String, password: String): Boolean {
+    override suspend fun authenticatedUser(username: String, password: String): Boolean {
         return if (_mockUsers.containsKey(username)){
             val user = _mockUsers[username]
             if (user?.password == password){
-                _user.value = user
+                withContext(Dispatchers.IO) {
+                    //initialize database if needed
+                    databaseManager.initializeDatabases(user)
+                    withContext(Dispatchers.Main) {
+                        _user.value = user
+                    }
+                }
                 true
             } else {
                 false

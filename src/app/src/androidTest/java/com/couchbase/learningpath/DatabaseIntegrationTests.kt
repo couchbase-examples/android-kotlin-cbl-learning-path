@@ -14,6 +14,7 @@ import com.couchbase.learningpath.models.*
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.lite.CouchbaseLiteException
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.*
 import org.junit.Assert.*
@@ -80,8 +81,10 @@ class DatabaseIntegrationTests {
             databaseManager.deleteDatabases()
             databaseManager.initializeDatabases(user1)
 
-            authenticationService = MockAuthenticationService()
-            val isAuth = authenticationService.authenticatedUser(user1.username, user1.password)
+            authenticationService = MockAuthenticationService(databaseManager)
+            val isAuth = runBlocking {
+                authenticationService.authenticatedUser(user1.username, user1.password)
+            }
 
             //arrange repositories
             auditRepository = AuditRepositoryDb(authenticationService, databaseManager)

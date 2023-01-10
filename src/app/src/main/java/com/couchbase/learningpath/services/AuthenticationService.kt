@@ -6,6 +6,6 @@ import com.couchbase.learningpath.models.User
 interface AuthenticationService {
     val currentUser: LiveData<User?>
     fun getCurrentUser() : User
-    fun authenticatedUser(username: String, password: String) : Boolean
+    suspend fun authenticatedUser(username: String, password: String) : Boolean
     fun logout()
 }

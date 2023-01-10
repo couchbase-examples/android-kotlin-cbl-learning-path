@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,7 @@ import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.couchbase.learningpath.R
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginView(onSuccessLogin: () -> Unit,
@@ -36,12 +38,16 @@ fun LoginView(onSuccessLogin: () -> Unit,
     val password = viewModel.password.observeAsState("")
     val isError = viewModel.isError.observeAsState(false)
 
+    val composableScope = rememberCoroutineScope()
+
     //****
     //checks authentication if works, route to UserProfile
     //****
     val onLoginCheck: () -> Unit = {
-        if (viewModel.login()) {
-            onSuccessLogin()
+        composableScope.launch {
+            if (viewModel.login()) {
+                onSuccessLogin()
+            }
         }
     }
 
