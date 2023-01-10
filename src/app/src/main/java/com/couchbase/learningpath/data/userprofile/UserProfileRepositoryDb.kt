@@ -41,7 +41,7 @@ class UserProfileRepositoryDb(
         }
     }
 
-    override suspend fun save(data: Map<String, Any>): Boolean {
+    override suspend fun save(data: Map<String, Any?>): Boolean {
         return withContext(Dispatchers.IO) {
             val email = data["email"] as String
             val documentId = getCurrentUserDocumentId(email)

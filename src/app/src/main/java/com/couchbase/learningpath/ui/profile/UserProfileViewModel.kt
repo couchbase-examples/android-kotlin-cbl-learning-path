@@ -49,6 +49,8 @@ class UserProfileViewModel(
     var profilePic by mutableStateOf(defaultProfilePic())
         private set
 
+    private var profilePicBlob: Blob? = null
+
     private fun defaultProfilePic(): Bitmap {
         return BitmapFactory.decodeResource(getApplication<Application>().resources, R.drawable.profile_placeholder)
     }
@@ -66,7 +68,8 @@ class UserProfileViewModel(
                     givenName = userProfile["givenName"] as? String ?: ""
                     surname = userProfile["surname"] as? String ?: ""
                     jobTitle = userProfile["jobTitle"] as? String ?: ""
-                    profilePic = (userProfile["imageData"] as? Blob)?.let { blob ->
+                    profilePicBlob = userProfile["imageData"] as? Blob
+                    profilePic = profilePicBlob?.let { blob ->
                         val d = Drawable.createFromStream(blob.contentStream, "res")
                         d?.toBitmap()
                     } ?: defaultProfilePic()
@@ -96,9 +99,10 @@ class UserProfileViewModel(
     }
 
     val onProfilePicChanged: (Bitmap) -> Unit = { newValue ->
-        viewModelScope.launch(Dispatchers.Main) {
-            profilePic = newValue
-        }
+        profilePic = newValue
+        val outputStream = ByteArrayOutputStream()
+        newValue.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        profilePicBlob = Blob("image/jpeg", outputStream.toByteArray())
     }
 
     val clearToastMessage: () -> Unit = {
@@ -109,16 +113,14 @@ class UserProfileViewModel(
         //when saving information to the database need to make sure
         //to use Dispatchers.IO so that Disk I/O work isn't done on the main thread
         viewModelScope.launch(Dispatchers.IO) {
-            val profile = HashMap<String, Any>()
+            val profile = HashMap<String, Any?>()
             profile["givenName"] = givenName
             profile["surname"] = surname
             profile["jobTitle"] = jobTitle
             profile["email"] = emailAddress
             profile["team"] = team
             profile["documentType"] = "user"
-            val outputStream = ByteArrayOutputStream()
-            profilePic.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            profile["imageData"] = Blob("image/jpeg", outputStream.toByteArray())
+            profile["imageData"] = profilePicBlob
             val didSave = repository.save(profile)
 
             //make sure when we update the UI we update on the Main Thread
