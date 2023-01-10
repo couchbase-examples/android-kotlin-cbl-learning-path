@@ -117,7 +117,8 @@ class MainActivity : ComponentActivity() {
                                 openDrawer =  { openDrawer() },
                                 navController = navController,
                                 scaffoldState = scaffoldState,
-                                scope = scope
+                                scope = scope,
+                                profileViewModel
                             )
                         }
                     }

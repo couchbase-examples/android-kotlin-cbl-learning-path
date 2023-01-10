@@ -66,6 +66,7 @@ fun InventoryNavGraph(
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     scope: CoroutineScope = rememberCoroutineScope(),
+    userProfileViewModel: UserProfileViewModel,
     startDestination: String = MainDestinations.LOGIN_ROUTE) {
     val actions = remember(navController) { MainActions(navController) }
     NavHost(navController = navController,
@@ -192,7 +193,7 @@ fun InventoryNavGraph(
             UserProfileView(
                 openDrawer = openDrawer,
                 scaffoldState = scaffoldState,
-                viewModel = getViewModel<UserProfileViewModel>())
+                viewModel = userProfileViewModel)
         }
 
         composable(MainDestinations.DEVELOPER_ROUTE){
