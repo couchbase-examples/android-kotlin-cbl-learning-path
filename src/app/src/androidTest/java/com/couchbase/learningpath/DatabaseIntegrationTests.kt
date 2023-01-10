@@ -8,7 +8,7 @@ import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.data.audits.AuditRepositoryDb
 import com.couchbase.learningpath.data.project.ProjectRepositoryDb
 import com.couchbase.learningpath.data.stockItem.StockItemRepositoryDb
-import com.couchbase.learningpath.data.userprofile.UserProfileRepository
+import com.couchbase.learningpath.data.userprofile.UserProfileRepositoryDb
 import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.models.*
 import com.couchbase.learningpath.services.MockAuthenticationService
@@ -34,7 +34,7 @@ class DatabaseIntegrationTests {
     private lateinit var warehouseRepository: WarehouseRepositoryDb
     private lateinit var auditRepository: AuditRepositoryDb
     private lateinit var stockItemRepository: StockItemRepositoryDb
-    private lateinit var userProfileRepository: UserProfileRepository
+    private lateinit var userProfileRepository: UserProfileRepositoryDb
 
     //test users
     private lateinit var user1: User
@@ -87,7 +87,7 @@ class DatabaseIntegrationTests {
             auditRepository = AuditRepositoryDb(authenticationService, databaseManager)
             stockItemRepository = StockItemRepositoryDb(databaseManager)
             warehouseRepository = WarehouseRepositoryDb(databaseManager)
-            userProfileRepository = UserProfileRepository(databaseManager)
+            userProfileRepository = UserProfileRepositoryDb(databaseManager)
             projectRepository = ProjectRepositoryDb(
                 authenticationService = authenticationService,
                 warehouseRepository = warehouseRepository,

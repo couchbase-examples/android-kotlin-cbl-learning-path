@@ -16,14 +16,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.R
+import com.couchbase.learningpath.data.userprofile.UserProfileRepository
 import com.couchbase.learningpath.models.User
 
 class UserProfileViewModel(
     application: Application,
-    private val repository: KeyValueRepository,
+    private val repository: UserProfileRepository,
     private val authService: AuthenticationService
 ) : AndroidViewModel(application) {
 
