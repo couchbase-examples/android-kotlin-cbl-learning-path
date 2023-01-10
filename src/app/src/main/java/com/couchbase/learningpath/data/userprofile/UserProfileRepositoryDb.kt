@@ -4,11 +4,7 @@ import com.couchbase.lite.CouchbaseLiteException
 import com.couchbase.lite.MutableDocument
 
 import com.couchbase.learningpath.data.DatabaseManager
-import com.couchbase.lite.documentChangeFlow
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class UserProfileRepositoryDb(
