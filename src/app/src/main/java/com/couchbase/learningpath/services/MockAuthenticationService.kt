@@ -11,8 +11,8 @@ class MockAuthenticationService(
     private val databaseManager: DatabaseManager
 ) : AuthenticationService {
 
-    private var _user = MutableLiveData<User?>()
-    private var _mockUsers = HashMap<String, User>()
+    private val _user = MutableLiveData<User?>()
+    private val _mockUsers = HashMap<String, User>()
 
     override val currentUser: LiveData<User?> = _user
 
