@@ -1,6 +1,5 @@
 package com.couchbase.learningpath.data.project
 
-import android.content.Context
 import android.util.Log
 import com.couchbase.lite.*
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +16,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.couchbase.learningpath.data.DatabaseManager
-import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.stockItem.StockItemRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.models.Audit
@@ -30,23 +28,22 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 @ExperimentalSerializationApi
 class ProjectRepositoryDb(
-    private val context: Context,
     private val authenticationService: AuthenticationService,
-    private val auditRepository: AuditRepository,
     private val warehouseRepository: WarehouseRepository,
     private val stockItemRepository: StockItemRepository,
+    private val databaseManager: DatabaseManager
 ) : ProjectRepository {
     private val projectDocumentType = "project"
     private val auditDocumentType = "audit"
 
     override val databaseName: String
-        get() = DatabaseManager.getInstance(context).currentInventoryDatabaseName
+        get() = databaseManager.currentInventoryDatabaseName
 
     //live query demo of returning project documents
 
     override fun getDocuments(team: String): Flow<List<Project>> {
         try {
-            val db = DatabaseManager.getInstance(context).inventoryDatabase
+            val db = databaseManager.inventoryDatabase
             // NOTE - the as method is a also a keyword in Kotlin, so it must be escaped using
             // `as` - this will probably break intellisense, so it will act like the where
             // method isn't available  work around is to do your entire statement without the as
@@ -92,7 +89,7 @@ class ProjectRepositoryDb(
     override suspend fun get(documentId: String): Project {
         return withContext(Dispatchers.IO) {
             try {
-                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val doc = database.getDocument(documentId)
                     doc?.let { document ->
@@ -136,7 +133,7 @@ class ProjectRepositoryDb(
     override suspend fun updateProjectWarehouse(projectId: String, warehouse: Warehouse) {
         return withContext(Dispatchers.IO) {
             try {
-                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 val project = get(projectId)
                 project.warehouse = warehouse
                 db?.let { database ->
@@ -153,7 +150,7 @@ class ProjectRepositoryDb(
     override suspend fun save(document: Project) {
         return withContext(Dispatchers.IO) {
             try {
-                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val json = Json.encodeToString(document)
                     val doc = MutableDocument(document.projectId, json)
@@ -173,7 +170,7 @@ class ProjectRepositoryDb(
         return withContext(Dispatchers.IO) {
             var result = false
             try {
-                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val projectDoc = database.getDocument(documentId)
                     projectDoc?.let { document ->
@@ -192,7 +189,7 @@ class ProjectRepositoryDb(
         return withContext(Dispatchers.IO) {
             var count = 0
             try {
-                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val query = QueryBuilder  // 1
                         .select(
@@ -223,7 +220,7 @@ class ProjectRepositoryDb(
                 val stockItemsCount = stockItems.count() - 1 // <5>
 
                 if (warehouseCount > 0 && stockItemsCount > 0) {
-                    val db = DatabaseManager.getInstance(context).inventoryDatabase
+                    val db = databaseManager.inventoryDatabase
                     db?.let { database ->
                         // batch operations for saving multiple documents
                         // this is a faster way to process groups of documents at once

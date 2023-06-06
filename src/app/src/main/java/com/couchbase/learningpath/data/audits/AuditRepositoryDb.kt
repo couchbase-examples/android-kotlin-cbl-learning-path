@@ -2,12 +2,10 @@
 
 package com.couchbase.learningpath.data.audits
 
-import android.content.Context
 import android.util.Log
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.Audit
 import com.couchbase.learningpath.models.AuditDao
-import com.couchbase.learningpath.models.Project
 import com.couchbase.learningpath.models.StockItem
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.lite.*
@@ -23,15 +21,13 @@ import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuditRepositoryDb(
-    var context: Context,
-    private val authenticationService: AuthenticationService
+    private val authenticationService: AuthenticationService,
+    private val databaseManager: DatabaseManager
 ) : AuditRepository {
-
-    private val databaseResources: DatabaseManager = DatabaseManager.getInstance(context)
 
     override fun getAuditsByProjectId(projectId: String): Flow<List<Audit>>? {
         try {
-            val db = databaseResources.inventoryDatabase
+            val db = databaseManager.inventoryDatabase
             val team = authenticationService.getCurrentUser().team
             db?.let { database ->
                 val query =
@@ -58,7 +54,7 @@ class AuditRepositoryDb(
     override suspend fun get(projectId: String, auditId: String): Audit {
         return withContext(Dispatchers.IO) {
             try {
-                val db = databaseResources.inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val doc = database.getDocument(auditId)
                     doc?.let { document ->
@@ -89,7 +85,7 @@ class AuditRepositoryDb(
     override suspend fun save(document: Audit) {
         return withContext(Dispatchers.IO) {
             try {
-                val db = databaseResources.inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val json = Json.encodeToString(document)
                     val doc = MutableDocument(document.auditId, json)
@@ -108,7 +104,7 @@ class AuditRepositoryDb(
     ) {
         return withContext(Dispatchers.IO) {
             try {
-                val db = databaseResources.inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 val audit = get(projectId, auditId)
                 audit.stockItem = stockItem
                 audit.notes = "Found item ${stockItem.name} - ${stockItem.description} in warehouse"
@@ -139,7 +135,7 @@ class AuditRepositoryDb(
         return withContext(Dispatchers.IO) {
             var result = false
             try {
-                val db = databaseResources.inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val doc = database.getDocument(documentId)
                     doc?.let { document ->
@@ -158,7 +154,7 @@ class AuditRepositoryDb(
         return withContext(Dispatchers.IO) {
             var count = 0
             try {
-                val db = DatabaseManager.getInstance(context).inventoryDatabase
+                val db = databaseManager.inventoryDatabase
                 db?.let { database ->
                     val query =
                         database.createQuery("SELECT COUNT(*) AS count FROM _ AS item WHERE documentType=\"audit\"") // 1

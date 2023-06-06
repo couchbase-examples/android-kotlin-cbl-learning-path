@@ -67,9 +67,10 @@ class MainActivity : ComponentActivity() {
                     scope.launch {
                         if (profileViewModel == null) {
                             profileViewModel = UserProfileViewModel(
+                                application = application,
                                 repository = userProfileRepository,
                                 authService = authService,
-                                mainViewModel.context)
+                            )
                         } else {
                             profileViewModel?.updateUserProfileInfo()
                         }

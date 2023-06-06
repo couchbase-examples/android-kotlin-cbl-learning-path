@@ -1,19 +1,18 @@
 package com.couchbase.learningpath.ui.profile
 
-import android.content.Context
+import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.couchbase.lite.Blob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
-import java.lang.ref.WeakReference
 
 import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.services.AuthenticationService
@@ -21,10 +20,10 @@ import com.couchbase.learningpath.R
 import com.couchbase.learningpath.models.User
 
 class UserProfileViewModel(
+    application: Application,
     private val repository: KeyValueRepository,
-    authService: AuthenticationService,
-    context: WeakReference<Context>
-) : ViewModel() {
+    authService: AuthenticationService
+) : AndroidViewModel(application) {
 
     private var currentUser: User? = null
 
@@ -40,7 +39,7 @@ class UserProfileViewModel(
     init {
         currentUser = authService.getCurrentUser()
         updateUserProfileInfo()
-        profilePic.value = BitmapFactory.decodeResource(context.get()?.resources, R.drawable.profile_placeholder)
+        profilePic.value = BitmapFactory.decodeResource(getApplication<Application>().resources, R.drawable.profile_placeholder)
     }
 
     fun updateUserProfileInfo() {

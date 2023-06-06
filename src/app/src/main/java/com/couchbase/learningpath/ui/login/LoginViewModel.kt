@@ -1,13 +1,11 @@
 package com.couchbase.learningpath.ui.login
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.ref.WeakReference
 
 import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.services.AuthenticationService
@@ -16,7 +14,7 @@ import com.couchbase.learningpath.services.ReplicatorService
 class LoginViewModel(
     private val authenticationService: AuthenticationService,
     private val replicatorService: ReplicatorService,
-    private val context: WeakReference<Context>
+    private val databaseManager: DatabaseManager
 ) : ViewModel() {
 
     private val _username = MutableLiveData("")
@@ -37,19 +35,17 @@ class LoginViewModel(
     val isError: LiveData<Boolean> = _isError
 
     fun login(): Boolean {
-        context.get()?.let { itContext ->
-            _username.value?.let { uname ->
-                _password.value?.let { pwd ->
-                    if (authenticationService.authenticatedUser(username = uname, password = pwd)) {
-                        _isError.value = false
-                        val currentUser = authenticationService.getCurrentUser()
-                        viewModelScope.launch(Dispatchers.IO) {
-                            //initialize database if needed
-                            DatabaseManager.getInstance(itContext).initializeDatabases(currentUser)
-                            replicatorService.updateAuthentication(isReset = false)
-                        }
-                        return true
+        _username.value?.let { uname ->
+            _password.value?.let { pwd ->
+                if (authenticationService.authenticatedUser(username = uname, password = pwd)) {
+                    _isError.value = false
+                    val currentUser = authenticationService.getCurrentUser()
+                    viewModelScope.launch(Dispatchers.IO) {
+                        //initialize database if needed
+                        databaseManager.initializeDatabases(currentUser)
+                        replicatorService.updateAuthentication(isReset = false)
                     }
+                    return true
                 }
             }
         }

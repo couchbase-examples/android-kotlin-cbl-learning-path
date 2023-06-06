@@ -1,15 +1,14 @@
 package com.couchbase.learningpath
 
 import android.app.Application
+import com.couchbase.learningpath.data.DatabaseManager
 import org.koin.android.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.GlobalContext
 import org.koin.core.logger.Level
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import java.lang.ref.WeakReference
 
 import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.data.audits.AuditRepository
@@ -41,6 +40,9 @@ import com.couchbase.learningpath.ui.project.ProjectListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
+import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
@@ -69,31 +71,29 @@ class InventoryApplication
     @OptIn(InternalCoroutinesApi::class)
     private fun registerDependencies() : Module {
         return module {
-            // ** DO NOT listen to the NO cast needed warnings - removing the as statement will
-            // ** result in the application not functioning correctly
-            single { MockAuthenticationService() as AuthenticationService }
-            single { ReplicatorServiceDb(get(), this@InventoryApplication) as ReplicatorService }
-            single { UserProfileRepository(this@InventoryApplication) as KeyValueRepository }
-            single { WarehouseRepositoryDb(this@InventoryApplication) as WarehouseRepository }
-            single { ProjectRepositoryDb(this@InventoryApplication, get(), get(), get(), get()) as ProjectRepository }
-            single { StockItemRepositoryDb(this@InventoryApplication) as StockItemRepository }
-            single { AuditRepositoryDb(this@InventoryApplication, get()) as AuditRepository }
+            singleOf(::DatabaseManager)
+            singleOf(::MockAuthenticationService) bind AuthenticationService::class
+            singleOf(::ReplicatorServiceDb) bind ReplicatorService::class
+            singleOf(::UserProfileRepository) bind KeyValueRepository::class
+            singleOf(::WarehouseRepositoryDb) bind WarehouseRepository::class
+            singleOf(::ProjectRepositoryDb) bind ProjectRepository::class
+            singleOf(::StockItemRepositoryDb) bind StockItemRepository::class
+            singleOf(::AuditRepositoryDb) bind AuditRepository::class
 
-            viewModel { MainViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
-            viewModel { LoginViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
-            viewModel { ProjectListViewModel(get(), get()) }
-            viewModel { ProjectEditorViewModel(get()) }
-            viewModel { AuditListViewModel(get())}
-            viewModel { AuditEditorViewModel(get()) as AuditEditorViewModel}
+            viewModelOf(::MainViewModel)
+            viewModelOf(::LoginViewModel)
+            viewModelOf(::ProjectListViewModel)
+            viewModelOf(::ProjectEditorViewModel)
+            viewModelOf(::AuditListViewModel)
+            viewModelOf(::AuditEditorViewModel)
 
-            viewModel { WarehouseSelectionViewModel(get(), get()) }
-            viewModel { StockItemSelectionViewModel(get(), get()) }
-            viewModel { UserProfileViewModel(get(), get(), WeakReference(this@InventoryApplication)) }
-            viewModel { DeveloperViewModel(get()) }
-            viewModel { DevDatabaseInfoViewModel(get(), get(), get(), get(), get(), get()) }
-            viewModel { ReplicatorViewModel(get())}
-            viewModel { ReplicatorConfigViewModel(get())}
-
+            viewModelOf(::WarehouseSelectionViewModel)
+            viewModelOf(::StockItemSelectionViewModel)
+            viewModelOf(::UserProfileViewModel)
+            viewModelOf(::DeveloperViewModel)
+            viewModelOf(::DevDatabaseInfoViewModel)
+            viewModelOf(::ReplicatorViewModel)
+            viewModelOf(::ReplicatorConfigViewModel)
         }
     }
 }

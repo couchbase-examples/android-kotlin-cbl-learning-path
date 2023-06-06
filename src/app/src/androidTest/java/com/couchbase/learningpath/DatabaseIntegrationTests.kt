@@ -59,7 +59,7 @@ class DatabaseIntegrationTests {
         try {
             //arrange database
             context = ApplicationProvider.getApplicationContext()
-            databaseManager = DatabaseManager.getInstance(context)
+            databaseManager = DatabaseManager(context)
 
             //arrange test users
             user1 = User(
@@ -84,16 +84,15 @@ class DatabaseIntegrationTests {
             val isAuth = authenticationService.authenticatedUser(user1.username, user1.password)
 
             //arrange repositories
-            auditRepository = AuditRepositoryDb(context, authenticationService)
-            stockItemRepository = StockItemRepositoryDb(context)
-            warehouseRepository = WarehouseRepositoryDb(context)
-            userProfileRepository = UserProfileRepository(context)
+            auditRepository = AuditRepositoryDb(authenticationService, databaseManager)
+            stockItemRepository = StockItemRepositoryDb(databaseManager)
+            warehouseRepository = WarehouseRepositoryDb(databaseManager)
+            userProfileRepository = UserProfileRepository(databaseManager)
             projectRepository = ProjectRepositoryDb(
-                context = context,
                 authenticationService = authenticationService,
-                auditRepository = auditRepository,
                 warehouseRepository = warehouseRepository,
-                stockItemRepository = stockItemRepository
+                stockItemRepository = stockItemRepository,
+                databaseManager = databaseManager
             )
 
             //load sample data
