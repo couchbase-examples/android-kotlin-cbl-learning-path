@@ -1,33 +1,48 @@
 package com.couchbase.learningpath.services
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.couchbase.learningpath.data.DatabaseManager
 import com.couchbase.learningpath.models.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class MockAuthenticationService : AuthenticationService {
+class MockAuthenticationService(
+    private val databaseManager: DatabaseManager
+) : AuthenticationService {
 
-    private var _user: User? = null
-    private var _mockUsers = HashMap<String, User>()
+    private val _user = MutableLiveData<User?>()
+    private val _mockUsers = HashMap<String, User>()
+
+    override val currentUser: LiveData<User?> = _user
 
     override fun getCurrentUser(): User {
-        return _user?: User("", "", "")
+        return _user.value ?: User("", "", "")
     }
 
-    override fun authenticatedUser(username: String, password: String): Boolean {
+    override suspend fun authenticatedUser(username: String, password: String): Boolean {
         return if (_mockUsers.containsKey(username)){
             val user = _mockUsers[username]
             if (user?.password == password){
-                _user = user
+                withContext(Dispatchers.IO) {
+                    //initialize database if needed
+                    databaseManager.initializeDatabases(user)
+                    withContext(Dispatchers.Main) {
+                        _user.value = user
+                    }
+                }
                 true
             } else {
                 false
             }
         } else {
-            _user = User(username = username, password = password, team = "team2")
+            _user.value = User(username = username, password = password, team = "team2")
             return true
         }
     }
 
     override fun logout() {
-        _user = null
+        _user.value = null
     }
 
     init {

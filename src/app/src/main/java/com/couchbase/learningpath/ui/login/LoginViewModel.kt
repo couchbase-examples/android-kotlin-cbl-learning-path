@@ -34,17 +34,12 @@ class LoginViewModel(
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
-    fun login(): Boolean {
+    suspend fun login(): Boolean {
         _username.value?.let { uname ->
             _password.value?.let { pwd ->
                 if (authenticationService.authenticatedUser(username = uname, password = pwd)) {
                     _isError.value = false
-                    val currentUser = authenticationService.getCurrentUser()
-                    viewModelScope.launch(Dispatchers.IO) {
-                        //initialize database if needed
-                        databaseManager.initializeDatabases(currentUser)
-                        replicatorService.updateAuthentication(isReset = false)
-                    }
+                    replicatorService.updateAuthentication(isReset = false)
                     return true
                 }
             }

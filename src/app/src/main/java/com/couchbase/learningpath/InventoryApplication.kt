@@ -10,7 +10,6 @@ import org.koin.core.logger.Level
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.audits.AuditRepositoryDb
 import com.couchbase.learningpath.data.project.ProjectRepository
@@ -18,6 +17,7 @@ import com.couchbase.learningpath.data.project.ProjectRepositoryDb
 import com.couchbase.learningpath.data.stockItem.StockItemRepository
 import com.couchbase.learningpath.data.stockItem.StockItemRepositoryDb
 import com.couchbase.learningpath.data.userprofile.UserProfileRepository
+import com.couchbase.learningpath.data.userprofile.UserProfileRepositoryDb
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.services.AuthenticationService
@@ -74,7 +74,7 @@ class InventoryApplication
             singleOf(::DatabaseManager)
             singleOf(::MockAuthenticationService) bind AuthenticationService::class
             singleOf(::ReplicatorServiceDb) bind ReplicatorService::class
-            singleOf(::UserProfileRepository) bind KeyValueRepository::class
+            singleOf(::UserProfileRepositoryDb) bind UserProfileRepository::class
             singleOf(::WarehouseRepositoryDb) bind WarehouseRepository::class
             singleOf(::ProjectRepositoryDb) bind ProjectRepository::class
             singleOf(::StockItemRepositoryDb) bind StockItemRepository::class

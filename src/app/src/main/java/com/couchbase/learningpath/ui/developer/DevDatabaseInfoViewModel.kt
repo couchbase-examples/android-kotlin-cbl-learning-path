@@ -9,17 +9,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.data.audits.AuditRepository
 import com.couchbase.learningpath.data.project.ProjectRepository
 import com.couchbase.learningpath.data.stockItem.StockItemRepository
+import com.couchbase.learningpath.data.userprofile.UserProfileRepository
 import com.couchbase.learningpath.data.warehouse.WarehouseRepository
 import com.couchbase.learningpath.services.AuthenticationService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @kotlinx.serialization.ExperimentalSerializationApi
 class DevDatabaseInfoViewModel(
-    private val userProfileRepository: KeyValueRepository,
+    private val userProfileRepository: UserProfileRepository,
     private val warehouseRepository: WarehouseRepository,
     private val projectRepository: ProjectRepository,
     private val auditRepository: AuditRepository,

@@ -42,8 +42,8 @@ import com.couchbase.learningpath.ui.theme.Red500
 fun UserProfileView(
     openDrawer: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    viewModel: UserProfileViewModel) {
-
+    viewModel: UserProfileViewModel
+) {
     LearningPathTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(scaffoldState = scaffoldState,
@@ -56,20 +56,19 @@ fun UserProfileView(
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+            ) {
                 UserProfileFormWidget(
-                    viewModel.givenName.value,
+                    viewModel.givenName,
                     viewModel.onGivenNameChanged,
-                    viewModel.surname.value,
+                    viewModel.surname,
                     viewModel.onSurnameChanged,
-                    viewModel.jobTitle.value,
+                    viewModel.jobTitle,
                     viewModel.onJobTitleChanged,
-                    viewModel.profilePic.value,
+                    viewModel.profilePic,
                     viewModel.onProfilePicChanged,
-                    viewModel.emailAddress.value,
-                    viewModel.team.value,
-                    viewModel.toastMessage.value,
+                    viewModel.emailAddress,
+                    viewModel.team,
+                    viewModel.toastMessage,
                     viewModel.onSave,
                     viewModel.clearToastMessage
                 )

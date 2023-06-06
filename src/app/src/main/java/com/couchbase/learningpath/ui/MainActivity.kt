@@ -24,18 +24,22 @@ import org.koin.androidx.compose.getViewModel
 import com.couchbase.learningpath.InventoryNavGraph
 import com.couchbase.learningpath.MainDestinations
 import com.couchbase.learningpath.R
-import com.couchbase.learningpath.data.KeyValueRepository
 import com.couchbase.learningpath.services.AuthenticationService
 import com.couchbase.learningpath.services.ReplicatorService
 import com.couchbase.learningpath.ui.components.Drawer
 import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalMaterialApi
 @ExperimentalCoroutinesApi
 class MainActivity : ComponentActivity() {
+
+    //used for drawing profile in drawer
+    private val profileViewModel: UserProfileViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,18 +49,13 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val scaffoldState = rememberScaffoldState()
                 val authService: AuthenticationService by inject()
-                val userProfileRepository: KeyValueRepository by inject()
                 val replicatorService : ReplicatorService by inject()
                 val menuResource = stringResource(id = R.string.btnMenu)
                 val mainViewModel = getViewModel<MainViewModel>()
 
-                //used for drawing profile in drawer
-                var profileViewModel: UserProfileViewModel? = null
-
                 fun logout() {
                     replicatorService.stopReplication()
                     replicatorService.updateAuthentication(isReset = true)
-                    profileViewModel = null
                     authService.logout()
                 }
                 //we need a drawer overflow menu on multiple screens
@@ -65,15 +64,6 @@ class MainActivity : ComponentActivity() {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val openDrawer = {
                     scope.launch {
-                        if (profileViewModel == null) {
-                            profileViewModel = UserProfileViewModel(
-                                application = application,
-                                repository = userProfileRepository,
-                                authService = authService,
-                            )
-                        } else {
-                            profileViewModel?.updateUserProfileInfo()
-                        }
                         drawerState.open()
                     }
                 }
@@ -84,17 +74,18 @@ class MainActivity : ComponentActivity() {
                             scaffoldState.snackbarHostState
                         }) {
                         ModalDrawer(
-                            modifier = Modifier.semantics { contentDescription = menuResource },
+                            modifier = Modifier
+                                .semantics { contentDescription = menuResource },
                             drawerState = drawerState,
                             gesturesEnabled = drawerState.isOpen,
                             drawerContent = {
                                 Drawer(
                                     modifier = Modifier.semantics { contentDescription = "{$menuResource}1" },
-                                    firstName = profileViewModel?.givenName?.value,
-                                    lastName =  profileViewModel?.surname?.value,
-                                    email = profileViewModel?.emailAddress?.value,
-                                    team = profileViewModel?.team?.value,
-                                    profilePicture = profileViewModel?.profilePic?.value,
+                                    firstName = profileViewModel.givenName,
+                                    lastName =  profileViewModel.surname,
+                                    email = profileViewModel.emailAddress,
+                                    team = profileViewModel.team,
+                                    profilePicture = profileViewModel.profilePic,
                                     onClicked = { route ->
                                         scope.launch {
                                             drawerState.close()
@@ -126,7 +117,8 @@ class MainActivity : ComponentActivity() {
                                 openDrawer =  { openDrawer() },
                                 navController = navController,
                                 scaffoldState = scaffoldState,
-                                scope = scope
+                                scope = scope,
+                                profileViewModel
                             )
                         }
                     }
