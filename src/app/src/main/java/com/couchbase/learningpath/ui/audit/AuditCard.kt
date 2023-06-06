@@ -187,13 +187,13 @@ fun AuditCardPreview() {
                 InventoryAppBar(title = "Audit",
                     navigationIcon = Icons.Filled.ArrowBack,
                     navigationOnClick = { })
-            })
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 AuditCard(
                     audit = audit,
                     onEditChange = onEditChange,

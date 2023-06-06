@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -82,9 +83,11 @@ class MainActivity : ComponentActivity() {
                     Scaffold(scaffoldState = scaffoldState,
                         snackbarHost = {
                             scaffoldState.snackbarHostState
-                        }) {
+                        }
+                    ) { padding ->
                         ModalDrawer(
-                            modifier = Modifier.semantics { contentDescription = menuResource },
+                            modifier = Modifier.semantics { contentDescription = menuResource }
+                                .padding(padding),
                             drawerState = drawerState,
                             gesturesEnabled = drawerState.isOpen,
                             drawerContent = {

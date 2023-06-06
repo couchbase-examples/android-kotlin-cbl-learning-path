@@ -39,11 +39,12 @@ fun AuditEditorView(
                 title = "Audit Editor",
                 navigationIcon = Icons.Filled.ArrowBack,
                 navigationOnClick = { navigateUp() })
-        })
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
+                    .padding(padding)
             ) {
                 viewModel.navigateUpCallback = navigateUp
                 AuditEditor(

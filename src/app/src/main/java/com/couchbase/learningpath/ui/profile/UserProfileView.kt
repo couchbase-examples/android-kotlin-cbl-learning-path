@@ -51,13 +51,13 @@ fun UserProfileView(
                 InventoryAppBar(title = "User Profile",
                     navigationIcon = Icons.Filled.Menu,
                     navigationOnClick = { openDrawer() })
-            })
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 UserProfileFormWidget(
                     viewModel.givenName.value,
                     viewModel.onGivenNameChanged,

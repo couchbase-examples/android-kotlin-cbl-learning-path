@@ -13,10 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.couchbase.learningpath.models.StockItem
-import com.couchbase.learningpath.models.Warehouse
 import com.couchbase.learningpath.ui.components.InventoryAppBar
-import com.couchbase.learningpath.ui.project.WarehouseCard
-import com.couchbase.learningpath.ui.project.WarehouseSelector
 import com.couchbase.learningpath.ui.theme.LearningPathTheme
 import com.couchbase.learningpath.ui.theme.Red500
 
@@ -37,12 +34,12 @@ fun StockItemSelectionView(
                     navigationIcon = Icons.Filled.ArrowBack,
                     navigationOnClick = { navigateUp() })
             }
-        )
-        {
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            ){
+                    .padding(padding)
+            ) {
 
                 val onStockItemSelected: (StockItem) -> Unit  = { stockItem ->
                     viewModel.onStockItemSelected(stockItem)

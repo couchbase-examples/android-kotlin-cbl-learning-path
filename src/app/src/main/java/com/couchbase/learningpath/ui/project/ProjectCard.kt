@@ -185,13 +185,13 @@ fun ProjectCardPreview() {
                 InventoryAppBar(title = "User Profile",
                     navigationIcon = Icons.Filled.Menu,
                     navigationOnClick = { })
-            })
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 ProjectCard(
                     project = project,
                     onProjectSelected = onProjectSelected,

@@ -134,7 +134,7 @@ class AuditEditorViewModel(
                         it.projectId = projectId.value
                         auditRepository.save(it)
                         withContext(Dispatchers.Main) {
-                                navigateUpCallback()
+                            navigateUpCallback()
                         }
                     }
                 }

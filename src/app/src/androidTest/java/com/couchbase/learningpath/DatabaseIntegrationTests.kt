@@ -13,12 +13,15 @@ import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.models.*
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.lite.CouchbaseLiteException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
 
+@OptIn(ExperimentalSerializationApi::class, ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class DatabaseIntegrationTests {
 

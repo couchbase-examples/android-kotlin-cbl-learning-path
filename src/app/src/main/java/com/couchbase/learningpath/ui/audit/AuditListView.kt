@@ -49,13 +49,12 @@ fun AuditListView(
                     }
                 )
             }
-        )
-        {
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 val audits = viewModel.audits.observeAsState()
                 AuditList(
                     items = audits.value,

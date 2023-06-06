@@ -35,7 +35,7 @@ Then add the following to the <a target="_blank" rel="noopener noreferrer" href=
 dependencies {
     ...
 
-    implementation "com.couchbase.lite:couchbase-lite-android-ktx:3.0.2"
+    implementation "com.couchbase.lite:couchbase-lite-android-ktx:3.0.5"
 }
 ```
 

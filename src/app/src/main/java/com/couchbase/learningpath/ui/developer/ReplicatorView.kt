@@ -43,14 +43,13 @@ fun ReplicatorView(
                         }
                     }
                 )
-            })
-
-        {
+            }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 ReplicatorWidget(
                     replicationStatus = viewModel.replicationStatus.value,
                     replicationProgress = viewModel.replicationProgress.value,

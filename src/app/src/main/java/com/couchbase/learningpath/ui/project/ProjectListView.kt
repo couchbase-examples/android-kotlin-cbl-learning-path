@@ -45,13 +45,13 @@ fun ProjectListView(
                 InventoryAppBar(title =  stringResource(id = R.string.projects),
                     navigationIcon = Icons.Filled.Menu,
                     navigationOnClick = { openDrawer() })
-            }, floatingActionButton = { AddButton(navigateToProjectEditor) })
-        {
+            }, floatingActionButton = { AddButton(navigateToProjectEditor) }
+        ) { padding ->
             Surface(
                 color = MaterialTheme.colors.background,
                 modifier = Modifier.fillMaxSize()
-            )
-            {
+                    .padding(padding)
+            ) {
                 // collecting the flow and turning it into state
                 // https://developer.android.com/jetpack/compose/libraries#streams
                 val projectList by viewModel.repositoryFlow.collectAsState(initial = listOf())
