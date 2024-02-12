@@ -2,7 +2,6 @@ package com.couchbase.learningpath
 
 import android.app.Application
 import com.couchbase.learningpath.data.DatabaseManager
-import org.koin.android.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext

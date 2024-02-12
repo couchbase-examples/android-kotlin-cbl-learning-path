@@ -1,6 +1,6 @@
 #!/bin/bash
 # used to start couchbase server - can't get around this as docker compose only allows you to start one command - so we have to start couchbase like the standard couchbase Dockerfile would 
-# https://github.com/couchbase/docker/blob/master/enterprise/couchbase-server/7.1.1/Dockerfile#L88
+# https://github.com/couchbase/docker/blob/master/enterprise/couchbase-server/7.2.0/Dockerfile#L88
 
 /entrypoint.sh couchbase-server & 
 
@@ -17,9 +17,10 @@ if ! [ -f "$FILE" ]; then
   /opt/couchbase/bin/couchbase-cli cluster-init -c 127.0.0.1 \
   --cluster-username $COUCHBASE_ADMINISTRATOR_USERNAME \
   --cluster-password $COUCHBASE_ADMINISTRATOR_PASSWORD \
-  --services data,index,query \
+  --services data,index,query,eventing \
   --cluster-ramsize $COUCHBASE_RAM_SIZE \
   --cluster-index-ramsize $COUCHBASE_INDEX_RAM_SIZE \
+  --cluster-eventing-ramsize $COUCHBASE_EVENTING_RAM_SIZE \
   --index-storage-setting default
 
   sleep 2s 

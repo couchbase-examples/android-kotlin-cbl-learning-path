@@ -16,6 +16,7 @@ services:
       - COUCHBASE_RBAC_PASSWORD=P@$$w0rd
       - COUCHBASE_RBAC_NAME=admin
       - COUCHBASE_RAM_SIZE=2048
+      - COUCHBASE_EVENTING_RAM_SIZE=512
       - COUCHBASE_INDEX_RAM_SIZE=512
     hostname: couchbase-server
     container_name: couchbase-server

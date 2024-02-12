@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Learning Path"
-include ':app'
+include (":app")
