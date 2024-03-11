@@ -70,87 +70,87 @@ dependencies {
 
     //Gradle docs on Extra properties
     //https://docs.gradle.org/current/userguide/kotlin_dsl.html#extra_properties
-    val kotlin_version:String by rootProject.extra
-    val core_ktx:String by rootProject.extra
-    val compose_version:String by rootProject.extra
-    val compose_ui_version:String by rootProject.extra
-    val activity_compose_version:String by rootProject.extra
-    val lifecyle_runtime_ktx_version:String by rootProject.extra
-    val koin_version:String by rootProject.extra
-    val android_materialdesign_version:String by rootProject.extra
-    val androidx_navigation_compose_version:String by rootProject.extra
-    val google_accompanist_version:String by rootProject.extra
-    val kotlinx_serialization_json:String by rootProject.extra
-    val constraints_compose_version:String by rootProject.extra
-    val annotation_experimental_version:String by rootProject.extra
-    val coroutines_tests_version:String by rootProject.extra
+    val kotlinVersion:String by rootProject.extra
+    val coreKtx:String by rootProject.extra
+    val composeVersion:String by rootProject.extra
+    val composeUiVersion:String by rootProject.extra
+    val activityComposeVersion:String by rootProject.extra
+    val lifestyleRuntimeKtVersion:String by rootProject.extra
+    val koinVersion:String by rootProject.extra
+    val androidMaterialDesignVersion:String by rootProject.extra
+    val androidxNavigationComposeVersion:String by rootProject.extra
+    val googleAccompanistVersion:String by rootProject.extra
+    val kotlinxSerializationJson:String by rootProject.extra
+    val constraintsComposeVersion:String by rootProject.extra
+    val annotationExperimentalVersion:String by rootProject.extra
+    val coroutinesTestsVersion:String by rootProject.extra
 
     //couchbase
-    val couchbase_lite_version:String by rootProject.extra
+    val couchbaseLiteVersion:String by rootProject.extra
     //core serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_json")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJson")
 
     //core compose
-    implementation("androidx.core:core-ktx:$core_ktx")
-    implementation("androidx.compose.ui:ui:$compose_ui_version")
+    implementation("androidx.core:core-ktx:$coreKtx")
+    implementation("androidx.compose.ui:ui:$composeUiVersion")
 
     // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling:$compose_ui_version")
+    implementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
 
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation("androidx.compose.foundation:foundation:$compose_ui_version")
-    implementation("androidx.compose.foundation:foundation-layout:$compose_ui_version")
+    implementation("androidx.compose.foundation:foundation:$composeUiVersion")
+    implementation("androidx.compose.foundation:foundation-layout:$composeUiVersion")
 
     // animation
-    implementation("androidx.compose.animation:animation:$compose_ui_version")
+    implementation("androidx.compose.animation:animation:$composeUiVersion")
 
     // Material design and icons
-    implementation("androidx.compose.material:material:$compose_ui_version")
-    implementation("androidx.compose.material:material-icons-core:$compose_ui_version")
-    implementation("androidx.compose.material:material-icons-extended:$compose_ui_version")
-    implementation("com.google.android.material:material:$android_materialdesign_version")
+    implementation("androidx.compose.material:material:$composeUiVersion")
+    implementation("androidx.compose.material:material-icons-core:$composeUiVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
+    implementation("com.google.android.material:material:$androidMaterialDesignVersion")
 
     //lifecycle and integration with ViewModels
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecyle_runtime_ktx_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecyle_runtime_ktx_version")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecyle_runtime_ktx_version")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecyle_runtime_ktx_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifestyleRuntimeKtVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifestyleRuntimeKtVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifestyleRuntimeKtVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifestyleRuntimeKtVersion")
 
     // Integration with observables
-    implementation("androidx.compose.runtime:runtime-livedata:$compose_ui_version")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeUiVersion")
 
     // Integration with activities
-    implementation("androidx.activity:activity-compose:$activity_compose_version")
+    implementation("androidx.activity:activity-compose:$activityComposeVersion")
 
     // Integration with constraints
-    implementation("androidx.constraintlayout:constraintlayout-compose:$constraints_compose_version")
+    implementation("androidx.constraintlayout:constraintlayout-compose:$constraintsComposeVersion")
 
     // navigation
-    implementation("androidx.navigation:navigation-compose:$androidx_navigation_compose_version")
+    implementation("androidx.navigation:navigation-compose:$androidxNavigationComposeVersion")
 
     //fix for android versions older than 9 that won't load images https://github.com/google/accompanist
     implementation("com.google.accompanist:accompanist-drawablepainter:0.34.0")
     implementation("com.google.accompanist:accompanist-insets:0.30.1")
 
     // Dependency injection
-    implementation("io.insert-koin:koin-core:$koin_version")
-    implementation("io.insert-koin:koin-android:$koin_version")
-    implementation("io.insert-koin:koin-androidx-compose:$koin_version")
+    implementation("io.insert-koin:koin-core:$koinVersion")
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     //couchbase lite for kotlin
-    implementation("com.couchbase.lite:couchbase-lite-android-ktx:$couchbase_lite_version")
+    implementation("com.couchbase.lite:couchbase-lite-android-ktx:3.1.6")
 
     //required because some flow APIs are still experimental (Card's onclick and cblite flow)
-    implementation("androidx.annotation:annotation-experimental:$annotation_experimental_version")
+    implementation("androidx.annotation:annotation-experimental:$annotationExperimentalVersion")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_ui_version")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestUtil("androidx.test:orchestrator:1.4.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:$compose_ui_version")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_ui_version")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
 }
