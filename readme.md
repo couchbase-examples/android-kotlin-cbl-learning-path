@@ -7,7 +7,7 @@ Full documentation can be found on the [Couchbase Developer Portal](https://deve
 ## Prerequisites
 To run this prebuilt project, you will need:
 - Familiarity with building Android Apps with <a target="_blank" rel="noopener noreferrer" href="https://developer.android.com/kotlin">Kotlin</a>, <a target="_blank" rel="noopener noreferrer"  href="https://developer.android.com/jetpack/compose/mental-model">JetPack Compose</a>, and Android Studio 
-- [Android Studio Chimpmuck or above](https://developer.android.com/studio)
+- [Android Studio Chipmunk or above](https://developer.android.com/studio)
 - Android SDK installed and setup (> v.33.0.0)
 - Android Build Tools (> v.33.0.0)
 - Android device or emulator running API level 24 or above
