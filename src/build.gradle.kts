@@ -35,7 +35,7 @@ plugins {
     id("com.android.library") version "8.3.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
     id("org.jetbrains.kotlin.jvm") version "1.9.22" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.24"
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
 }
 
