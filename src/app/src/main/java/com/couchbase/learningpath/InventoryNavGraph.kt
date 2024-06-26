@@ -22,6 +22,7 @@ import com.couchbase.learningpath.ui.login.LoginViewModel
 import com.couchbase.learningpath.ui.profile.UserProfileView
 import com.couchbase.learningpath.ui.profile.UserProfileViewModel
 import com.couchbase.learningpath.ui.project.*
+import org.koin.androidx.compose.koinViewModel
 
 /*
     Destinations used in routing
@@ -75,7 +76,7 @@ fun InventoryNavGraph(
             LoginView(onSuccessLogin = {
                 actions.navigateToProjectsListView()
             },
-                viewModel = getViewModel<LoginViewModel>())
+                viewModel = koinViewModel<LoginViewModel>())
         }
 
         composable(MainDestinations.PROJECT_LIST_ROUTE) {
@@ -85,13 +86,13 @@ fun InventoryNavGraph(
                 scope = scope,
                 navigateToProjectEditor = actions.navigateToProjectEditor,
                 navigateToAuditListByProject = actions.navigateToAuditListByProject,
-                viewModel = getViewModel<ProjectListViewModel>())
+                viewModel = koinViewModel<ProjectListViewModel>())
         }
 
         composable(MainDestinations.AUDIT_LIST_ROUTE_PATH){ backstackEntry ->
             val projectJson = backstackEntry.arguments?.getString(MainDestinations.AUDIT_LIST_KEY_ID)
             projectJson?.let {
-                val viewModel = getViewModel<AuditListViewModel>()
+                val viewModel = koinViewModel<AuditListViewModel>()
                 viewModel.projectJson = it
                 viewModel.getAudits()
                 AuditListView(
@@ -106,7 +107,7 @@ fun InventoryNavGraph(
 
         composable(MainDestinations.PROJECT_EDITOR_ROUTE_PATH ) { backstackEntry ->
             val projectId = backstackEntry.arguments?.getString(MainDestinations.PROJECT_KEY_ID)
-            val viewModel = getViewModel<ProjectEditorViewModel>()
+            val viewModel = koinViewModel<ProjectEditorViewModel>()
             if (projectId == null){
                 viewModel.projectId(UUID.randomUUID().toString())
             }
@@ -133,7 +134,7 @@ fun InventoryNavGraph(
             argAuditId?.let {
                 auditId = it
             }
-            val viewModel = getViewModel<AuditEditorViewModel>()
+            val viewModel = koinViewModel<AuditEditorViewModel>()
                 viewModel.getAudit(projectId = projectId, auditId = auditId)
                 viewModel.navigateToListSelection = actions.navigateToStockItemListSelector
 
@@ -146,7 +147,7 @@ fun InventoryNavGraph(
         composable(MainDestinations.LOCATION_ROUTE_PATH) {  backstackEntry ->
             val projectId = backstackEntry.arguments?.getString(MainDestinations.LOCATION_LIST_KEY_ID)
             projectId?.let {
-                val viewModel = getViewModel<WarehouseSelectionViewModel>()
+                val viewModel = koinViewModel<WarehouseSelectionViewModel>()
                 viewModel.projectId(it)
                 WarehouseSelectionView(
                     viewModel = viewModel,
@@ -169,8 +170,8 @@ fun InventoryNavGraph(
                 auditId = it
             }
 
-            val viewModel = getViewModel<StockItemSelectionViewModel>()
-            val auditEditorViewModel = getViewModel<AuditEditorViewModel>()
+            val viewModel = koinViewModel<StockItemSelectionViewModel>()
+            val auditEditorViewModel = koinViewModel<AuditEditorViewModel>()
 
             viewModel.projectId(projectId)
             viewModel.auditId(auditId)
@@ -192,13 +193,13 @@ fun InventoryNavGraph(
             UserProfileView(
                 openDrawer = openDrawer,
                 scaffoldState = scaffoldState,
-                viewModel = getViewModel<UserProfileViewModel>())
+                viewModel = koinViewModel<UserProfileViewModel>())
         }
 
         composable(MainDestinations.DEVELOPER_ROUTE){
             DeveloperView(
                 scaffoldState = scaffoldState,
-                viewModel = getViewModel<DeveloperViewModel>(),
+                viewModel = koinViewModel<DeveloperViewModel>(),
                 openDrawer = openDrawer,
                 navigateToDatabaseInfoView = actions.navigateToDeveloperDatabaseInfo)
         }
@@ -207,12 +208,12 @@ fun InventoryNavGraph(
             DevDatabaseInfoView(
                 scaffoldState = scaffoldState,
                 navigateUp = actions.upPress,
-                viewModel = getViewModel<DevDatabaseInfoViewModel>())
+                viewModel = koinViewModel<DevDatabaseInfoViewModel>())
         }
 
         composable(MainDestinations.REPLICATOR_ROUTE){
             ReplicatorView(
-                viewModel = getViewModel<ReplicatorViewModel>(),
+                viewModel = koinViewModel<ReplicatorViewModel>(),
                 openDrawer = openDrawer,
                 replicatorConfigNav = actions.navigateToReplicatorConfig,
                 scaffoldState = scaffoldState
@@ -221,7 +222,7 @@ fun InventoryNavGraph(
 
         composable(MainDestinations.REPLICATOR_SETTINGS_ROUTE){
             ReplicatorConfigView(
-                viewModel = getViewModel<ReplicatorConfigViewModel>(),
+                viewModel = koinViewModel<ReplicatorConfigViewModel>(),
                 navigateUp = actions.upPress,
                 scaffoldState = scaffoldState
             )

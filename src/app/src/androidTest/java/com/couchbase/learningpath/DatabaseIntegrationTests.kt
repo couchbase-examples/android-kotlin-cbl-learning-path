@@ -13,12 +13,16 @@ import com.couchbase.learningpath.data.warehouse.WarehouseRepositoryDb
 import com.couchbase.learningpath.models.*
 import com.couchbase.learningpath.services.MockAuthenticationService
 import com.couchbase.lite.CouchbaseLiteException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
 
+@ExperimentalSerializationApi
+@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class DatabaseIntegrationTests {
 
@@ -30,6 +34,7 @@ class DatabaseIntegrationTests {
     private lateinit var authenticationService: MockAuthenticationService
 
     //setup repositories
+    @OptIn(ExperimentalCoroutinesApi::class)
     private lateinit var projectRepository: ProjectRepositoryDb
     private lateinit var warehouseRepository: WarehouseRepositoryDb
     private lateinit var auditRepository: AuditRepositoryDb
@@ -82,6 +87,7 @@ class DatabaseIntegrationTests {
 
             authenticationService = MockAuthenticationService()
             val isAuth = authenticationService.authenticatedUser(user1.username, user1.password)
+            assertTrue(isAuth)
 
             //arrange repositories
             auditRepository = AuditRepositoryDb(authenticationService, databaseManager)

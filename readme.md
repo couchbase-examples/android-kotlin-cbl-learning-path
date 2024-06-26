@@ -7,10 +7,10 @@ Full documentation can be found on the [Couchbase Developer Portal](https://deve
 ## Prerequisites
 To run this prebuilt project, you will need:
 - Familiarity with building Android Apps with <a target="_blank" rel="noopener noreferrer" href="https://developer.android.com/kotlin">Kotlin</a>, <a target="_blank" rel="noopener noreferrer"  href="https://developer.android.com/jetpack/compose/mental-model">JetPack Compose</a>, and Android Studio 
-- [Android Studio Chimpmuck or above](https://developer.android.com/studio)
-- Android SDK installed and setup (> v.33.0.0)
-- Android Build Tools (> v.33.0.0)
-- Android device or emulator running API level 24 or above
+- [Android Studio Chipmuck or above](https://developer.android.com/studio)
+- Android SDK installed and setup (> v.34.0.0)
+- Android Build Tools (> v.34.0.0)
+- Android device or emulator running API level 26 or above
 - JDK 11 (now embedded into Android Studio 4+)
 
 ### Installing Couchbase Lite Framework
@@ -35,7 +35,7 @@ Then add the following to the <a target="_blank" rel="noopener noreferrer" href=
 dependencies {
     ...
 
-    implementation "com.couchbase.lite:couchbase-lite-android-ktx:3.0.2"
+    implementation "com.couchbase.lite:couchbase-lite-android-ktx:3.1.8"
 }
 ```
 
