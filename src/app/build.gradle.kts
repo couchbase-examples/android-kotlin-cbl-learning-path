@@ -154,7 +154,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
-    androidTestImplementation("androidx.test:runner:1.6.0")
+    androidTestImplementation("androidx.test:runner:1.6.1")
     androidTestUtil("androidx.test:orchestrator:1.5.0")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
