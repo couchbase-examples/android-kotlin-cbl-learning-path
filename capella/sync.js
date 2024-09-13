@@ -1,4 +1,4 @@
-function sync(doc, oldDoc) {
+function (doc, oldDoc, meta) {
 
 	/* Data Validation */
 	validateNotEmpty("documentType", doc.documentType);  // <1>
